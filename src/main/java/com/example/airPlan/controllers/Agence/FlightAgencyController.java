@@ -26,12 +26,47 @@ public class FlightAgencyController implements Initializable {
     @FXML private ListView<FlightModel> listview_flights;
 
     private final FlightServices flightService = new FlightServices();
+    @FXML
+    private TextField search_field;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupListView();
         loadFlights();
         setupButtonActions();
+        setupSearchListener();
+    }
+
+    private void setupSearchListener() {
+        search_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.trim().isEmpty()) {
+                loadFlights(); // Reset to all flights when search is empty
+            } else {
+                searchFlights(newValue.trim());
+            }
+        });
+    }
+    private void searchFlights(String searchTerm) {
+        List<FlightModel> allFlights = flightService.getAllFlights();
+        ObservableList<FlightModel> filteredFlights = FXCollections.observableArrayList();
+        String lowerSearchTerm = searchTerm.toLowerCase();
+        for (FlightModel flight : allFlights) {
+            if (flight.getFlightNumber() != null && flight.getFlightNumber().toLowerCase().contains(lowerSearchTerm) ||
+                    flight.getAirline() != null && flight.getAirline().toLowerCase().contains(lowerSearchTerm) ||
+                    flight.getOrigin() != null && flight.getOrigin().toLowerCase().contains(lowerSearchTerm) ||
+                    flight.getDestination() != null && flight.getDestination().toLowerCase().contains(lowerSearchTerm) ||
+                    String.format("$%.2f", flight.getPrice()).toLowerCase().contains(lowerSearchTerm) ||
+                    String.valueOf(flight.getCapacity()).contains(searchTerm)) { // No toLowerCase for numbers
+
+                filteredFlights.add(flight);
+            }
+        }
+        listview_flights.setItems(filteredFlights);
+        if (filteredFlights.isEmpty()) {
+            listview_flights.setPlaceholder(new Label("No flights found matching: " + searchTerm));
+        } else {
+            listview_flights.setPlaceholder(null);
+        }
     }
 
     private void setupListView() {

@@ -1,21 +1,31 @@
 .flight_view{
     -fx-background-color: #EEEEEE;
+    -fx-padding: 15;
+}
+.view{
+    -fx-background-color: #FFFE;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-padding: 5;
 }
 .top_view{
-    -fx-background-color: white;
+    -fx-background-color: rgba(0,0,0,0.1);
     -fx-background-radius: 25;
+    -fx-alignment: center;
 }
 .top_view Label{
     -fx-font-size: 1.5em;
     -fx-font-weight: bolder;
 }
-.top_view Button {
-    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+.top_view Button  {
+    -fx-background-color: transparent;
     -fx-pref-width: 30;
     -fx-pref-height: 30;
-    -fx-font-size: 1.2em;
-    -fx-font-weight: bold;
-    -fx-border-radius: 20;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+.top_view Button:hover  {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
 }
 .listView{
     -fx-background-color: transparent;
@@ -83,7 +93,7 @@
 .toolbar-btn:hover {
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
-    -fx-opacity: 1; /* Ensure full visibility on hover */
+    -fx-opacity: 1;
     -fx-background-color: linear-gradient(to right, #588b8b, #AAAAAA);
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
 }

@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 public class FlightAdminController implements Initializable {
 
 
-    @FXML private ListView<FlightModel> pendingListView;
     private boolean isToolbarVisible = false;
     private final FlightServices flightService = new FlightServices();
     @FXML
@@ -38,7 +37,7 @@ public class FlightAdminController implements Initializable {
     @FXML
     private ChoiceBox<String> flight_status;
     @FXML
-    private ListView<FlightModel> FlightsListView;
+    private ListView FlightListView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,8 +48,8 @@ public class FlightAdminController implements Initializable {
         accept_all.setDisable(true);
         reject_all.setDisable(true);
         reset_btn.setDisable(true);
-        flight_status.getItems().addAll("Approved", "Rejected");
-        flight_status.setValue("Approved"); // Default selection
+        flight_status.getItems().addAll("All", "Pending", "Approved", "Rejected");
+        flight_status.setValue("All");
         flight_status.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             filterFlightsByStatus(newVal);
         });
@@ -63,14 +62,18 @@ public class FlightAdminController implements Initializable {
         ObservableList<FlightModel> filteredFlights = FXCollections.observableArrayList();
 
         for (FlightModel flight : allFlights) {
-            if (status.equals("Approved") && "approved".equals(flight.getAdminStatus())) {
+            if ("All".equals(status)) {
                 filteredFlights.add(flight);
-            } else if (status.equals("Rejected") && "rejected".equals(flight.getAdminStatus())) {
+            } else if ("Pending".equals(status) && ("pending".equals(flight.getAdminStatus()) || flight.getAdminStatus() == null)) {
+                filteredFlights.add(flight);
+            } else if ("Approved".equals(status) && "approved".equals(flight.getAdminStatus())) {
+                filteredFlights.add(flight);
+            } else if ("Rejected".equals(status) && "rejected".equals(flight.getAdminStatus())) {
                 filteredFlights.add(flight);
             }
         }
 
-        FlightsListView.setItems(filteredFlights);
+        FlightListView.setItems(filteredFlights);
     }
     @FXML
     private void toggleToolbar(ActionEvent actionEvent) {
@@ -148,8 +151,7 @@ public class FlightAdminController implements Initializable {
 
 
     private void setupListView() {
-        pendingListView.setCellFactory(param -> createFlightCell());
-        FlightsListView.setCellFactory(param -> createFlightCell());
+        FlightListView.setCellFactory(param -> createFlightCell());
     }
     private ListCell<FlightModel> createFlightCell() {
         return new ListCell<FlightModel>() {
@@ -187,23 +189,6 @@ public class FlightAdminController implements Initializable {
 
     @FXML
     public void loadFlights() {
-        List<FlightModel> allFlights = flightService.getAllFlights();
-
-        ObservableList<FlightModel> pendingFlights = FXCollections.observableArrayList();
-        ObservableList<FlightModel> approvedFlights = FXCollections.observableArrayList();
-        ObservableList<FlightModel> rejectedFlights = FXCollections.observableArrayList();
-
-        for (FlightModel flight : allFlights) {
-            if (flight.getAdminStatus() == null || "pending".equals(flight.getAdminStatus())) {
-                pendingFlights.add(flight);
-            } else if ("approved".equals(flight.getAdminStatus())) {
-                approvedFlights.add(flight);
-            } else if ("rejected".equals(flight.getAdminStatus())) {
-                rejectedFlights.add(flight);
-            }
-        }
-
-        pendingListView.setItems(pendingFlights);
         filterFlightsByStatus(flight_status.getValue());
     }
 
