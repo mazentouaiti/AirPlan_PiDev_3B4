@@ -1,0 +1,156 @@
+.dashboard {
+    -fx-background-color: #EEEEEE;
+}
+.user_name{
+    -fx-font-size: 2.6em;
+    -fx-font-family: "Calibri Light";
+}
+.date_lbl{
+    -fx-text-fill: #588b8b;
+    -fx-font-size: 1.1em;
+    -fx-font-family: "Calibri Light";
+}
+.dashboard Text{
+    -fx-text-fill: #588b8b;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.9em;
+    -fx-font-weight: bold;
+}
+/* upcoming trips*/
+.trips_view{
+    -fx-background-color: #FFF;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-alignment: center_left;
+    -fx-border-width: 0 0 0 0;
+    -fx-border-color: #588b8b;
+    -fx-spacing: 20;
+}
+.trip{
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box,#AAAAAA,10,0,0,10);
+    -fx-spacing: 10;
+}
+.trip VBox {
+    -fx-background-color: #FFFF;
+    -fx-background-radius: 10 10 0 0;
+}
+.trip FontAwesomeIconView {
+    -fx-fill: #FFFFFF;
+}
+.trip_gradient{
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-background-radius: 10;
+}
+.trip_destination{
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+.trip_date{
+    -fx-text-fill: #FFFF;
+    -fx-font-family: Calibri;
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+/*travel budget*/
+.budget_view{
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 5 10 5 10;
+    -fx-spacing: 20;
+    -fx-background-radius: 10;
+    -fx-alignment: center_left;
+}
+.budget{
+    -fx-text-fill: #588b8b;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+.progression{
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-alignment: center_left;
+    -fx-border-radius: 10;
+    -fx-border-color: #99999999;
+    -fx-border-width: 1;
+    -fx-border-style: dashed;
+}
+.progression Text{
+    -fx-text-fill: #588b8b;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+.progress-bar {
+    -fx-pref-height: 20;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-background-color: #ddd;
+}
+.progress-bar .bar {
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.2, 0, 2);
+}
+
+/*Notifications*/
+.notification_view {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 5 10 5 10;
+    -fx-spacing: 20;
+    -fx-background-radius: 10;
+    -fx-alignment: center_left;
+
+}
+.notification_listview{
+    -fx-background-color: #EEEEEE;
+    -fx-border-width: 0;
+    -fx-border-color: #AAAAAA;
+    -fx-border-radius: 10;
+}
+.notification_listview .scroll-bar:vertical {
+    -fx-scale-x: 0;
+}
+.list-cell{
+    -fx-background-color: #EEEEEE;
+    -fx-padding: 15 0 15 0;
+}
+/*Top deal*/
+.deal_view {
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 5 10 5 10;
+    -fx-spacing: 20;
+    -fx-background-radius: 10;
+    -fx-alignment: center_left;
+
+}
+.deal_listview{
+    -fx-background-color: #EEEEEE;
+    -fx-border-width: 0;
+    -fx-border-color: #AAAAAA;
+    -fx-border-radius: 10;
+}
+.deal_listview .scroll-bar:vertical {
+    -fx-scale-x: 0;
+}
+.list-cell{
+    -fx-background-color: #EEEEEE;
+    -fx-padding: 15 0 15 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,100 @@
+.profile{
+    -fx-background-color: #EEEE;
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+.user_area{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-alignment: center_left;
+    -fx-padding: 20;
+    -fx-spacing: 30;
+}
+.user_img{
+    -fx-border-color: #588b8b;
+    -fx-border-radius: 50;
+    -fx-border-width: 1;
+    -fx-alignment: center;
+    -fx-padding: 1;
+}
+.user_area Label{
+    -fx-font-family: "Calibri Light";
+    -fx-text-fill: #588b8b;
+    -fx-font-weight: bold;
+    -fx-font-size: 35;
+}
+.user_state{
+    -fx-background-color: #588b8b;
+    -fx-pref-width: 200;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-pref-height: 25;
+    -fx-alignment: center;
+    -fx-font-size: 25;
+}
+.info{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-alignment: center_left;
+    -fx-padding: 20;
+    -fx-spacing: 30;
+}
+.info VBox{
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-alignment: center;
+    -fx-pref-width: 200;
+    -fx-background-radius: 20;
+}
+.info FontAwesomeIconView {
+    -fx-fill: #fff;
+}
+.info Label {
+    -fx-font-family: "Calibri Light";
+    -fx-text-fill:#fff;
+    -fx-font-size: 1.7em;
+    -fx-font-weight: bold;
+}
+.private_info_view{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-alignment: center;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-pref-width: 300;
+}
+.private_info_entry{
+    -fx-pref-width: 300;
+    -fx-pref-height: 30;
+    -fx-alignment: Center_left;
+    -fx-spacing: 10;
+
+}
+.private_info{
+    -fx-spacing: 20;
+    -fx-padding: 20;
+}
+.button_area{
+    -fx-background-color: transparent;
+    -fx-spacing: 20;
+    -fx-padding: 20;
+    -fx-alignment: Center;
+}
+.button_area Button{
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-pref-width: 100;
+    -fx-pref-height: 40;
+    -fx-background-radius: 15;
+    -fx-text-fill: white;
+    -fx-font-family: "Calibri Light";
+    -fx-font-weight: Bold;
+    -fx-font-size: 1.1em;
+}
+.button_area Button:hover{
+    -fx-cursor: hand;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-transition:0.3s;
+}

@@ -1,0 +1,99 @@
+.flight_view{
+    -fx-background-color: #EEEEEE;
+}
+.top_view{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+}
+.top_view Label{
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bolder;
+}
+.top_view Button {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-pref-width: 100;
+    -fx-pref-height: 30;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 20;
+}
+.listView{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-spacing: 10;
+}
+.list-cell{
+    -fx-background-color: transparent;
+}
+.list-cell:filled:selected{
+    -fx-background-color: #588b8b;
+}
+.list-cell:filled:hover{
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical{
+    -fx-background-color: rgb(48,58,59);
+    -fx-pref-width: 0;
+}
+.scroll-pane .thumb {
+    -fx-background-color: transparent;
+    -fx-pref-width: 0;
+    -fx-background-radius: 8;
+}
+/* Toggle Button */
+.toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #588b8b;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.toggle-btn:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Toolbar */
+.toolbar {
+    -fx-background-color: transparent;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-translate-x: 150; /* Start hidden */
+    -fx-alignment: right;
+}
+
+/* Toolbar Buttons */
+.toolbar-btn {
+    -fx-opacity: 1;
+    -fx-min-height: 32;
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-text-fill: #EEE;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3, 3, 2, 1;
+
+}
+
+.toolbar-btn:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-opacity: 1; /* Ensure full visibility on hover */
+    -fx-background-color: linear-gradient(to right, #588b8b, #AAAAAA);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+.toolbar-btn:armed {
+    -fx-background-color: #e0e0e0;
+    -fx-opacity: 1;
+}
+.font-awesome-icon {
+    -fx-fill: #EEEE;
+}
+
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="45.0" prefWidth="245.0" spacing="10" styleClass="bot-message-container" stylesheets="@../Styles/chatbot.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.ChatMessageCellController">
+    <ImageView fx:id="avatar" fitHeight="40" fitWidth="40" styleClass="bot-avatar">
+      <image>
+         <Image url="@../images/hotel_img2.jpg" />
+      </image></ImageView>
+    <VBox fx:id="messageBubble" prefHeight="41.0" prefWidth="338.0" spacing="5" styleClass="bot-message-bubble">
+        <Label fx:id="messageLabel" maxWidth="250" styleClass="bot-message-text" text="Hello" wrapText="true" />
+    </VBox>
+</HBox>

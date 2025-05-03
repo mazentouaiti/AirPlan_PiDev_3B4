@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="134.0" prefWidth="443.0" styleClass="cell_container" stylesheets="@../../Styles/FlightAdminCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.FlightAdminCellController">
+    <AnchorPane layoutX="12.0" layoutY="12.0" prefHeight="221.0" prefWidth="437.0" styleClass="container" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="5.0">
+        <FontAwesomeIconView glyphName="PLANE" layoutX="22.0" layoutY="34.0" size="30" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="8.285715103149414" />
+        <Label fx:id="airline_lbl" layoutX="69.0" layoutY="28.0" styleClass="lbl" text="AIRLINE" AnchorPane.topAnchor="28.0" />
+        <Label fx:id="origin_lbl" layoutX="194.0" layoutY="4.0" styleClass="lbl" text="FROM" AnchorPane.topAnchor="4.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="MAP_MARKER" />
+         </graphic></Label>
+        <Label fx:id="des_lbl" layoutX="194.0" layoutY="28.0" styleClass="lbl" text="TO" AnchorPane.topAnchor="28.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="GLOBE" />
+         </graphic></Label>
+        <Label fx:id="depart_lbl" layoutX="22.0" layoutY="64.0" styleClass="lbl" text="2000-07-04" AnchorPane.topAnchor="64.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="ARROW_RIGHT" />
+         </graphic></Label>
+        <Line endX="-99.99998474121094" endY="18.95956039428711" layoutX="447.0" layoutY="54.0" startX="-100.0" AnchorPane.topAnchor="53.29289323091507" />
+        <Label fx:id="price_lbl" layoutX="316.0" layoutY="9.0" styleClass="price_lbl" text="PRICE" AnchorPane.topAnchor="9.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="MONEY" />
+         </graphic></Label>
+        <Label fx:id="status_lbl" layoutX="190.0" layoutY="87.0" styleClass="lbl" text="STATUS" AnchorPane.topAnchor="87.0" />
+      <Label fx:id="number_lbl" layoutX="69.0" layoutY="5.0" styleClass="lbl" text="Number" AnchorPane.topAnchor="5.0" />
+      <Label fx:id="capacity_lbl" layoutX="182.0" layoutY="64.0" styleClass="lbl" text="CAPACITY" AnchorPane.topAnchor="64.0">
+         <graphic>
+            <FontAwesomeIconView glyphName="USERS" />
+         </graphic></Label>
+      <Label fx:id="arrival_lbl" layoutX="22.0" layoutY="86.0" styleClass="lbl" text="2000-07-04">
+         <graphic>
+            <FontAwesomeIconView glyphName="ARROW_LEFT" />
+         </graphic></Label>
+      <Button fx:id="accept_btn" layoutX="275.0" layoutY="51.0" mnemonicParsing="false" onAction="#onAcceptClicked" text="Accept" AnchorPane.topAnchor="51.0" />
+      <Button fx:id="refuse_btn" layoutX="359.0" layoutY="51.0" mnemonicParsing="false" onAction="#onRefuseClicked" text="Refuse" AnchorPane.topAnchor="51.0" />
+      <Label fx:id="admin_status" layoutX="324.0" layoutY="86.0" text="Admin Status" />
+    </AnchorPane>
+</AnchorPane>

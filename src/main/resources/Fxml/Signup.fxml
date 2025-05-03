@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="signup_parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="717.0" stylesheets="@../Styles/Signup.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.SignupController">
+   <Label layoutX="242.0" layoutY="69.0" text="Create an Account" textFill="#588b8b">
+      <font>
+         <Font size="24" />
+      </font>
+   </Label>
+   <TextField fx:id="firstNameField" layoutX="110.0" layoutY="131.0" prefHeight="26.0" prefWidth="176.0" />
+   <TextField fx:id="lastNameField" layoutX="111.0" layoutY="184.0" prefHeight="26.0" prefWidth="176.0" />
+   <TextField fx:id="emailField" layoutX="484.0" layoutY="131.0" prefHeight="26.0" prefWidth="176.0" />
+   <TextField fx:id="addressField" layoutX="483.0" layoutY="184.0" prefHeight="26.0" prefWidth="176.0" />
+   <PasswordField fx:id="phoneField" layoutX="483.0" layoutY="237.0" prefHeight="26.0" prefWidth="176.0" />
+   <ComboBox fx:id="roleComboBox" layoutX="108.0" layoutY="345.0" prefHeight="26.0" prefWidth="175.0" promptText="Select Role">
+      <items>
+         <FXCollections fx:factory="observableArrayList">
+            <String fx:value="Passenger" />
+            <String fx:value="Admin" />
+            <String fx:value="Agency" />
+            <String fx:value="Company" />
+         </FXCollections>
+      </items>
+   </ComboBox>
+   <Button fx:id="signUpButton" layoutX="302.0" layoutY="459.0" prefHeight="26.0" prefWidth="102.0" styleClass="resserv_btn" text="Sign Up" />
+   <Hyperlink fx:id="linktologin" layoutX="265.0" layoutY="581.0" text="Already have an account? Login" />
+   <Text layoutX="293.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Or Sign Up With ">
+      <font>
+         <Font size="16.0" />
+      </font>
+   </Text>
+   <RadioButton fx:id="Fcheck" layoutX="110.0" layoutY="237.0" mnemonicParsing="false" text="Female" />
+   <RadioButton fx:id="Mcheck" layoutX="209.0" layoutY="237.0" mnemonicParsing="false" text="Male" />
+   <Button fx:id="facebook" layoutX="296.0" layoutY="540.0" mnemonicParsing="false">
+      <graphic>
+         <FontAwesomeIconView glyphName="FACEBOOK" />
+      </graphic>
+   </Button>
+   <Button fx:id="google" layoutX="370.0" layoutY="541.0" mnemonicParsing="false">
+      <graphic>
+         <FontAwesomeIconView glyphName="GOOGLE" />
+      </graphic>
+   </Button>
+   <Label layoutX="22.0" layoutY="134.0" text="First Name :" />
+   <Label layoutX="21.0" layoutY="189.0" text="Family Name :" />
+   <Label layoutX="30.0" layoutY="237.0" text="Gender :" />
+   <DatePicker fx:id="BDField" layoutX="108.0" layoutY="290.0" />
+   <Label layoutX="26.0" layoutY="292.0" text="Birth Date : " />
+   <Label styleClass="title_pane" text="AirPlan">
+      <font>
+         <Font size="22.0" />
+      </font>
+   </Label>
+   <Label layoutX="407.0" layoutY="134.0" text="Email :" />
+   <Label layoutX="400.0" layoutY="189.0" text="Address :" />
+   <Label layoutX="373.0" layoutY="241.0" text="Phone Number :" />
+   <Label layoutX="386.0" layoutY="294.0" text="Password :" />
+   <Label layoutX="33.0" layoutY="349.0" text="Role : " />
+   <Label layoutX="362.0" layoutY="350.0" text="Upload your Photo : " />
+   <CheckBox fx:id="agree_check" layoutX="30.0" layoutY="422.0" mnemonicParsing="false" text="I agree to the terms and conditions" />
+   <Button fx:id="btnChooseFile" layoutX="483.0" layoutY="345.0" mnemonicParsing="false" onAction="#handleChooseFile" prefHeight="26.0" prefWidth="176.0" styleClass="pay_btn" text="Select A File">
+      <font>
+         <Font size="16.0" />
+      </font>
+      <graphic>
+         <FontAwesomeIconView glyphName="UPLOAD" />
+      </graphic>
+   </Button>
+   <FontAwesomeIconView fill="#ffd5c2" glyphName="PLANE" layoutX="18.0" layoutY="43.0" size="40" styleClass="title_pane" />
+   <PasswordField fx:id="passField" layoutX="484.0" layoutY="290.0" prefHeight="26.0" prefWidth="176.0" />
+</AnchorPane>

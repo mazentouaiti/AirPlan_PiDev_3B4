@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Profil.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.ProfileController">
+   <VBox prefHeight="750.0" prefWidth="850.0" styleClass="profile">
+      <HBox prefHeight="100.0" prefWidth="850.0" styleClass="user_area">
+         <AnchorPane prefHeight="100.0" prefWidth="100.0" styleClass="user_img">
+            <ImageView fx:id="profile_img" fitHeight="100.0" fitWidth="100.0" layoutX="7.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
+         </AnchorPane>
+         <Label fx:id="name_profile" text="Mazen Touaiti" />
+         <Label fx:id="state" prefHeight="42.0" prefWidth="230.0" styleClass="user_state" text="Frequent Flyer" />
+      </HBox>
+      <HBox prefHeight="250.0" prefWidth="810.0" styleClass="info">
+         <VBox prefHeight="200.0" prefWidth="100.0">
+            <FontAwesomeIconView glyphName="PLANE" size="50" />
+            <Label fx:id="nbr_flights" text="12" />
+            <Label text="Flights" />
+         </VBox>
+         <VBox layoutX="30.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0">
+            <FontAwesomeIconView glyphName="MONEY" size="50" />
+            <Label fx:id="cost_estimation" text="\$130" />
+            <Label text="Estimated Cost" />
+         </VBox>
+         <VBox layoutX="260.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0">
+            <FontAwesomeIconView glyphName="BED" size="50" />
+            <Label fx:id="hotel_nights" text="5" />
+            <Label text="Hotel Nights" />
+         </VBox>
+         <VBox layoutX="491.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0">
+            <FontAwesomeIconView glyphName="GLOBE" size="50" />
+            <Label fx:id="top_destination" text="Tunisia" />
+            <Label text="Top Destination" />
+         </VBox>
+      </HBox>
+      <HBox styleClass="private_info">
+         <VBox prefHeight="200.0" prefWidth="298.0" styleClass="private_info_view">
+            <VBox styleClass="private_info_entry">
+               <Label text="Name" />
+               <TextField fx:id="name_entry" />
+            </VBox>
+            <VBox styleClass="private_info_entry">
+               <Label text="Age" />
+               <TextField fx:id="age_entry" promptText="18+" />
+            </VBox>
+            <VBox styleClass="private_info_entry">
+               <Label text="Address" />
+               <TextField fx:id="address_entry" promptText="country,delegation" />
+            </VBox>
+         </VBox>
+         <VBox prefHeight="200.0" prefWidth="298.0" styleClass="private_info_view">
+            <VBox styleClass="private_info_entry">
+               <Label text="\@ Email" />
+               <TextField fx:id="email_entry" promptText="name@gmail.com" />
+            </VBox>
+            <VBox styleClass="private_info_entry">
+               <Label text="Password" />
+               <TextField fx:id="password_entry" promptText="number+symbols" />
+            </VBox>
+            <VBox styleClass="private_info_entry">
+               <Label text="CIN" />
+               <TextField fx:id="cin_entry" promptText="8 numbers" />
+            </VBox>
+         </VBox>
+         <VBox styleClass="button_area">
+            <Button fx:id="update_btn" mnemonicParsing="false" text="Update Profile" />
+            <Button fx:id="reset_btn" mnemonicParsing="false" text="Reset Profile" />
+            <Button fx:id="delete_btn" mnemonicParsing="false" text="Delete Profile" />
+         </VBox>
+      </HBox>
+   </VBox>
+</AnchorPane>

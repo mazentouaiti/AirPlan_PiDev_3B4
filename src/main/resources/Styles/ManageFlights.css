@@ -1,0 +1,87 @@
+.fields_zone{
+    -fx-background-radius: 25;
+    -fx-background-color: white;
+    -fx-font-weight: 700;
+    -fx-font-size: 1em;
+}
+.fields_zone TextField{
+    -fx-background-color: rgba(255,255,255,0.5);
+    -fx-border-color: #588b8b;
+    -fx-border-radius: 20;
+    -fx-text-fill: black;
+}
+.fields_zone DatePicker{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-pref-height: 26;
+    -fx-font-size: 1em;
+    -fx-border-color: #588b8b;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+.fields_zone ComboBox{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-color: transparent;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10 5 10;
+    -fx-text-fill: #588b8b;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+}
+.combo-box:hover {
+    -fx-cursor: hand;
+}
+
+.combo-box:focused {
+    -fx-background-color: #f4fefc;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.combo-box .arrow-button:hover {
+    -fx-background-color: #366666;
+}
+
+.combo-box .arrow {
+    -fx-shape: "M0,0 L4,4 L8,0 Z";
+    -fx-background-color: #ffd5c2;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 8 10;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #588b8b;
+    -fx-font-size: 1.05em;
+    -fx-pref-width: 190;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #EEEEEE;
+    -fx-text-fill: #366666;
+}
+
+.combo-box .list-cell:selected {
+    -fx-background-color: #DDEEEE;
+    -fx-text-fill: #366666;
+}
+
+.btn{
+    -fx-pref-width: 100;
+    -fx-pref-height: 40;
+    -fx-background-color: white;
+    -fx-background-radius: 0 25 25 0;
+
+}
+.btn:hover{
+    -fx-background-color: linear-gradient(to right, white,#EEEE);
+    -fx-cursor: hand;
+}
+.rect{
+    -fx-background-color: #EEE;
+    -fx-border-color: transparent;
+    -fx-background-radius: 25 0 0 25;
+    -fx-border-radius: 25 0 0 25;
+}

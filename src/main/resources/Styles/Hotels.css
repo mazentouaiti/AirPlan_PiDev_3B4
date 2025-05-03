@@ -1,0 +1,72 @@
+.title_pane{
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 0 0 25 0;
+    -fx-pref-height: 55;
+    -fx-pref-width: 300;
+    -fx-padding:15;
+    -fx-alignment: center;
+    -fx-text-fill: #ffd5c2;
+    -fx-font-family: "Calibri Light";
+    -fx-font-weight: bold;
+
+}
+
+.title_pane FontAwesomeIconView{
+    -fx-fill: #ffd5c2;
+}
+
+#label_offer{
+    -fx-font-family: "Calibri Light";
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #ffd5c2;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+
+}
+
+/* Effet au survol */
+.button:hover {
+    -fx-background-color: #ffbda2; /* Couleur un peu plus foncée au hover */
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.reserv_zone{
+    -fx-background-color: white;
+    -fx-alignment: CENTER;
+    -fx-spacing: 10;
+}
+.resserv_btn {
+    -fx-background-color: #588b8b;
+    -fx-text-fill: #ffd5c2;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+
+}
+.resserv_btn:hover {
+    -fx-scale-x:1.05 ;
+    -fx-cursor: hand;
+    -fx-scale-y: 1.05 ;
+}
+.pay_btn{
+    -fx-background-color: #ffd5c2;
+    -fx-text-fill: #588b8b;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+    -fx-pref-width: 150;
+    -fx-pref-height: 40;
+}
+.pay_btn:hover {
+    -fx-scale-x:1.05 ;
+    -fx-cursor: hand;
+    -fx-scale-y: 1.05 ;
+}

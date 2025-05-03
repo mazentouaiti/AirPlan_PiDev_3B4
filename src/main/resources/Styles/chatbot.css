@@ -1,0 +1,109 @@
+
+.chat-container {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-pref-width: 350px;
+    -fx-pref-height: 500px;
+}
+
+
+.header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10px;
+    -fx-padding: 0 0 10px 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.header-date {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+
+.chat-list-view {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-border-width: 0;
+}
+
+.chat-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
+
+
+.input-container {
+    -fx-padding: 10px 0 0 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.input-field {
+    -fx-pref-width: 280px;
+    -fx-pref-height: 35px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 0 15px;
+}
+
+.send-button {
+    -fx-pref-width: 60px;
+    -fx-pref-height: 35px;
+    -fx-background-color: #588b8b;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-font-weight: bold;
+}
+
+.send-button:hover {
+    -fx-background-color: #3367d6;
+}
+
+.bot-message-container {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10px;
+}
+
+.user-message-container {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 10px;
+}
+
+.bot-message-bubble {
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 15px 15px 15px 0;
+    -fx-padding: 10px 15px;
+    -fx-max-width: 250px;
+}
+
+.user-message-bubble {
+    -fx-background-color: #ffc2b5;
+    -fx-background-radius: 15px 15px 0 15px;
+    -fx-padding: 10px 15px;
+    -fx-max-width: 250px;
+}
+
+.bot-message-text {
+    -fx-text-fill: #EEEE;
+    -fx-font-size: 1.3em;
+    -fx-wrap-text: true;
+}
+
+.user-message-text {
+    -fx-text-fill: #588b8b;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.bot-avatar {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}

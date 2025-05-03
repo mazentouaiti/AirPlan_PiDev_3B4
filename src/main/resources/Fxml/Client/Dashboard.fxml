@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" styleClass="dashboard" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.DashboardController">
+   <Text fx:id="user_name" layoutX="35.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="user_name" text="Hi , Mazen" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0" />
+   <Label fx:id="login_date" layoutX="791.0" layoutY="19.0" styleClass="date_lbl" text="Today April 6,2025" AnchorPane.rightAnchor="30.0" />
+   <VBox layoutX="58.0" layoutY="80.0" prefHeight="240.0" prefWidth="500.0" styleClass="trips_view" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="80.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upcoming Trips" />
+      <HBox prefHeight="180.0" prefWidth="500.0" styleClass="trip">
+         <AnchorPane prefHeight="100.0" prefWidth="250.0" styleClass="trip_gradient">
+            <Label fx:id="destination" layoutX="26.0" layoutY="59.0" styleClass="trip_destination" text="Djerba" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0" />
+            <Label fx:id="date_dest" layoutX="26.0" layoutY="107.0" styleClass="trip_date" text="May 15 - May 20" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="100.0" />
+            <FontAwesomeIconView glyphName="PLANE" layoutX="208.0" layoutY="34.0" size="30" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+            <VBox layoutX="202.0" layoutY="52.0" prefHeight="99.0" prefWidth="29.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="18.0" />
+         </AnchorPane>
+         <AnchorPane prefHeight="100.0" prefWidth="250.0" styleClass="trip_gradient">
+            <Label fx:id="next_destination" layoutX="35.0" layoutY="44.0" styleClass="trip_destination" text="Tabarka" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="30.0" />
+            <Label fx:id="next_date" layoutX="35.0" layoutY="103.0" styleClass="trip_date" text="May 20 - May 30" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="100.0" />
+            <FontAwesomeIconView glyphName="PLANE" layoutX="202.0" layoutY="40.0" size="30" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+            <VBox layoutX="201.0" layoutY="77.0" prefHeight="99.0" prefWidth="29.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="18.0" />
+         </AnchorPane>
+      </HBox>
+   </VBox>
+   <VBox layoutX="583.0" layoutY="120.0" prefHeight="168.0" prefWidth="242.0" styleClass="budget_view" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="120.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Travel Budget" />
+      <Label fx:id="budget" styleClass="budget" text="\$1,200" />
+      <HBox prefHeight="30.0" prefWidth="200.0" styleClass="progression">
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Expreses" />
+         <ProgressBar fx:id="progression" prefWidth="120.0" progress="0.72" />
+      </HBox>
+   </VBox>
+   <VBox layoutY="369.0" prefHeight="341.0" prefWidth="266.0" styleClass="notification_view" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="369.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recents Notifications" />
+      <ListView fx:id="notification_list" prefHeight="290.0" prefWidth="360.0" styleClass="notification_listview" />
+   </VBox>
+   <VBox layoutX="486.0" layoutY="369.0" prefHeight="341.0" prefWidth="500.0" styleClass="deal_view" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="369.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Top Deals" />
+      <ListView fx:id="deals_list" prefHeight="296.0" prefWidth="400.0" styleClass="deal_listview" />
+   </VBox>
+</AnchorPane>
