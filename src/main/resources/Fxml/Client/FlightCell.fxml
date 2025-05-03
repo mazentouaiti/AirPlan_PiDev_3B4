@@ -22,6 +22,6 @@
         <Line endX="-99.99998474121094" endY="18.95956039428711" layoutX="357.0" layoutY="-8.0" startX="-100.0" startY="78.33333587646484" />
         <Label fx:id="price_lbl" layoutX="410.0" layoutY="11.0" styleClass="price_lbl" text="PRICE" AnchorPane.topAnchor="11.0" />
         <Label fx:id="status_lbl" layoutX="279.0" layoutY="42.0" styleClass="lbl" text="STATUS" AnchorPane.topAnchor="42.0" />
-        <Button fx:id="view_btn" layoutX="388.0" layoutY="35.8" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" text="View" AnchorPane.topAnchor="35.8" />
+        <Button fx:id="view_btn" onAction="#onViewClicked" layoutX="388.0" layoutY="35.8" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" text="View" AnchorPane.topAnchor="35.8" />
     </AnchorPane>
 </AnchorPane>

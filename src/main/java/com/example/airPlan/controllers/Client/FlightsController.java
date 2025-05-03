@@ -3,15 +3,24 @@ package com.example.airPlan.controllers.Client;
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.models.FlightModel;
 import com.example.airPlan.views.FlightCellFactory;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -21,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FlightsController implements Initializable {
 
+    @FXML
+    public AnchorPane mainContent;
     // UI Components
     @FXML private TextField depart_field;
     @FXML private TextField destin_field;
@@ -34,24 +45,58 @@ public class FlightsController implements Initializable {
     private FlightServices flightServices;
     private ObservableList<FlightModel> flightsList;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private FlightModel selectedFlight;
+
+    @FXML
+    private TextField resv_dest_field;
+    @FXML
+    private ComboBox<String> resv_classcombo;
+    @FXML
+    private Label reservationTitle;
+    @FXML
+    private Spinner<Integer> resv_passenger_number;
+    @FXML
+    private TextField resv_num_field;
+    @FXML
+    private Button resv_cancel_btn;
+    @FXML
+    private Button resv_confirm_btn;
+    @FXML
+    private TextField resv_autoprice;
+    @FXML
+    private AnchorPane reservationPanel;
+    @FXML
+    private TextField resv_depart_field;
+    @FXML
+    private Button closeReservationBtn;
+    @FXML
+    private TextField resv_origin_field;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             // Initialize services
             flightServices = new FlightServices();
-
             // Setup UI components
             initializePriceFilter();
             initializeFlightListView();
             setupSearchHandler();
-
             // Load initial data
             refreshFlightData();
             startStatusUpdateScheduler();
         } catch (Exception e) {
             showErrorAlert("Initialization Error", "Failed to initialize: " + e.getMessage());
         }
+        resv_classcombo.getItems().addAll("Economy", "Business", "First Class");
+        resv_classcombo.setValue("Economy");
+        resv_confirm_btn.setOnAction(event -> confirmReservation());
+        closeReservationBtn.setOnAction(event -> hideReservationPanel());
+        resv_cancel_btn.setOnAction(event -> hideReservationPanel());
+
+        // Set up price calculation listeners
+        resv_passenger_number.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
+        resv_classcombo.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
+
     }
 
     private void startStatusUpdateScheduler() {
@@ -73,7 +118,35 @@ public class FlightsController implements Initializable {
     }
 
     private void initializeFlightListView() {
-        flights_listview.setCellFactory(listView -> new FlightCellFactory());
+        flights_listview.setCellFactory(listView -> {
+            try {
+                // Load the cell FXML
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/FlightCell.fxml"));
+                Node cell = loader.load();
+
+                // Get the cell's controller
+                FlightCellController cellController = loader.getController();
+
+                // Pass this main controller to the cell
+                cellController.setMainController(this);
+
+                return new ListCell<FlightModel>() {
+                    @Override
+                    protected void updateItem(FlightModel flight, boolean empty) {
+                        super.updateItem(flight, empty);
+                        if (empty || flight == null) {
+                            setGraphic(null);
+                        } else {
+                            cellController.setFlight(flight);
+                            setGraphic(cell);
+                        }
+                    }
+                };
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new ListCell<>();
+            }
+        });
     }
 
     private void setupSearchHandler() {
@@ -136,4 +209,83 @@ public class FlightsController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    public void hideReservationPanel() {
+        // Slide down animation
+        TranslateTransition slideDown = new TranslateTransition(Duration.millis(300), reservationPanel);
+        slideDown.setToY(0);
+        slideDown.play();
+
+        // Restore main content
+        mainContent.setDisable(false);
+        mainContent.setEffect(null);
+    }
+
+
+    public void showReservationPanel(FlightModel flight) {
+        this.selectedFlight = flight;
+
+        // Populate form
+        resv_num_field.setText(flight.getFlightNumber());
+        resv_origin_field.setText(flight.getOrigin());
+        resv_dest_field.setText(flight.getDestination());
+        resv_depart_field.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(flight.getDepartureDate()));
+
+        // Setup passenger spinner
+        SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, flight.getCapacity(), 1);
+        resv_passenger_number.setValueFactory(valueFactory);
+
+        calculateTotalPrice();
+
+        // Slide up animation
+        TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), reservationPanel);
+        slideUp.setToY(-reservationPanel.getHeight());
+        slideUp.play();
+
+        // Dim main content
+        mainContent.setDisable(true);
+        mainContent.setEffect(new BoxBlur(3, 3, 2));
+    }
+
+    private void calculateTotalPrice() {
+        if (selectedFlight != null) {
+            double basePrice = selectedFlight.getPrice();
+            int passengers = resv_passenger_number.getValue();
+            String classType = resv_classcombo.getValue();
+
+            double multiplier = switch (classType) {
+                case "Business" -> 1.5;
+                case "First Class" -> 2.0;
+                default -> 1.0;
+            };
+
+            double total = basePrice * multiplier * passengers;
+            resv_autoprice.setText(String.format("€%.2f", total));
+        }
+    }
+
+    private void confirmReservation() {
+        try {
+            if (selectedFlight == null || !"approved".equals(selectedFlight.getAdminStatus())) {
+                showErrorAlert("Reservation Error", "This flight is no longer available for booking");
+                return;
+            }
+
+            int passengers = resv_passenger_number.getValue();
+            if (passengers > selectedFlight.getCapacity()) {
+                showErrorAlert("Capacity Exceeded",
+                        "Only " + selectedFlight.getCapacity() + " seats available");
+                return;
+            }
+
+            // Add your reservation logic here
+            showInformationAlert("Success", "Reservation confirmed successfully!");
+            hideReservationPanel();
+        } catch (Exception e) {
+            showErrorAlert("Reservation Error", "Failed to confirm reservation: " + e.getMessage());
+        }
+    }
+
 }
