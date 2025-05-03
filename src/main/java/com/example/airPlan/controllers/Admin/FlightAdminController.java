@@ -22,40 +22,57 @@ import java.util.ResourceBundle;
 public class FlightAdminController implements Initializable {
 
 
-    private boolean isToolbarVisible = false;
+
     private final FlightServices flightService = new FlightServices();
-    @FXML
-    private Button reject_all;
-    @FXML
-    private Button accept_all;
-    @FXML
-    private Button reset_btn;
-    @FXML
-    private Button toggleToolbarBtn;
-    @FXML
-    private AnchorPane actionToolbar;
     @FXML
     private ChoiceBox<String> flight_status;
     @FXML
     private ListView FlightListView;
+    @FXML
+    private TextField search_field;
+    @FXML
+    private Button resetAll_to_pending;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        actionToolbar.setTranslateX(actionToolbar.getWidth());
-        accept_all.setOpacity(0);
-        reject_all.setOpacity(0);
-        reset_btn.setOpacity(0);
-        accept_all.setDisable(true);
-        reject_all.setDisable(true);
-        reset_btn.setDisable(true);
         flight_status.getItems().addAll("All", "Pending", "Approved", "Rejected");
         flight_status.setValue("All");
         flight_status.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             filterFlightsByStatus(newVal);
         });
 
+        // Add search field listener
+        search_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            searchFlights(newValue);
+        });
+
+        // Activate reset button
+        resetAll_to_pending.setOnAction(event -> onResetAllClicked());
+
         setupListView();
         loadFlights();
+    }
+    private void searchFlights(String searchText) {
+        List<FlightModel> allFlights = flightService.getAllFlights();
+        ObservableList<FlightModel> filteredFlights = FXCollections.observableArrayList();
+
+        if (searchText == null || searchText.isEmpty()) {
+            filterFlightsByStatus(flight_status.getValue());
+            return;
+        }
+
+        String lowerCaseSearch = searchText.toLowerCase();
+
+        for (FlightModel flight : allFlights) {
+            if ((flight.getFlightNumber() != null && flight.getFlightNumber().toLowerCase().contains(lowerCaseSearch)) ||
+                    (flight.getOrigin() != null && flight.getOrigin().toLowerCase().contains(lowerCaseSearch)) ||
+                    (flight.getDestination() != null && flight.getDestination().toLowerCase().contains(lowerCaseSearch)) ||
+                    (flight.getAirline() != null && flight.getAirline().toLowerCase().contains(lowerCaseSearch))) {
+                filteredFlights.add(flight);
+            }
+        }
+
+        FlightListView.setItems(filteredFlights);
     }
     private void filterFlightsByStatus(String status) {
         List<FlightModel> allFlights = flightService.getAllFlights();
@@ -75,44 +92,6 @@ public class FlightAdminController implements Initializable {
 
         FlightListView.setItems(filteredFlights);
     }
-    @FXML
-    private void toggleToolbar(ActionEvent actionEvent) {
-        if (isToolbarVisible) {
-            hideToolbar();
-        } else {
-            showToolbar();
-        }
-        isToolbarVisible = !isToolbarVisible;
-    }
-
-    private void showToolbar() {
-        // Slide in the toolbar
-        TranslateTransition slide = new TranslateTransition(Duration.millis(300), actionToolbar);
-        slide.setToX(0);
-
-        // Reset opacity for animation (buttons start invisible)
-        accept_all.setOpacity(0);
-        reject_all.setOpacity(0);
-        reset_btn.setOpacity(0);
-
-        // Enable buttons for interaction
-        accept_all.setDisable(false);
-        reject_all.setDisable(false);
-        reset_btn.setDisable(false);
-
-        // Create sequential animations
-        SequentialTransition buttonSequence = new SequentialTransition(
-                new PauseTransition(Duration.millis(100)),
-                createFadeAnimation(accept_all),
-                new PauseTransition(Duration.millis(100)),
-                createFadeAnimation(reject_all),
-                new PauseTransition(Duration.millis(100)),
-                createFadeAnimation(reset_btn)
-        );
-
-        // Play both animations together
-        new ParallelTransition(slide, buttonSequence).play();
-    }
 
     private FadeTransition createFadeAnimation(Button button) {
         FadeTransition fade = new FadeTransition(Duration.millis(200), button);
@@ -121,27 +100,6 @@ public class FlightAdminController implements Initializable {
         return fade;
     }
 
-    private void hideToolbar() {
-        // Slide out the toolbar
-        TranslateTransition slide = new TranslateTransition(Duration.millis(300), actionToolbar);
-        slide.setToX(actionToolbar.getWidth());
-
-        // Fade out all buttons simultaneously
-        ParallelTransition fadeOut = new ParallelTransition(
-                createFadeOutAnimation(accept_all),
-                createFadeOutAnimation(reject_all),
-                createFadeOutAnimation(reset_btn)
-        );
-
-        // Disable buttons during hide
-        fadeOut.setOnFinished(e -> {
-            accept_all.setDisable(true);
-            reject_all.setDisable(true);
-            reset_btn.setDisable(true);
-        });
-
-        new ParallelTransition(slide, fadeOut).play();
-    }
 
     private FadeTransition createFadeOutAnimation(Button button) {
         FadeTransition fade = new FadeTransition(Duration.millis(150), button);

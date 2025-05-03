@@ -4,12 +4,9 @@ import com.example.airPlan.controllers.Admin.AdminController;
 import com.example.airPlan.controllers.Agence.AgencyController;
 import com.example.airPlan.controllers.ChatbotController;
 import com.example.airPlan.controllers.Client.ClientController;
-import com.example.airPlan.controllers.Client.WindowReservationController;
-import com.example.airPlan.models.FlightModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -72,21 +69,6 @@ public class ViewFactory {
             }
         }
         return flightView;
-    }
-    public void showReservationFlightView(FlightModel selectedFlight) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/windowReservation.fxml"));
-            Parent root = loader.load();
-            WindowReservationController controller = loader.getController();
-            controller.setSelectedFlight(selectedFlight);
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Reservation");
-
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 //*******************************************************************************************************
     public AnchorPane getHotelsView() {

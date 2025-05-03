@@ -67,16 +67,14 @@
 /* Toolbar Buttons */
 .toolbar-btn {
     -fx-opacity: 1;
-    -fx-min-height: 32;
-    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-min-height: 30;
+    -fx-background-color: transparent;
     -fx-text-fill: #EEE;
-    -fx-border-radius: 3;
-    -fx-background-radius: 3;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
     -fx-font-size: 12px;
     -fx-cursor: hand;
     -fx-alignment: center;
-    -fx-background-insets: 0;
-    -fx-background-radius: 3, 3, 2, 1;
 
 }
 
