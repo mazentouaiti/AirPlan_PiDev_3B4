@@ -1,6 +1,8 @@
 .fields_zone{
     -fx-background-radius: 25;
     -fx-background-color: white;
+    -fx-border-color: #588b8b;
+    -fx-border-radius: 25;
     -fx-font-weight: 700;
     -fx-font-size: 1em;
 }
@@ -69,10 +71,12 @@
 }
 
 .btn{
-    -fx-pref-width: 100;
     -fx-pref-height: 40;
     -fx-background-color: white;
-    -fx-background-radius: 0 25 25 0;
+    -fx-background-radius: 25;
+    -fx-border-color: #588b8b;
+    -fx-border-radius: 25;
+
 
 }
 .btn:hover{

@@ -2,18 +2,23 @@ package com.example.airPlan.controllers.Agence;
 
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.models.FlightModel;
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,17 +31,141 @@ public class FlightAgencyController implements Initializable {
     @FXML private ListView<FlightModel> listview_flights;
 
     private final FlightServices flightService = new FlightServices();
+    private boolean isCreateMode;
+    private FlightModel currentFlight;
+
+
     @FXML
     private TextField search_field;
+    @FXML
+    private TextField airlineField;
+    @FXML
+    private TextField originField;
+    @FXML
+    private DatePicker arrivalDatePicker;
+    @FXML
+    private Button closePanelBtn;
+    @FXML
+    private TextField capacityField;
+    @FXML
+    private Button confirmBtn;
+    @FXML
+    private TextField flightNumberField;
+    @FXML
+    private TextField priceField;
+    @FXML
+    private ComboBox<String> statusComboBox;
+    @FXML
+    private AnchorPane mainContent;
+    @FXML
+    private Label panelTitle;
+    @FXML
+    private DatePicker departureDatePicker;
+    @FXML
+    private AnchorPane managementPanel;
+    @FXML
+    private TextField destinationField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setupListView();
-        loadFlights();
+
         setupButtonActions();
         setupSearchListener();
+        managementPanel.setTranslateX(managementPanel.getWidth());
+        statusComboBox.setItems(FXCollections.observableArrayList(
+                "Scheduled", "Delayed", "Cancelled", "Boarding", "Landed"
+        ));
+        setupListView();
+        loadFlights();
+    }
+    @FXML
+    private void handleCreateFlight() {
+        isCreateMode = true;
+        panelTitle.setText("Create New Flight");
+        clearForm();
+        showManagementPanel();
+    }
+    public void handleUpdateFlight(FlightModel flight) {
+        isCreateMode = false;
+        panelTitle.setText("Update Flight");
+        currentFlight = flight;
+        populateForm(flight);
+        showManagementPanel();
+    }
+    @FXML
+    private void handleConfirmAction() {
+        if (validateInputs()) {
+            FlightModel flight = isCreateMode ? new FlightModel() : currentFlight;
+
+            // Set flight properties from form
+            flight.setFlightNumber(flightNumberField.getText());
+            flight.setOrigin(originField.getText());
+            flight.setDestination(destinationField.getText());
+            flight.setAirline(airlineField.getText());
+            flight.setStatus(statusComboBox.getValue());
+            flight.setPrice(Double.parseDouble(priceField.getText()));
+            flight.setCapacity(Integer.parseInt(capacityField.getText()));
+            flight.setDepartureDate(Date.valueOf(departureDatePicker.getValue()));
+            flight.setReturnDate(Date.valueOf(arrivalDatePicker.getValue()));
+
+            if (isCreateMode) {
+                flightService.addFlight(flight);
+                showAlert("Success", "Flight created successfully!");
+            } else {
+                flightService.updateFlight(flight);
+                showAlert("Success", "Flight updated successfully!");
+            }
+
+            loadFlights();
+            hideManagementPanel();
+        }
+    }
+    private void showManagementPanel() {
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), managementPanel);
+        slideIn.setToX(-managementPanel.getWidth());
+        slideIn.play();
+
+        // Dim main content
+        mainContent.setDisable(true);
+        mainContent.setEffect(new BoxBlur(3, 3, 2));
     }
 
+    @FXML
+    private void hideManagementPanel() {
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), managementPanel);
+        slideOut.setToX(managementPanel.getWidth());
+        slideOut.play();
+        mainContent.setDisable(false);
+        mainContent.setEffect(null);
+    }
+    private void populateForm(FlightModel flight) {
+        flightNumberField.setText(flight.getFlightNumber());
+        originField.setText(flight.getOrigin());
+        destinationField.setText(flight.getDestination());
+        airlineField.setText(flight.getAirline());
+        statusComboBox.setValue(flight.getStatus());
+        priceField.setText(String.valueOf(flight.getPrice()));
+        capacityField.setText(String.valueOf(flight.getCapacity()));
+        departureDatePicker.setValue(flight.getDepartureDate().toLocalDate());
+        arrivalDatePicker.setValue(flight.getReturnDate().toLocalDate());
+    }
+    private void clearForm() {
+        flightNumberField.clear();
+        originField.clear();
+        destinationField.clear();
+        airlineField.clear();
+        statusComboBox.getSelectionModel().clearSelection();
+        priceField.clear();
+        capacityField.clear();
+        departureDatePicker.setValue(null);
+        arrivalDatePicker.setValue(null);
+        currentFlight = null;
+    }
+
+    private boolean validateInputs() {
+        // Add your validation logic here
+        return true;
+    }
     private void setupSearchListener() {
         search_field.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.trim().isEmpty()) {
@@ -102,7 +231,7 @@ public class FlightAgencyController implements Initializable {
     }
 
     private void setupButtonActions() {
-        create_btn.setOnAction(event -> createFlight());
+        create_btn.setOnAction(event -> handleCreateFlight());
 
     }
 
@@ -111,64 +240,6 @@ public class FlightAgencyController implements Initializable {
         List<FlightModel> flightList = flightService.getAllFlights();
         ObservableList<FlightModel> observableList = FXCollections.observableArrayList(flightList);
         listview_flights.setItems(observableList);
-    }
-
-    @FXML
-    private void createFlight() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/ManageFlights.fxml"));
-            AnchorPane root = loader.load();
-
-            ManageFlightsController controller = loader.getController();
-            controller.setMode(true); // Create mode
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Create New Flight");
-            stage.showAndWait();
-
-            // After the stage is closed, check if flight was created
-            FlightModel newFlight = controller.getFlightData();
-            if (newFlight != null) {
-                flightService.addFlight(newFlight);
-                loadFlights();
-                showAlert("Success", "Flight created successfully!");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not open flight creation window");
-        }
-    }
-
-
-
-    public void updateFlight(FlightModel flight) {
-        if (flight != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/ManageFlights.fxml"));
-                AnchorPane root = loader.load();
-
-                ManageFlightsController controller = loader.getController();
-                controller.setMode(false); // Update mode
-                controller.populateFields(flight);
-
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Update Flight");
-                stage.showAndWait();
-
-                FlightModel updatedFlight = controller.getFlightData();
-                if (updatedFlight != null) {
-                    updatedFlight.setFlight_id(flight.getFlight_id());
-                    flightService.updateFlight(updatedFlight);
-                    loadFlights();
-                    showAlert("Success", "Flight updated successfully!");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Error", "Could not open flight update window");
-            }
-        }
     }
 
     public void deleteFlight(FlightModel flight) {
@@ -194,4 +265,6 @@ public class FlightAgencyController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 }

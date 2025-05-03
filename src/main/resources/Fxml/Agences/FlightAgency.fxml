@@ -2,6 +2,8 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -9,12 +11,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="flight_view" stylesheets="@../../Styles/FlightAgency.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.FlightAgencyController">
-   <AnchorPane layoutX="15.0" layoutY="25.0" styleClass="view">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/FlightAgency.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.FlightAgencyController">
+
+   <!-- Main Content -->
+   <AnchorPane fx:id="mainContent" layoutX="15.0" layoutY="25.0" styleClass="view">
       <children>
          <AnchorPane layoutX="68.0" prefHeight="43.0" prefWidth="868.0" styleClass="top_view" AnchorPane.topAnchor="5.0">
             <Label layoutX="14.0" layoutY="8.0" text="AirPlan" />
-            <Button fx:id="create_btn" layoutX="819.0" layoutY="13.0" mnemonicParsing="false" onAction="#createFlight" prefHeight="32.0" prefWidth="35.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0">
+            <Button fx:id="create_btn" layoutX="819.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleCreateFlight" prefHeight="32.0" prefWidth="35.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0">
                <graphic>
                   <FontAwesomeIconView glyphName="PLUS" />
                </graphic>
@@ -29,5 +33,34 @@
             </image>
          </ImageView>
       </children>
+   </AnchorPane>
+
+   <!-- Sliding Management Panel -->
+   <AnchorPane fx:id="managementPanel" layoutX="1000.0" layoutY="147.0" prefHeight="453.0" prefWidth="400" styleClass="fields_zone" stylesheets="@../../Styles/ManageFlights.css" AnchorPane.rightAnchor="-400.0">
+
+      <!-- Panel Header -->
+      <Label fx:id="panelTitle" layoutX="20" layoutY="20" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+      <!-- Close Button -->
+      <Button fx:id="closePanelBtn" layoutX="340.0" layoutY="14.0" onAction="#hideManagementPanel" prefHeight="25.0" prefWidth="40.0" styleClass="btn">
+         <graphic>
+            <FontAwesomeIconView glyphName="TIMES" size="20" />
+         </graphic>
+      </Button>
+
+      <!-- Form Content -->
+      <AnchorPane layoutX="20" layoutY="60" prefHeight="376.0" prefWidth="360">
+         <TextField fx:id="flightNumberField" layoutY="14.0" prefHeight="27.0" prefWidth="154.0" promptText="Flight Number" />
+         <TextField fx:id="originField" layoutX="200.0" layoutY="14.0" prefHeight="27.0" prefWidth="154.0" promptText="Origin" />
+         <TextField fx:id="destinationField" layoutX="200.0" layoutY="68.0" prefHeight="27.0" prefWidth="154.0" promptText="Destination" />
+         <TextField fx:id="airlineField" layoutX="1.0" layoutY="68.0" prefHeight="27.0" prefWidth="154.0" promptText="Airline" />
+         <TextField fx:id="priceField" layoutX="1.0" layoutY="129.0" prefHeight="27.0" prefWidth="154.0" promptText="Price" />
+         <TextField fx:id="capacityField" layoutX="200.0" layoutY="129.0" prefHeight="27.0" prefWidth="154.0" promptText="Capacity" />
+         <ComboBox fx:id="statusComboBox" layoutX="13.0" layoutY="244.0" prefHeight="50.0" prefWidth="154.0" promptText="Status" />
+         <DatePicker fx:id="departureDatePicker" layoutX="2.0" layoutY="191.0" prefHeight="27.0" prefWidth="154.0" promptText="Departure Date" />
+         <DatePicker fx:id="arrivalDatePicker" layoutX="200.0" layoutY="191.0" prefHeight="27.0" prefWidth="154.0" promptText="Arrival Date" />
+
+         <Button fx:id="confirmBtn" layoutX="254.0" layoutY="317.0" onAction="#handleConfirmAction" prefWidth="79.0" styleClass="btn" text="Confirm" />
+      </AnchorPane>
    </AnchorPane>
 </AnchorPane>

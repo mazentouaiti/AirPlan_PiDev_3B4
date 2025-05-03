@@ -65,7 +65,7 @@ public class FlightAgencyCellController implements Initializable {
     @FXML
     private void onUpdateClicked() {
         if (currentFlight != null && mainController != null) {
-            mainController.updateFlight(currentFlight);
+            mainController.handleUpdateFlight(currentFlight);
         }
     }
 
