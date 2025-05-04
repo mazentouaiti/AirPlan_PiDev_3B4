@@ -3,6 +3,7 @@ package com.example.airPlan.controllers.Client;
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.models.FlightModel;
 import com.example.airPlan.views.FlightCellFactory;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,10 +17,14 @@ import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import javafx.util.converter.LocalDateStringConverter;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -75,13 +80,11 @@ public class FlightsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            // Initialize services
             flightServices = new FlightServices();
-            // Setup UI components
             initializePriceFilter();
             initializeFlightListView();
             setupSearchHandler();
-            // Load initial data
+            setupAutoSearch();
             refreshFlightData();
             startStatusUpdateScheduler();
         } catch (Exception e) {
@@ -93,12 +96,34 @@ public class FlightsController implements Initializable {
         closeReservationBtn.setOnAction(event -> hideReservationPanel());
         resv_cancel_btn.setOnAction(event -> hideReservationPanel());
 
-        // Set up price calculation listeners
         resv_passenger_number.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
         resv_classcombo.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
+        depart_date.setConverter(new LocalDateStringConverter(DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE));
+        depart_date.setPromptText("AAAA-MM-JJ");
 
     }
+    private void setupAutoSearch() {
+        setupDebounce(depart_field);
+        setupDebounce(destin_field);
+        depart_date.getEditor().textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d{4}-\\d{2}-\\d{2}") && !newVal.isEmpty()) {
+                Platform.runLater(() -> {
+                    showErrorAlert("Format invalide", "Le format doit être AAAA-MM-JJ");
+                    depart_date.setValue(null);
+                });
+            }
+        });
+        depart_date.valueProperty().addListener((obs, oldVal, newVal) -> searchFlights());
+        combo_price.valueProperty().addListener((obs, oldVal, newVal) -> searchFlights());
+    }
 
+    private void setupDebounce(TextField textField) {
+        PauseTransition debounce = new PauseTransition(Duration.millis(500));
+        debounce.setOnFinished(e -> searchFlights());
+        textField.textProperty().addListener((obs, oldVal, newVal) -> {
+            debounce.playFromStart();
+        });
+    }
     private void startStatusUpdateScheduler() {
         scheduler.scheduleAtFixedRate(() -> {
             Platform.runLater(() -> {
@@ -169,28 +194,50 @@ public class FlightsController implements Initializable {
 
     private void searchFlights() {
         try {
-            String departure = depart_field.getText().trim();
-            String destination = destin_field.getText().trim();
+            String departure = depart_field.getText().trim().toLowerCase();
+            String destination = destin_field.getText().trim().toLowerCase();
             LocalDate departureDate = depart_date.getValue();
             String priceFilter = combo_price.getValue();
 
-            List<FlightModel> filteredFlights = flightServices.searchFlights(
-                            departure.isEmpty() ? null : departure,
-                            destination.isEmpty() ? null : destination,
-                            departureDate != null ? Date.valueOf(departureDate) : null,
-                            priceFilter
-                    ).stream()
-                    .filter(flight -> "approved".equals(flight.getAdminStatus()))
+            if (flightsList == null) refreshFlightData();
+
+            List<FlightModel> filteredFlights = flightsList.stream()
+                    .filter(flight ->
+                            (departure.isEmpty() || flight.getOrigin().toLowerCase().contains(departure)) &&
+                                    (destination.isEmpty() || flight.getDestination().toLowerCase().contains(destination)) &&
+                                    (departureDate == null || isSameDate(flight.getDepartureDate(), departureDate)) && // Modification
+                                    checkPriceFilter(flight.getPrice(), priceFilter)
+                    )
                     .toList();
+
+            flights_listview.setItems(FXCollections.observableArrayList(filteredFlights));
 
             if (filteredFlights.isEmpty()) {
                 showInformationAlert("No Results", "No matching flights found");
             }
-
-            flightsList = FXCollections.observableArrayList(filteredFlights);
-            flights_listview.setItems(flightsList);
         } catch (Exception e) {
+            e.printStackTrace();
             showErrorAlert("Search Error", "Failed to search flights: " + e.getMessage());
+        }
+    }
+
+    private boolean isSameDate(Date flightDate, LocalDate targetDate) {
+        if (flightDate == null || targetDate == null) return false;
+        Instant instant = Instant.ofEpochMilli(flightDate.getTime());
+        LocalDate convertedDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        return convertedDate.equals(targetDate);
+    }
+
+    private boolean checkPriceFilter(double price, String priceFilter) {
+        switch (priceFilter) {
+            case "Under 100€":
+                return price < 100;
+            case "100–300€":
+                return price >= 100 && price <= 300;
+            case "Above 300€":
+                return price > 300;
+            default:
+                return true;
         }
     }
 

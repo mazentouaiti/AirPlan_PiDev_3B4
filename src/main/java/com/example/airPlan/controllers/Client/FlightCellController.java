@@ -2,8 +2,6 @@ package com.example.airPlan.controllers.Client;
 import com.example.airPlan.models.FlightModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
