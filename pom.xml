@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>17.0.6</version> <!-- Use your JavaFX version -->
+            <version>17.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -61,6 +61,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -94,6 +95,11 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 
 

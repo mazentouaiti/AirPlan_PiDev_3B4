@@ -49,16 +49,16 @@ public class ViewFactory {
         return clientSelectedMenuItem;
     }
 //***************************************************************************************
-    public AnchorPane getDashboardView() {
-        if (dashboardView == null) {
-            try {
-                dashboardView = new FXMLLoader(getClass().getResource("/Fxml/Client/Dashboard.fxml")).load();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return dashboardView;
-    }
+//    public AnchorPane getDashboardView() {
+//        if (dashboardView == null) {
+//            try {
+//                dashboardView = new FXMLLoader(getClass().getResource("/Fxml/Client/Dashboard.fxml")).load();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return dashboardView;
+//    }
 //************************************************************************************************
     public AnchorPane getFlightView() {
         if (flightView == null) {
@@ -71,27 +71,27 @@ public class ViewFactory {
         return flightView;
     }
 //*******************************************************************************************************
-    public AnchorPane getHotelsView() {
-        if (hotelsView == null) {
-            try {
-                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/Hotels.fxml")).load();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return hotelsView;
-    }
+//    public AnchorPane getHotelsView() {
+//        if (hotelsView == null) {
+//            try {
+//                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/Hotels.fxml")).load();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return hotelsView;
+//    }
 //*********************************************************************************************************
-    public AnchorPane getProfileView() {
-        if (profileView == null) {
-            try {
-                profileView = new FXMLLoader(getClass().getResource("/Fxml/Client/Profile.fxml")).load();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return profileView;
-    }
+//    public AnchorPane getProfileView() {
+//        if (profileView == null) {
+//            try {
+//                profileView = new FXMLLoader(getClass().getResource("/Fxml/Client/Profile.fxml")).load();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return profileView;
+//    }
 //************************************************************************************************************
     public void showLoginView() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login.fxml"));

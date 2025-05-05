@@ -10,8 +10,18 @@ import java.util.List;
 public class FlightServices implements Services{
     private Connection connection;
     public FlightServices() {connection= DBConnection.getInstance().getConnection();}
-    // ✅ CREATE
     public void addFlight(FlightModel flight) {
+        String checkSql = "SELECT COUNT(*) FROM flights WHERE flight_number = ?";
+        try (PreparedStatement checkPs = connection.prepareStatement(checkSql)) {
+            checkPs.setString(1, flight.getFlightNumber());
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("Flight " + flight.getFlightNumber() + " already exists, skipping insertion.");
+                return;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking flight existence: " + e.getMessage());
+        }
         String sql = "INSERT INTO flights (flight_number, airline, origin, destination, departureDate, return_date, class_type, status, price,capacity ,admin_status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try {
@@ -33,8 +43,6 @@ public class FlightServices implements Services{
             System.out.println(e.getMessage());
         }
     }
-
-    // ✅ READ
     public  List<FlightModel> getAllFlights()  {
         List<FlightModel> flights = new ArrayList<>();
         String sql = "SELECT * FROM flights";
@@ -63,8 +71,6 @@ public class FlightServices implements Services{
         }
         return flights;
     }
-
-    // ✅ UPDATE
     public void updateFlight(FlightModel flight)  {
         String sql = "UPDATE flights SET flight_number=?, airline=?, origin=?, destination=?, departureDate=?, return_date=?, class_type=?, status=?, price=? , capacity=? WHERE flight_id=?";
         try  {
@@ -86,8 +92,6 @@ public class FlightServices implements Services{
             System.out.println(e.getMessage());
         }
     }
-
-    // ✅ DELETE
     public void deleteFlight(int id)  {
         String sql = "DELETE FROM flights WHERE flight_id=?";
         try {
@@ -174,7 +178,6 @@ public class FlightServices implements Services{
             System.out.println("Error approving flight: " + e.getMessage());
         }
     }
-
     public void rejectFlight(int flightId) {
         String sql = "UPDATE flights SET admin_status = 'rejected' WHERE flight_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -193,7 +196,6 @@ public class FlightServices implements Services{
             System.out.println("Error approving all pending flights: " + e.getMessage());
         }
     }
-
     public void rejectAllPendingFlights() {
         String sql = "UPDATE flights SET admin_status = 'rejected' WHERE admin_status = 'pending' OR admin_status IS NULL";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

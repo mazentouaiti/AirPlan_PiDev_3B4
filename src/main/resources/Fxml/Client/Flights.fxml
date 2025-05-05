@@ -13,15 +13,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane styleClass="flights_view" stylesheets="@../../Styles/Flights.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.FlightsController">
-     <AnchorPane fx:id="mainContent" minHeight="0.0" minWidth="0.0" prefHeight="742.0" prefWidth="850.0" styleClass="flights_view">
-         <AnchorPane layoutX="54.0" layoutY="35.199999999999996" prefHeight="214.0" prefWidth="772.0" styleClass="search_form" AnchorPane.topAnchor="34.0">
+     <AnchorPane fx:id="mainContent" minHeight="0.0" minWidth="0.0" prefHeight="742.0" prefWidth="1000.0" styleClass="flights_view">
+         <AnchorPane layoutX="54.0" layoutY="37.0" prefHeight="104.0" prefWidth="933.0" styleClass="search_form" AnchorPane.topAnchor="36.0">
              <TextField fx:id="depart_field" prefWidth="160.0" promptText="From" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="40.0" />
              <TextField fx:id="destin_field" layoutX="194.0" layoutY="60.0" promptText="To " AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="40.0" />
              <DatePicker fx:id="depart_date" layoutX="330.0" layoutY="39.0" prefHeight="22.0" prefWidth="178.0" promptText="When ?" AnchorPane.leftAnchor="330.0" AnchorPane.topAnchor="39.0" />
-             <ComboBox fx:id="combo_price" editable="true" layoutX="525.0" layoutY="32.0" prefHeight="35.0" prefWidth="194.0" promptText="Sort Price" AnchorPane.rightAnchor="53.0" />
-             <Button fx:id="search_btn" layoutX="525.0" layoutY="107.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="194.0" text="Search" AnchorPane.leftAnchor="525.0" AnchorPane.rightAnchor="53.40000000000009" />
+             <ComboBox fx:id="combo_price" editable="true" layoutX="525.0" layoutY="32.0" prefHeight="35.0" prefWidth="194.0" promptText="Sort Price" />
+             <Button fx:id="search_btn" layoutX="783.0" layoutY="35.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" text="Search">
+            <graphic>
+               <FontAwesomeIconView glyphName="SEARCH" />
+            </graphic></Button>
          <FontAwesomeIconView fill="#588b8b" glyphName="MAP_MARKER" layoutX="130.0" layoutY="64.0" selectionFill="#588b8b" size="20" />
          <FontAwesomeIconView fill="#588b8b" glyphName="GLOBE" layoutX="284.0" layoutY="65.0" size="20" />
          </AnchorPane>
@@ -29,17 +33,9 @@
          <ImageView fitHeight="214.0" fitWidth="342.0" layoutX="107.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true">
              <Image url="@../../images/pngwing.com.png" />
          </ImageView>
-         <AnchorPane layoutX="583.0" layoutY="332.0" prefHeight="371.0" prefWidth="243.0" styleClass="search_form">
-             <ImageView fitHeight="218.0" fitWidth="204.0" layoutX="20.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
-                 <Image url="@../../images/passport.png" />
-             </ImageView>
-             <TextField layoutX="20.0" layoutY="193.0" prefHeight="71.0" prefWidth="194.0" promptText="Name User" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="30.0" />
-             <TextField layoutX="20.0" layoutY="248.0" prefHeight="71.0" prefWidth="194.0" promptText="Passport N°" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="30.0" />
-             <FontAwesomeIconView fill="#588b8b" glyphName="ID_CARD" layoutX="185.0" layoutY="218.0" size="20" />
-             <FontAwesomeIconView fill="#588b8b" glyphName="ADDRESS_BOOK" layoutX="190.0" layoutY="273.0" size="20" />
-         </AnchorPane>
+      <WebView fx:id="mapWebView" layoutX="588.0" layoutY="194.0" prefHeight="524.0" prefWidth="394.0" />
      </AnchorPane>
-    <AnchorPane fx:id="reservationPanel" prefHeight="400" prefWidth="850" styleClass="field_zone" stylesheets="@../../Styles/windowReservation.css" AnchorPane.bottomAnchor="-400" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <AnchorPane fx:id="reservationPanel" layoutX="79.0" layoutY="730.0" prefHeight="400" prefWidth="850" styleClass="field_zone" stylesheets="@../../Styles/windowReservation.css" AnchorPane.bottomAnchor="-400.0">
 
         <!-- Panel Header -->
         <Label fx:id="reservationTitle" layoutX="20" layoutY="20" styleClass="title" text="FLIGHT RESERVATION" />

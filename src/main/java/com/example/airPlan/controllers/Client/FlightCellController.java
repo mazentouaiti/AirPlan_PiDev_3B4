@@ -42,15 +42,8 @@ public class FlightCellController implements Initializable {
     public void setFlight(FlightModel flightModel) {
         this.flightModel = flightModel;
         updateFlightData();
-
-        // Disable view button if flight isn't approved
-        if (flightModel != null && !"approved".equals(flightModel.getAdminStatus())) {
-            view_btn.setDisable(true);
-            view_btn.setTooltip(new Tooltip("This flight is not available for booking"));
-        } else {
-            view_btn.setDisable(false);
-            view_btn.setTooltip(null);
-        }
+        view_btn.setDisable(false);
+        view_btn.setTooltip(null);
     }
 
     private void updateFlightData() {
@@ -66,7 +59,7 @@ public class FlightCellController implements Initializable {
             // Add visual indicator for flight status
             if (!"approved".equals(flightModel.getAdminStatus())) {
                 status_lbl.setStyle("-fx-text-fill: red;");
-                status_lbl.setText(status_lbl.getText() + " (Pending Approval)");
+                status_lbl.setText(status_lbl.getText());
             } else {
                 status_lbl.setStyle("-fx-text-fill: green;");
             }
