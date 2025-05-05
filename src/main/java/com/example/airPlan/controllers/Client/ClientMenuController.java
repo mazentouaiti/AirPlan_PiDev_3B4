@@ -30,16 +30,16 @@ public class ClientMenuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initMenuButtons();
         addButtonListeners();
-        setActiveButton(dash_btn); // default selection
+        setActiveButton(flights_btn); // default selection
         Model.getInstance().getViewFactory().getClientSelectedMenuItem().set(ClientMenuOptions.DASHBOARD);
     }
 
     private void initMenuButtons() {
-        buttonMenuMap.put(dash_btn, ClientMenuOptions.DASHBOARD);
+       // buttonMenuMap.put(dash_btn, ClientMenuOptions.DASHBOARD);
         buttonMenuMap.put(flights_btn, ClientMenuOptions.FLIGHT);
-        buttonMenuMap.put(acc_btn, ClientMenuOptions.HOTELS);
+       // buttonMenuMap.put(acc_btn, ClientMenuOptions.HOTELS);
         //buttonMenuMap.put(trans_btn, ClientMenuOptions.TRANSPORT);
-        buttonMenuMap.put(profile_btn, ClientMenuOptions.PROFILE);
+       // buttonMenuMap.put(profile_btn, ClientMenuOptions.PROFILE);
 //        buttonMenuMap.put(report_btn, ClientMenuOptions.REPORT);
 //        buttonMenuMap.put(assistance_user, ClientMenuOptions.ASSISTANCE);
 //        buttonMenuMap.put(discover_user, ClientMenuOptions.DISCOVER);
