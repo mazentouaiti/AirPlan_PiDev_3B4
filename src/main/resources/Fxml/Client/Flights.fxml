@@ -34,6 +34,11 @@
              <Image url="@../../images/pngwing.com.png" />
          </ImageView>
       <WebView fx:id="mapWebView" layoutX="588.0" layoutY="194.0" prefHeight="524.0" prefWidth="394.0" />
+      <Button layoutX="955.0" layoutY="194.0" mnemonicParsing="false" onAction="#loadMap">
+         <graphic>
+            <FontAwesomeIconView glyphName="UNDO" />
+         </graphic>
+      </Button>
      </AnchorPane>
     <AnchorPane fx:id="reservationPanel" layoutX="79.0" layoutY="730.0" prefHeight="400" prefWidth="850" styleClass="field_zone" stylesheets="@../../Styles/windowReservation.css" AnchorPane.bottomAnchor="-400.0">
 

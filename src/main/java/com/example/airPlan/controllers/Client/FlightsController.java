@@ -19,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
+
+import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -29,12 +31,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
-
 
 
 
@@ -56,7 +57,7 @@ public class FlightsController implements Initializable {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private FlightModel selectedFlight;
     private WebEngine webEngine;
-    private boolean mapInitialized = false;
+
 
     @FXML    private TextField resv_dest_field;
     @FXML    private ComboBox<String> resv_classcombo;
@@ -79,73 +80,24 @@ public class FlightsController implements Initializable {
             initializeFlightListView();
             setupSearchHandler();
             setupAutoSearch();
-            initializeMap();
             refreshFlightData();
             startStatusUpdateScheduler();
         } catch (Exception e) {
             showErrorAlert("Initialization Error", "Failed to initialize: " + e.getMessage());
         }
+        webEngine = mapWebView.getEngine();
+        loadMap();
         resv_classcombo.getItems().addAll("Economy", "Business", "First Class");
         resv_classcombo.setValue("Economy");
         resv_confirm_btn.setOnAction(event -> confirmReservation());
         closeReservationBtn.setOnAction(event -> hideReservationPanel());
         resv_cancel_btn.setOnAction(event -> hideReservationPanel());
-
         resv_passenger_number.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
         resv_classcombo.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
         depart_date.setConverter(new LocalDateStringConverter(DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE));
         depart_date.setPromptText("AAAA-MM-JJ");
-        WebView mapWebView = new WebView();
-        webEngine = mapWebView.getEngine();
-        URL mapHtml = getClass().getResource("/html/map_template.html");
-        webEngine.load(mapHtml.toExternalForm());
-        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                mapInitialized = true;
-                updateMapMarkers();
-            }
-        });
 
-    }
-    private void updateMapMarkers() {
-        if (!mapInitialized || flightsList == null) return;
 
-        // Clear existing markers
-        webEngine.executeScript("clearMarkers()");
-
-        // Add new markers
-        flightsList.forEach(flight -> {
-            double[] coords = getCoordinatesForAirport(flight.getOrigin());
-            String js = String.format(
-                    "addMarker(%f, %f, '%s', '%s → %s<br>Price: €%.2f');",
-                    coords[0], coords[1],
-                    flight.getFlightNumber(),
-                    flight.getOrigin(),
-                    flight.getDestination(),
-                    flight.getPrice()
-            );
-            webEngine.executeScript(js);
-        });
-
-        // Center on first flight if available
-        if (!flightsList.isEmpty()) {
-            double[] coords = getCoordinatesForAirport(flightsList.get(0).getOrigin());
-            webEngine.executeScript(String.format("centerMap(%f, %f)", coords[0], coords[1]));
-        }
-    }
-    private double[] getCoordinatesForAirport(String iataCode) {
-        // Mock coordinates for common airports
-        switch(iataCode) {
-            case "NYC": return new double[]{40.7128, -74.0060};
-            case "LON": return new double[]{51.5074, -0.1278};
-            case "PAR": return new double[]{48.8566, 2.3522};
-            case "BER": return new double[]{52.5200, 13.4050};
-            case "TOK": return new double[]{35.6762, 139.6503};
-            case "SYD": return new double[]{-33.8688, 151.2093};
-            case "MAD": return new double[]{40.4168, -3.7038};
-            case "ROM": return new double[]{41.9028, 12.4964};
-            default: return new double[]{0, 0};
-        }
     }
     private void setupAutoSearch() {
         setupDebounce(depart_field);
@@ -231,7 +183,7 @@ public class FlightsController implements Initializable {
                             .toList()
             );
             flights_listview.setItems(flightsList);
-            updateMapMarkers();
+
         } catch (Exception e) {
             Button retryButton = new Button("Retry");
             retryButton.setOnAction(event -> refreshFlightData());
@@ -243,12 +195,6 @@ public class FlightsController implements Initializable {
         } finally {
             search_btn.setDisable(false);
         }
-    }
-    public boolean mockBookFlight(String flightId, int passengers) {
-        // In a real app, this would call a real API
-        System.out.println("Mock booking created for flight " + flightId);
-        System.out.println(passengers + " passenger(s) booked");
-        return true; // Always succeeds for demo
     }
     private void searchFlights() {
         try {
@@ -364,39 +310,12 @@ public class FlightsController implements Initializable {
     }
     private void confirmReservation() {
         if (selectedFlight == null) return;
-
-        boolean success = mockBookFlight(
-                selectedFlight.getFlightNumber(),
-                resv_passenger_number.getValue()
-        );
-
-        if (success) {
-            showInformationAlert("Success", "Mock booking confirmed!");
-            hideReservationPanel();
-        }
+        showInformationAlert("Success", "Mock booking confirmed!");
+        hideReservationPanel();
     }
-    private void initializeMap() {
-        if (mapWebView == null) {
-            System.err.println("Error: mapWebView is not injected!");
-            return;
-        }
 
-        webEngine = mapWebView.getEngine();
-
-        // Load the HTML template
-        URL mapHtml = getClass().getResource("/html/map_template.html");
-        if (mapHtml == null) {
-            System.err.println("Error: Could not find map template!");
-            return;
-        }
-
-        webEngine.load(mapHtml.toExternalForm());
-
-        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                mapInitialized = true;
-                updateMapMarkers();
-            }
-        });
+    @FXML
+    public void loadMap() {
+        webEngine.load("https://www.google.com/maps/");
     }
 }
