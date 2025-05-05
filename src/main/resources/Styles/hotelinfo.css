@@ -1,0 +1,115 @@
+/* Main styles */
+.flights_view {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10px;
+}
+
+.title-label {
+    -fx-alignment: center;
+    -fx-text-fill: #588b8b;
+    -fx-font-weight: bold;
+    -fx-font-size: 28px;
+
+}
+
+.round-button {
+    -fx-background-radius: 25;
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-border-radius: 25;
+    -fx-text-fill: #EEEE;
+}
+
+
+.round-button:hover {
+    -fx-background-color: #3a6e6e;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+
+
+/* Info grid styles */
+.info-grid {
+    -fx-padding: 4px;
+}
+
+.info-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.info-value-large {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 15px;
+    -fx-font-weight: normal;
+}
+
+.section-label-large {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 0 0 5 0;
+}
+
+.info-section {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-padding: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+
+/* Scroll pane styles */
+.transparent-scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.horizontal-scroll-pane-large {
+    -fx-background-color: transparent;
+    -fx-pref-height: 180px;
+    -fx-min-height: 180px;
+}
+
+.horizontal-scroll-pane-large .viewport {
+    -fx-background-color: transparent;
+}
+
+.horizontal-scroll-pane-large .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 15px;
+}
+
+.horizontal-scroll-pane-large:hover .scroll-bar:horizontal {
+
+    -fx-background-color: transparent;
+}
+
+/* Album styles */
+.album-container {
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 3px;
+}
+
+.image-thumbnail-large {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-fit-width: 160px;
+    -fx-fit-height: 160px;
+    -fx-preserve-ratio: true;
+}
+
+.image-thumbnail-large:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
