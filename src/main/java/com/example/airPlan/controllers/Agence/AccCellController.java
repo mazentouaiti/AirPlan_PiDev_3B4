@@ -77,7 +77,7 @@ public class AccCellController implements Initializable {
         try {
             // Charger le fichier FXML de la scène de modification de l'hébergement
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Fxml/Agences/hotel_add.fxml")); // Chemin correct ici
+            loader.setLocation(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
             Parent root = loader.load();
 
             // Récupérer le contrôleur de hotel_add
