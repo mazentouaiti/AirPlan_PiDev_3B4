@@ -15,8 +15,7 @@ public class ClientController implements Initializable {
         Model.getInstance().getViewFactory().getClientSelectedMenuItem().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
                 case FLIGHT -> client_parent.setCenter(Model.getInstance().getViewFactory().getFlightView());
-//                case PROFILE -> client_parent.setCenter(Model.getInstance().getViewFactory().getProfileView());
-//                case HOTELS -> client_parent.setCenter(Model.getInstance().getViewFactory().getHotelsView());
+                case HOTELS -> client_parent.setCenter(Model.getInstance().getViewFactory().getHotelsView());
                 default -> client_parent.setCenter(Model.getInstance().getViewFactory().getFlightView());
             }
         });

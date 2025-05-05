@@ -24,9 +24,13 @@ public class ViewFactory {
     //AdminViews
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
     private AnchorPane FlightAdminView;
+    private AnchorPane AccAdminView;
+
+
     //AgencyViews
     private final ObjectProperty<AgencyMenuOptions> agencySelectedMenuItem;
     private AnchorPane agencyFlightsView;
+    private AnchorPane agencyHotelsView;
 
     //viewFactory
     public ViewFactory() {
@@ -71,16 +75,16 @@ public class ViewFactory {
         return flightView;
     }
 //*******************************************************************************************************
-//    public AnchorPane getHotelsView() {
-//        if (hotelsView == null) {
-//            try {
-//                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/Hotels.fxml")).load();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-//        return hotelsView;
-//    }
+    public AnchorPane getHotelsView() {
+        if (hotelsView == null) {
+            try {
+                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return hotelsView;
+    }
 //*********************************************************************************************************
 //    public AnchorPane getProfileView() {
 //        if (profileView == null) {
@@ -120,6 +124,26 @@ public class ViewFactory {
     public ObjectProperty<AdminMenuOptions> getAdminSelectedMenuItem() {
         return adminSelectedMenuItem;
     }
+    public AnchorPane getAdminFlightsView() {
+        if (FlightAdminView == null) {
+            try{
+                FlightAdminView new FXMLLoader(getClass().getResource("/Fxml/Admin/FlightAdmin.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return FlightAdminView;
+    }
+    public AnchorPane getAdminHotelsView() {
+        if (AccAdminView == null) {
+            try{
+                AccAdminView new FXMLLoader(getClass().getResource("/Fxml/Admin/Admin_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return AccAdminView;
+    }
 
     //************************************************************************************************************
     public ObjectProperty<AgencyMenuOptions> getAgencySelectedMenuItem() { return agencySelectedMenuItem; }
@@ -132,6 +156,17 @@ public class ViewFactory {
             }
         }
         return agencyFlightsView;
+    }
+    public AnchorPane getAgencyHotelsView() {
+        if (agencyHotelsView == null) {
+            try {
+                agencyHotelsView = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return agencyHotelsView;
+
     }
 
     //Agency window
@@ -178,4 +213,7 @@ public class ViewFactory {
     public void closeStage(Stage stage){
         stage.close();
     }
+
+
+
 }

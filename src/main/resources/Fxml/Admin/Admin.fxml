@@ -8,7 +8,7 @@
         <fx:include source="AdminMenu.fxml"/>
     </left>
     <center>
-        <fx:include source="FlightAdmin.fxml"/>
+        <fx:include fx:id="center_area" source="FlightAdmin.fxml"/>
     </center>
 
 </BorderPane>

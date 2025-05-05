@@ -30,10 +30,14 @@ public class AdminMenuController implements Initializable {
     private void addListeners() {
         logout_admin.setOnAction(actionEvent -> onLogout());
         flights_admin.setOnAction(actionEvent -> onFlight_admin());
+        hotels_admin.setOnAction(actionEvent -> onHotel_admin());
 
     }
     private void onFlight_admin() {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.FLIGHT);
+    }
+    private void onHotel_admin() {
+        Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.HOTEL);
     }
     private void onLogout() {
         Stage stage = (Stage) logout_admin.getScene().getWindow();

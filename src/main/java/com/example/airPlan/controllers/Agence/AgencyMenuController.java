@@ -29,6 +29,7 @@ public class AgencyMenuController implements Initializable {
     private void addListeners() {
 //        dash_agency.setOnAction(event -> onDashboard());
         flights_agency.setOnAction(event -> onFlights());
+        acc_agency.setOnAction(event -> onHotels());
         // Add listeners for other buttons
         logout_btn.setOnAction(event -> onLogout());
     }
@@ -39,6 +40,9 @@ public class AgencyMenuController implements Initializable {
 
     private void onFlights() {
         Model.getInstance().getViewFactory().getAgencySelectedMenuItem().set(AgencyMenuOptions.FLIGHTS);
+    }
+    private void onHotels(){
+        Model.getInstance().getViewFactory().getAgencySelectedMenuItem().set(AgencyMenuOptions.Hotels);
     }
 
     private void onLogout() {
