@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="65.0" prefWidth="830.0" styleClass="cell_container" stylesheets="@../../Styles/AccCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.AccCellController">
+    <AnchorPane layoutX="2.0" layoutY="12.0" prefHeight="52.0" prefWidth="802.0" styleClass="container" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <FontAwesomeIconView glyphName="HOTEL" layoutX="5.6" layoutY="34.6" size="28" AnchorPane.leftAnchor="5.6" AnchorPane.topAnchor="10.600000000000001" />
+        <Label fx:id="name_lbl" layoutX="64.0" layoutY="14.4" styleClass="price_lbl" text="Name" AnchorPane.topAnchor="14.4" />
+        <Label fx:id="type_lbl" layoutX="261.0" layoutY="16.0" styleClass="lbl" text="Type" AnchorPane.topAnchor="16.0" />
+        <Label fx:id="country_lbl" layoutX="346.0" layoutY="17.0" styleClass="lbl" text="Country" AnchorPane.topAnchor="17.0" />
+        <Label fx:id="city_lbl" layoutX="446.0" layoutY="14.4" styleClass="price_lbl" text="City" AnchorPane.topAnchor="14.4" />
+        <Line endX="-99.99998474121094" endY="18.95956039428711" layoutX="626.0" layoutY="15.90710676908493" startX="-100.0" AnchorPane.topAnchor="15.2" />
+        <Label fx:id="price_lbl" layoutX="573.0" layoutY="15.0" styleClass="price_lbl" text="PRICE" AnchorPane.topAnchor="15.0" />
+        <Label fx:id="status_lbl" layoutX="688.0" layoutY="16.0" styleClass="lbl" text="STATUS" AnchorPane.topAnchor="16.0" />
+        <Button fx:id="btnDelete" layoutX="863.0" layoutY="11.2" mnemonicParsing="false" prefHeight="28.0" prefWidth="50.0" AnchorPane.topAnchor="11.2">
+         <graphic>
+            <FontAwesomeIconView id="trash" glyphName="TRASH" size="18" />
+         </graphic></Button>
+      <Button id="trash" fx:id="btnEdit" layoutX="797.0" layoutY="11.2" mnemonicParsing="false" prefHeight="28.0" prefWidth="50.0" />
+      <FontAwesomeIconView id="trash" glyphName="EDIT" layoutX="814.0" layoutY="33.0" size="18" />
+    </AnchorPane>
+</AnchorPane>

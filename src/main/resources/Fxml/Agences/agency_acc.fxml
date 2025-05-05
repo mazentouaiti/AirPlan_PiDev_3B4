@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/accommodation.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.AccController">
+   <AnchorPane id="anchorfilter" layoutX="283.0" layoutY="143.0" prefHeight="110.0" prefWidth="670.0">
+      <children>
+         <TextField fx:id="countryfilteragence" layoutX="93.0" layoutY="57.0" prefHeight="26.0" prefWidth="222.0" promptText="Search By Name Or Country" />
+         <FontAwesomeIconView glyphName="GLOBE" layoutX="290.0" layoutY="75.0" size="16" text="" />
+         <Label layoutX="61.0" layoutY="12.0" prefHeight="27.0" prefWidth="109.0" text="Filter :" textFill="#588b8b">
+            <graphic>
+               <FontAwesomeIconView fill="#588b8b" glyphName="LIST" />
+            </graphic>
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Label>
+         <ComboBox id="combo" fx:id="dispocomboagence" layoutX="360.0" layoutY="56.0" maxWidth="-Infinity" prefHeight="26.0" prefWidth="171.0" promptText="   Sort By Type / Status" styleClass="combo-box" />
+         <Button layoutX="602.0" layoutY="13.0" mnemonicParsing="false" onAction="#onReset" prefHeight="32.0" prefWidth="36.0" styleClass="Button" stylesheets="@../../Styles/accadmin.css">
+            <graphic>
+               <FontAwesomeIconView glyphName="UNDO" size="14" />
+            </graphic>
+         </Button>
+         <FontAwesomeIconView glyphName="SORT" layoutX="502.0" layoutY="76.0" size="16" />
+          <Button layoutX="600.0" layoutY="60.0" mnemonicParsing="false" onAction="#switch_add" prefHeight="18.0" prefWidth="36.0" styleClass="Button" stylesheets="@../../Styles/accadmin.css">
+              <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="20.0">
+                      <image>
+                          <Image url="@../../images/add.png" />
+                      </image>
+                  </ImageView>
+              </graphic>
+          </Button>
+      </children>
+   </AnchorPane>
+   <ListView fx:id="listHebergement" layoutY="331.0" prefHeight="413.0" prefWidth="1000.0" />
+   <ImageView fitHeight="221.0" fitWidth="332.0" layoutX="1.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../images/image.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="58.0" fitWidth="724.0" layoutX="14.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../images/titreadmin.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="99.0" fitWidth="332.0" layoutX="668.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../images/border.png" />
+      </image>
+   </ImageView>
+</AnchorPane>

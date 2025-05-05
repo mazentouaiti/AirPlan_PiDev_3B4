@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/hotel_add.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.HotelAdd">
+   <children>
+      <Label layoutX="65.0" layoutY="401.0" text="Amenities :">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label layoutX="62.0" layoutY="506.0" text="Description :">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <TextArea fx:id="descriptionfield" layoutX="119.0" layoutY="539.0" prefHeight="154.0" prefWidth="541.0" />
+      <Button fx:id="btnAdd" layoutX="788.0" layoutY="706.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="32.0" prefWidth="89.0" styleClass="Button" text="Submit">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHECK" size="17" />
+         </graphic></Button>
+      <AnchorPane id="anchop" fx:id="anchoption" layoutX="125.0" layoutY="429.0" prefHeight="60.0" prefWidth="717.0">
+         <children>
+            <CheckBox fx:id="wifi" layoutX="25.0" layoutY="20.0" mnemonicParsing="false" text="Wi-Fi">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="pool" layoutX="126.0" layoutY="21.0" mnemonicParsing="false" text="Pool">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="air" layoutX="226.0" layoutY="21.0" mnemonicParsing="false" text="Air Conditioning">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="parking" layoutX="399.0" layoutY="21.0" mnemonicParsing="false" text="Parking">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="meals" layoutX="538.0" layoutY="22.0" mnemonicParsing="false" text="All Meals Included">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnreturn" layoutX="896.0" layoutY="706.0" mnemonicParsing="false" onAction="#switch_admin" prefHeight="32.0" prefWidth="89.0" styleClass="Button" text="Return">
+         <graphic>
+            <FontAwesomeIconView glyphName="CHEVRON_LEFT" size="17" />
+         </graphic></Button>
+      <ImageView fitHeight="60.0" fitWidth="653.0" layoutX="171.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/titreadd.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="113.0" fitWidth="251.0" layoutX="751.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/zina1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="113.0" fitWidth="236.0" layoutX="-8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/zina3.png" />
+         </image>
+      </ImageView>
+      <AnchorPane id="anchop" layoutX="53.0" layoutY="121.0" prefHeight="261.0" prefWidth="393.0">
+         <children>
+            <Label layoutX="60.0" layoutY="203.0" text="Type :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="50.0" layoutY="64.0" text="Country :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="62.0" layoutY="104.0" text="City :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="typeCombo" layoutX="178.0" layoutY="202.0" prefWidth="150.0" promptText="Select a type" />
+            <TextField fx:id="addressfield" layoutX="179.0" layoutY="154.0" />
+            <TextField fx:id="countryfield" layoutX="180.0" layoutY="63.0" />
+            <TextField fx:id="cityfield" layoutX="180.0" layoutY="104.0" />
+            <TextField fx:id="namefield" layoutX="179.0" layoutY="19.0" prefHeight="26.0" prefWidth="150.0" />
+            <Label layoutX="56.0" layoutY="22.0" text="Name :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="154.0" text="Full Address :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="errorName" layoutX="57.0" layoutY="45.0" />
+            <Label fx:id="errorCountry" layoutX="64.0" layoutY="86.0" />
+            <Label fx:id="errorCity" layoutX="64.0" layoutY="131.0" />
+            <Label fx:id="errorAddress" layoutX="64.0" layoutY="180.0" />
+            <Label fx:id="errorType" layoutX="64.0" layoutY="228.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="anchop" layoutX="554.0" layoutY="121.0" prefHeight="261.0" prefWidth="393.0">
+         <children>
+            <Spinner fx:id="capacityspinner" layoutX="214.0" layoutY="19.0" />
+            <TextField fx:id="pricefield" layoutX="216.0" layoutY="63.0" />
+            <HBox fx:id="starBox" layoutX="218.0" layoutY="104.0" prefHeight="26.0" prefWidth="166.0" />
+            <Button layoutX="255.0" layoutY="154.0" mnemonicParsing="false" onAction="#handleChooseFile" prefHeight="26.0" prefWidth="72.0" styleClass="Button">
+               <graphic>
+                  <FontAwesomeIconView glyphName="IMAGE" size="18" />
+               </graphic>
+            </Button>
+            <Button layoutX="258.0" layoutY="202.0" mnemonicParsing="false" onAction="#handleChooseAlbum" prefHeight="26.0" prefWidth="72.0" styleClass="Button">
+               <graphic>
+                  <FontAwesomeIconView glyphName="FOLDER_OPEN" size="18" />
+               </graphic>
+            </Button>
+            <Label layoutX="54.0" layoutY="22.0" text="Capacity :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="48.0" layoutY="64.0" text="Price Per Night :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="54.0" layoutY="104.0" text="Rating :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="52.0" layoutY="154.0" text="Photo : ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="53.0" layoutY="203.0" text="Album :">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="fileLabel" layoutX="147.0" layoutY="182.0" prefHeight="18.0" prefWidth="178.0" />
+            <Label fx:id="errorCapacity" layoutX="62.0" layoutY="45.0" />
+            <Label fx:id="errorPrice" layoutX="62.0" layoutY="89.0" />
+            <Label fx:id="errorRating" layoutX="62.0" layoutY="131.0" />
+            <Label fx:id="errorPhoto" layoutX="62.0" layoutY="183.0" />
+            <Label fx:id="errorAlbum" layoutX="64.0" layoutY="231.0" />
+         </children>
+      </AnchorPane>
+      <Label fx:id="albumlabel" layoutX="788.0" layoutY="386.0" prefHeight="18.0" prefWidth="178.0" />
+      <ImageView fitHeight="269.0" fitWidth="249.0" layoutX="751.0" layoutY="403.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tayara2.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="errorDescription" layoutX="105.0" layoutY="706.0" />
+   </children>
+</AnchorPane>
