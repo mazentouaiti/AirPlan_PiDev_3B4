@@ -2,11 +2,13 @@ package com.example.airPlan.controllers.Client;
 
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.models.FlightModel;
+import com.sun.webkit.network.CookieManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +22,8 @@ import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
 
+import java.net.CookieHandler;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -74,6 +78,27 @@ public class FlightsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        webEngine = mapWebView.getEngine(); // Initialize FIRST
+        webEngine.setJavaScriptEnabled(true);
+        webEngine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                String currentUrl = webEngine.getLocation();
+
+                // Detect CAPTCHA/verification pages (e.g., URLs containing "captcha" or "verify")
+                if (currentUrl.contains("captcha") || currentUrl.contains("verify")) {
+                    Platform.runLater(() -> {
+                        // Open the verification URL in the system browser
+                        loadInExternalBrowser(currentUrl);
+
+                        // Show a prompt to the user
+                        showInformationAlert("Verification Required",
+                                "Complete the verification in your browser, then return to this app and click 'Retry'.");
+                    });
+                }
+            }
+        });
+        loadMap();
         try {
             flightServices = new FlightServices();
             initializePriceFilter();
@@ -85,8 +110,7 @@ public class FlightsController implements Initializable {
         } catch (Exception e) {
             showErrorAlert("Initialization Error", "Failed to initialize: " + e.getMessage());
         }
-        webEngine = mapWebView.getEngine();
-        loadMap();
+
         resv_classcombo.getItems().addAll("Economy", "Business", "First Class");
         resv_classcombo.setValue("Economy");
         resv_confirm_btn.setOnAction(event -> confirmReservation());
@@ -196,8 +220,18 @@ public class FlightsController implements Initializable {
             search_btn.setDisable(false);
         }
     }
+    private boolean isValidAirportCode(String input) {
+        return input.matches("[A-Za-z]{3}");
+    }
     private void searchFlights() {
         try {
+            String departureInput = depart_field.getText().trim();
+            String destinationInput = destin_field.getText().trim();
+            if ((!departureInput.isEmpty() && !isValidAirportCode(departureInput)) ||
+                    (!destinationInput.isEmpty() && !isValidAirportCode(destinationInput))) {
+                showErrorAlert("Invalid Input", "Please use 3-letter airport codes (e.g., CDG, JFK)");
+                return;
+            }
             String departure = depart_field.getText().trim().toLowerCase();
             String destination = destin_field.getText().trim().toLowerCase();
             LocalDate departureDate = depart_date.getValue();
@@ -215,7 +249,7 @@ public class FlightsController implements Initializable {
                     .toList();
 
             flights_listview.setItems(FXCollections.observableArrayList(filteredFlights));
-
+            updateMap(destinationInput);
             if (filteredFlights.isEmpty()) {
                 showInformationAlert("No Results", "No matching flights found");
             }
@@ -313,9 +347,22 @@ public class FlightsController implements Initializable {
         showInformationAlert("Success", "Mock booking confirmed!");
         hideReservationPanel();
     }
-
     @FXML
     public void loadMap() {
-        webEngine.load("https://www.google.com/maps/");
+        // Load the default Passport Index page for Tunisia
+        webEngine.load("https://www.passportindex.org/passport/");
+    }
+    private void loadInExternalBrowser(String url) {
+        try {
+            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+        } catch (Exception e) {
+            showErrorAlert("Browser Error", "Failed to open browser: " + e.getMessage());
+        }
+    }
+
+    // Update updateMap() to use external browser if needed
+    private void updateMap(String countryCode) {
+        String url = String.format("https://www.passportindex.org/passport/%s/", countryCode.toLowerCase());
+        loadInExternalBrowser(url); // Open in external browser
     }
 }
