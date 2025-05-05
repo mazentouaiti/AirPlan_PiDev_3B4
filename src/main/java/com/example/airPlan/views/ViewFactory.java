@@ -23,7 +23,7 @@ public class ViewFactory {
 
     //AdminViews
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
-    private AnchorPane FlightAdminView;
+    private AnchorPane flightAdminView;
     private AnchorPane AccAdminView;
 
 
@@ -125,19 +125,19 @@ public class ViewFactory {
         return adminSelectedMenuItem;
     }
     public AnchorPane getAdminFlightsView() {
-        if (FlightAdminView == null) {
+        if (flightAdminView == null) {
             try{
-                FlightAdminView new FXMLLoader(getClass().getResource("/Fxml/Admin/FlightAdmin.fxml")).load();
+                flightAdminView =new FXMLLoader(getClass().getResource("/Fxml/Admin/FlightAdmin.fxml")).load();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        return FlightAdminView;
+        return flightAdminView;
     }
     public AnchorPane getAdminHotelsView() {
         if (AccAdminView == null) {
             try{
-                AccAdminView new FXMLLoader(getClass().getResource("/Fxml/Admin/Admin_acc.fxml")).load();
+                AccAdminView =new FXMLLoader(getClass().getResource("/Fxml/Admin/Admin_acc.fxml")).load();
             }catch (Exception e){
                 e.printStackTrace();
             }
