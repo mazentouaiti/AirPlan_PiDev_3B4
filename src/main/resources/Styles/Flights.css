@@ -48,7 +48,6 @@
 .search_form Button{
     -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
     -fx-background-radius: 15;
-    -fx-pref-height: 30;
     -fx-font-size: 1.2em;
     -fx-text-fill: #eeee;
 }

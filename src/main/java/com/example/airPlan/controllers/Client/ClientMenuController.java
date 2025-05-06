@@ -35,7 +35,7 @@ public class ClientMenuController implements Initializable {
     }
 
     private void initMenuButtons() {
-       // buttonMenuMap.put(dash_btn, ClientMenuOptions.DASHBOARD);
+       //buttonMenuMap.put(dash_btn, ClientMenuOptions.DASHBOARD);
         buttonMenuMap.put(flights_btn, ClientMenuOptions.FLIGHT);
        // buttonMenuMap.put(acc_btn, ClientMenuOptions.HOTELS);
         //buttonMenuMap.put(trans_btn, ClientMenuOptions.TRANSPORT);
