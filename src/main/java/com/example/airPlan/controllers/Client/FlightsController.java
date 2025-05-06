@@ -75,6 +75,12 @@ public class FlightsController implements Initializable {
     @FXML    private TextField resv_depart_field;
     @FXML    private Button closeReservationBtn;
     @FXML    private TextField resv_origin_field;
+    @FXML
+    private Button reservedFlights_btn;
+    @FXML
+    private ListView reservedFlightsList;
+    @FXML
+    private AnchorPane reservedFlights;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -347,11 +353,7 @@ public class FlightsController implements Initializable {
         showInformationAlert("Success", "Mock booking confirmed!");
         hideReservationPanel();
     }
-    @FXML
-    public void loadMap() {
-        // Load the default Passport Index page for Tunisia
-        webEngine.load("https://www.passportindex.org/passport/");
-    }
+
     private void loadInExternalBrowser(String url) {
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
@@ -359,10 +361,31 @@ public class FlightsController implements Initializable {
             showErrorAlert("Browser Error", "Failed to open browser: " + e.getMessage());
         }
     }
-
-    // Update updateMap() to use external browser if needed
-    private void updateMap(String countryCode) {
-        String url = String.format("https://www.passportindex.org/passport/%s/", countryCode.toLowerCase());
-        loadInExternalBrowser(url); // Open in external browser
+    @FXML
+    public void loadMap() {
+        // Load empty Google Maps in WebView
+        webEngine.load("https://www.google.com/maps");
     }
+
+    private void updateMap(String destination) {
+        try {
+            if (!destination.isEmpty()) {
+                // Proper URL encoding and Google Maps search format
+                String encodedDest = java.net.URLEncoder.encode(destination, "UTF-8");
+                String url = "https://www.google.com/maps/search/?api=1&query=" + encodedDest;
+                //loadInExternalBrowser(url);
+            }
+        } catch (Exception e) {
+            showErrorAlert("Map Error", "Failed to search destination: " + e.getMessage());
+        }
+    }
+
+    private String encodeURIComponent(String s) {
+        try {
+            return java.net.URLEncoder.encode(s, "UTF-8");
+        } catch (Exception e) {
+            return s.replace(" ", "+");
+        }
+    }
+
 }

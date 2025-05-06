@@ -13,32 +13,47 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane styleClass="flights_view" stylesheets="@../../Styles/Flights.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.FlightsController">
      <AnchorPane fx:id="mainContent" minHeight="0.0" minWidth="0.0" prefHeight="742.0" prefWidth="1000.0" styleClass="flights_view">
+      <WebView fx:id="mapWebView" layoutX="588.0" layoutY="141.0" prefHeight="603.0" prefWidth="410.0" />
+      <ListView fx:id="flights_listview" layoutX="25.0" layoutY="338.0" prefHeight="365.0" prefWidth="560.0" AnchorPane.leftAnchor="0.0" />
          <AnchorPane layoutX="54.0" layoutY="37.0" prefHeight="104.0" prefWidth="933.0" styleClass="search_form" AnchorPane.topAnchor="36.0">
              <TextField fx:id="depart_field" prefWidth="160.0" promptText="From" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="40.0" />
              <TextField fx:id="destin_field" layoutX="194.0" layoutY="60.0" promptText="To " AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="40.0" />
              <DatePicker fx:id="depart_date" layoutX="330.0" layoutY="39.0" prefHeight="22.0" prefWidth="178.0" promptText="When ?" AnchorPane.leftAnchor="330.0" AnchorPane.topAnchor="39.0" />
              <ComboBox fx:id="combo_price" editable="true" layoutX="525.0" layoutY="32.0" prefHeight="35.0" prefWidth="194.0" promptText="Sort Price" />
-             <Button fx:id="search_btn" layoutX="783.0" layoutY="35.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="130.0" text="Search">
+             <Button fx:id="search_btn" layoutX="793.0" layoutY="36.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
             <graphic>
                <FontAwesomeIconView glyphName="SEARCH" />
             </graphic></Button>
          <FontAwesomeIconView fill="#588b8b" glyphName="MAP_MARKER" layoutX="130.0" layoutY="64.0" selectionFill="#588b8b" size="20" />
          <FontAwesomeIconView fill="#588b8b" glyphName="GLOBE" layoutX="284.0" layoutY="65.0" size="20" />
+         <Button fx:id="reservedFlights_btn" layoutX="855.0" layoutY="37.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0">
+            <graphic>
+               <FontAwesomeIconView glyphName="PLANE" />
+            </graphic>
+         </Button>
          </AnchorPane>
-      <ListView fx:id="flights_listview" layoutX="25.0" layoutY="338.0" prefHeight="365.0" prefWidth="560.0" AnchorPane.leftAnchor="0.0" />
          <ImageView fitHeight="214.0" fitWidth="342.0" layoutX="107.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true">
              <Image url="@../../images/pngwing.com.png" />
          </ImageView>
-      <WebView fx:id="mapWebView" layoutX="588.0" layoutY="194.0" prefHeight="524.0" prefWidth="394.0" />
-      <Button layoutX="955.0" layoutY="194.0" mnemonicParsing="false" onAction="#loadMap">
+      <Button layoutX="960.0000000000001" layoutY="144.0" mnemonicParsing="false" onAction="#loadMap" AnchorPane.rightAnchor="0.0">
          <graphic>
             <FontAwesomeIconView glyphName="UNDO" />
          </graphic>
       </Button>
+      <AnchorPane fx:id="reservedFlights" layoutX="688.0" layoutY="151.0" prefHeight="583.0" prefWidth="560.0" styleClass="search_form" AnchorPane.rightAnchor="-600.0">
+         <children>
+            <Label layoutX="63.0" layoutY="44.0" text="Reserved Flights">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
+            <ListView fx:id="reservedFlightsList" layoutX="129.0" layoutY="133.0" prefHeight="411.0" prefWidth="560.0" AnchorPane.rightAnchor="0.0" />
+         </children></AnchorPane>
      </AnchorPane>
     <AnchorPane fx:id="reservationPanel" layoutX="79.0" layoutY="730.0" prefHeight="400" prefWidth="850" styleClass="field_zone" stylesheets="@../../Styles/windowReservation.css" AnchorPane.bottomAnchor="-400.0">
 
