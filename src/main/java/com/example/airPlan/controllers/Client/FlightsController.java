@@ -7,6 +7,7 @@ import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -21,10 +22,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
-
-import java.net.CookieHandler;
-import java.net.CookiePolicy;
-import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +57,7 @@ public class FlightsController implements Initializable {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private FlightModel selectedFlight;
     private WebEngine webEngine;
+    private ObservableList<FlightModel> reservedFlightsListItems = FXCollections.observableArrayList();
 
 
     @FXML    private TextField resv_dest_field;
@@ -81,6 +78,8 @@ public class FlightsController implements Initializable {
     private ListView reservedFlightsList;
     @FXML
     private AnchorPane reservedFlights;
+    @FXML
+    private Label counter;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -126,8 +125,17 @@ public class FlightsController implements Initializable {
         resv_classcombo.valueProperty().addListener((obs, oldVal, newVal) -> calculateTotalPrice());
         depart_date.setConverter(new LocalDateStringConverter(DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE));
         depart_date.setPromptText("AAAA-MM-JJ");
-
-
+        reservedFlightsList.setItems(reservedFlightsListItems);
+        initializeReservedFlightsListView();
+        reservedFlights_btn.setOnAction(event -> toggleReservedFlightsPanel());
+        reservedFlights.setTranslateX(600);
+        counter.setText("0");
+        counter.setStyle("-fx-background-color: red; -fx-background-radius: 50; -fx-pref-width: 25; -fx-pref-height: 25; -fx-alignment: center;");
+        reservedFlightsListItems.addListener((ListChangeListener<FlightModel>) change -> {
+            Platform.runLater(() -> {
+                counter.setText(String.valueOf(reservedFlightsListItems.size()));
+            });
+        });
     }
     private void setupAutoSearch() {
         setupDebounce(depart_field);
@@ -350,10 +358,10 @@ public class FlightsController implements Initializable {
     }
     private void confirmReservation() {
         if (selectedFlight == null) return;
-        showInformationAlert("Success", "Mock booking confirmed!");
+        reservedFlightsListItems.add(selectedFlight);
+        showInformationAlert("Success", "Reservation confirmed!");
         hideReservationPanel();
     }
-
     private void loadInExternalBrowser(String url) {
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
@@ -366,7 +374,6 @@ public class FlightsController implements Initializable {
         // Load empty Google Maps in WebView
         webEngine.load("https://www.google.com/maps");
     }
-
     private void updateMap(String destination) {
         try {
             if (!destination.isEmpty()) {
@@ -379,7 +386,6 @@ public class FlightsController implements Initializable {
             showErrorAlert("Map Error", "Failed to search destination: " + e.getMessage());
         }
     }
-
     private String encodeURIComponent(String s) {
         try {
             return java.net.URLEncoder.encode(s, "UTF-8");
@@ -387,5 +393,52 @@ public class FlightsController implements Initializable {
             return s.replace(" ", "+");
         }
     }
-
+    private void initializeReservedFlightsListView() {
+        reservedFlightsList.setCellFactory(listView -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/FlightCell.fxml"));
+                Node cell = loader.load();
+                FlightCellController cellController = loader.getController();
+                cellController.setMainController(this);
+                return new ListCell<FlightModel>() {
+                    @Override
+                    protected void updateItem(FlightModel flight, boolean empty) {
+                        super.updateItem(flight, empty);
+                        if (empty || flight == null) {
+                            setGraphic(null);
+                        } else {
+                            cellController.setFlight(flight);
+                            cellController.setCancelButtonBehavior(() -> {
+                                reservedFlightsListItems.remove(flight);
+                            });
+                            setGraphic(cell);
+                        }
+                    }
+                };
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new ListCell<>();
+            }
+        });
+    }
+    @FXML
+    private void toggleReservedFlightsPanel() {
+        if (reservedFlights.getTranslateX() == -600) {
+            hideReservedFlightsPanel();
+        } else {
+            showReservedFlightsPanel();
+        }
+    }
+    private void showReservedFlightsPanel() {
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), reservedFlights);
+        slideIn.setToX(-600); // Adjust based on layout
+        slideIn.play();
+    }
+    @FXML
+    private void hideReservedFlightsPanel() {
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), reservedFlights);
+        slideOut.setToX(600);
+        slideOut.play();
+    }
 }
+
