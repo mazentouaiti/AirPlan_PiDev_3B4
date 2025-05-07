@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.airPlan.controllers.Client.MyReservationsController">
+    <VBox spacing="10" style="-fx-padding: 20;">
+        <Label text="My Reservations" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+        <ListView fx:id="reservationsListView" prefHeight="400" prefWidth="600"/>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh"/>
+            <Button fx:id="closeButton" text="Close" onAction="#handleClose"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

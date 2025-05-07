@@ -57,6 +57,8 @@
                  </font>
              </Label>
              <ListView fx:id="reservedFlightsList" layoutX="129.0" layoutY="133.0" prefHeight="411.0" prefWidth="560.0" AnchorPane.rightAnchor="0.0" />
+         <Label layoutX="401.0" layoutY="58.0" text="Total :" />
+         <Label fx:id="priceLabel" layoutX="453.0" layoutY="58.0" text="Label" />
          </AnchorPane>
      </AnchorPane>
     <AnchorPane fx:id="reservationPanel" layoutX="79.0" layoutY="730.0" prefHeight="400" prefWidth="850" styleClass="field_zone" stylesheets="@../../Styles/windowReservation.css" AnchorPane.bottomAnchor="-400.0">

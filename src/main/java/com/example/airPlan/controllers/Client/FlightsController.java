@@ -37,7 +37,29 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
 
+class ReservedFlight {
+    private FlightModel flight;
+    private int passengers;
+    private double totalPrice;
 
+    public ReservedFlight(FlightModel flight, int passengers, double totalPrice) {
+        this.flight = flight;
+        this.passengers = passengers;
+        this.totalPrice = totalPrice;
+    }
+
+    public FlightModel getFlight() {
+        return flight;
+    }
+
+    public int getPassengers() {
+        return passengers;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+}
 
 public class FlightsController implements Initializable {
 
@@ -57,7 +79,7 @@ public class FlightsController implements Initializable {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private FlightModel selectedFlight;
     private WebEngine webEngine;
-    private ObservableList<FlightModel> reservedFlightsListItems = FXCollections.observableArrayList();
+    private ObservableList<ReservedFlight> reservedFlightsListItems = FXCollections.observableArrayList();
 
 
     @FXML    private TextField resv_dest_field;
@@ -80,6 +102,8 @@ public class FlightsController implements Initializable {
     private AnchorPane reservedFlights;
     @FXML
     private Label counter;
+    @FXML
+    private Label priceLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -131,9 +155,10 @@ public class FlightsController implements Initializable {
         reservedFlights.setTranslateX(600);
         counter.setText("0");
         counter.setStyle("-fx-background-color: red; -fx-background-radius: 50; -fx-pref-width: 25; -fx-pref-height: 25; -fx-alignment: center;");
-        reservedFlightsListItems.addListener((ListChangeListener<FlightModel>) change -> {
+        reservedFlightsListItems.addListener((ListChangeListener<ReservedFlight>) change -> {
             Platform.runLater(() -> {
-                counter.setText(String.valueOf(reservedFlightsListItems.size()));
+                updatePassengerCounter();
+                updateTotalPriceDisplay();
             });
         });
     }
@@ -358,9 +383,23 @@ public class FlightsController implements Initializable {
     }
     private void confirmReservation() {
         if (selectedFlight == null) return;
-        reservedFlightsListItems.add(selectedFlight);
+
+        int passengers = resv_passenger_number.getValue();
+        String classType = resv_classcombo.getValue();
+        double basePrice = selectedFlight.getPrice();
+
+        double multiplier = switch (classType) {
+            case "Business" -> 1.5;
+            case "First Class" -> 2.0;
+            default -> 1.0;
+        };
+
+        double total = basePrice * multiplier * passengers;
+
+        reservedFlightsListItems.add(new ReservedFlight(selectedFlight, passengers, total));
         showInformationAlert("Success", "Reservation confirmed!");
         hideReservationPanel();
+        updateTotalPriceDisplay();
     }
     private void loadInExternalBrowser(String url) {
         try {
@@ -400,16 +439,23 @@ public class FlightsController implements Initializable {
                 Node cell = loader.load();
                 FlightCellController cellController = loader.getController();
                 cellController.setMainController(this);
-                return new ListCell<FlightModel>() {
+                return new ListCell<ReservedFlight>() {
                     @Override
-                    protected void updateItem(FlightModel flight, boolean empty) {
-                        super.updateItem(flight, empty);
-                        if (empty || flight == null) {
+                    protected void updateItem(ReservedFlight reservedFlight, boolean empty) {
+                        super.updateItem(reservedFlight, empty);
+                        if (empty || reservedFlight == null) {
                             setGraphic(null);
                         } else {
-                            cellController.setFlight(flight);
+                            // Set the flight
+                            cellController.setFlight(reservedFlight.getFlight());
+                            // Update the priceLabel directly
+                            priceLabel.setText(String.format("€%.2f", reservedFlight.getTotalPrice()));
                             cellController.setCancelButtonBehavior(() -> {
-                                reservedFlightsListItems.remove(flight);
+                                reservedFlightsListItems.remove(reservedFlight);
+                                // Update the counter when a reservation is canceled
+                                updatePassengerCounter();
+                                // Clear or update priceLabel when canceled
+                                updateTotalPriceDisplay();
                             });
                             setGraphic(cell);
                         }
@@ -420,6 +466,27 @@ public class FlightsController implements Initializable {
                 return new ListCell<>();
             }
         });
+    }
+    private void updatePassengerCounter() {
+        int totalPassengers = reservedFlightsListItems.stream()
+                .mapToInt(ReservedFlight::getPassengers)
+                .sum();
+        counter.setText(String.valueOf(totalPassengers));
+    }
+    private void updateTotalPriceDisplay() {
+        if (reservedFlightsListItems.isEmpty()) {
+            priceLabel.setText("€0.00"); // Reset when no reservations
+        } else {
+            // Calculate and display the sum of all reserved flight prices
+            double total = reservedFlightsListItems.stream()
+                    .mapToDouble(ReservedFlight::getTotalPrice)
+                    .sum();
+            priceLabel.setText(String.format("€%.2f", total));
+        }
+    }
+    public void setPrice(double price) {
+        // Assuming you have a priceLabel in your FlightCellController
+        priceLabel.setText(String.format("€%.2f", price));
     }
     @FXML
     private void toggleReservedFlightsPanel() {

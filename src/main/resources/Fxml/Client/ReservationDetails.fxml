@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.airPlan.controllers.Client.ReservationDetailsController">
+    <VBox spacing="10" style="-fx-padding: 20;">
+        <Label text="Reservation Details" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+        <GridPane hgap="10" vgap="10">
+            <Label text="Reservation ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label fx:id="reservationIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Flight Number:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label fx:id="flightNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Route:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="routeLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Departure:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="departureLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Passengers:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Label fx:id="passengerCountLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="Class:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label fx:id="classLabel" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="Total Price:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <Label fx:id="totalPriceLabel" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+            <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+        </GridPane>
+
+        <Label text="Passenger List:" style="-fx-font-weight: bold;"/>
+        <ListView fx:id="passengerListView" prefHeight="150"/>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="cancelButton" text="Cancel Reservation" onAction="#handleCancelReservation"/>
+            <Button fx:id="closeButton" text="Close" onAction="#handleClose"/>
+        </HBox>
+    </VBox>
+</AnchorPane>
