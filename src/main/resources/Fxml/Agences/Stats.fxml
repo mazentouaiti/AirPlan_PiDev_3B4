@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="750" prefWidth="1000" styleClass="stats-pane" stylesheets="@../../Styles/stats.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.StatsController">
+
+    <!-- Header Section -->
+    <HBox layoutX="14.0" layoutY="14.0" spacing="20" styleClass="header-box">
+        <Label styleClass="dashboard-title" text="Flight Statistics ">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <ComboBox fx:id="statTypeComboBox" prefWidth="200" promptText="Select Statistic Type" styleClass="stats-combo" />
+    </HBox>
+
+    <!-- Main Chart Container -->
+    <VBox layoutX="70.0" layoutY="70.0" spacing="10" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="70.0">
+
+        <!-- Chart Title Container -->
+        <HBox alignment="CENTER" styleClass="chart-title-box">
+            <Label fx:id="chartTitle" styleClass="chart-title" text="Flight Statistics" />
+        </HBox>
+
+        <!-- The Bar Chart -->
+        <BarChart fx:id="barChartFlights" animated="true" legendVisible="false" styleClass="stats-chart">
+            <xAxis>
+                <CategoryAxis side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT" />
+            </yAxis>
+        </BarChart>
+
+        <!-- Info Panel -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="info-box">
+            <Label styleClass="info-label" text="Last Updated:" />
+            <Label fx:id="lastUpdatedLabel" styleClass="info-value" text="Never" />
+        </HBox>
+    </VBox>
+
+    <!-- Status Bar -->
+    <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="status-bar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Label styleClass="status-label" text="Status:" />
+        <Label fx:id="statusLabel" styleClass="status-value" text="Ready" />
+    </HBox>
+</AnchorPane>

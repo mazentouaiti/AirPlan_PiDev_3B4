@@ -2,12 +2,13 @@ package com.example.airPlan.controllers.Admin;
 
 import com.example.airPlan.models.Model;
 import com.example.airPlan.views.AdminMenuOptions;
+
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class AdminMenuController implements Initializable {
     public Button dash_admin;
@@ -22,15 +23,40 @@ public class AdminMenuController implements Initializable {
     public Button chats_admin;
     public Button logout_admin;
 
+    private final Map<Button, AdminMenuOptions> buttonMenuMap = new HashMap<>();
+    private List<Button> menuButtons;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+//        buttonMenuMap.put(dash_admin, AdminMenuOptions.DASHBOARD);
+        buttonMenuMap.put(flights_admin, AdminMenuOptions.FLIGHT);
+//        buttonMenuMap.put(hotels_admin, AdminMenuOptions.HOTELS);
+//        buttonMenuMap.put(transport_admin, AdminMenuOptions.TRANSPORT);
+//        buttonMenuMap.put(offers_admin, AdminMenuOptions.OFFERS);
+//        buttonMenuMap.put(clients_admin, AdminMenuOptions.CLIENTS);
+//        buttonMenuMap.put(agences_admin, AdminMenuOptions.AGENCES);
+//        buttonMenuMap.put(feed_admin, AdminMenuOptions.FEEDBACK);
+//        buttonMenuMap.put(stats_admin, AdminMenuOptions.STATS);
+//        buttonMenuMap.put(chats_admin, AdminMenuOptions.CHATS);
         addListeners();
+
+        menuButtons = Arrays.asList(
+                flights_admin
+        );
+        setActiveButton(flights_admin);
     }
 
     private void addListeners() {
         logout_admin.setOnAction(actionEvent -> onLogout());
-        flights_admin.setOnAction(actionEvent -> onFlight_admin());
 
+        // Add listeners using the buttonMenuMap
+        buttonMenuMap.forEach((button, menuOption) -> {
+            button.setOnAction(event -> {
+                Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(menuOption);
+                setActiveButton(button);
+            });
+        });
     }
     private void onFlight_admin() {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.FLIGHT);
@@ -39,5 +65,13 @@ public class AdminMenuController implements Initializable {
         Stage stage = (Stage) logout_admin.getScene().getWindow();
         Model.getInstance().getViewFactory().closeStage(stage);
         Model.getInstance().getViewFactory().showLoginView();
+    }
+    private void setActiveButton(Button activeButton) {
+        for (Button btn : menuButtons) {
+            btn.getStyleClass().remove("active");
+        }
+        if (!activeButton.getStyleClass().contains("active")) {
+            activeButton.getStyleClass().add("active");
+        }
     }
 }

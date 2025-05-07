@@ -7,72 +7,67 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0"
-      prefWidth="160.0" styleClass="main_menu_container" stylesheets="@../../Styles/ClientMenu.css"
-      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.AdminMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="160.0" styleClass="main_menu_container" stylesheets="@../../Styles/ClientMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.AdminMenuController">
    <AnchorPane prefHeight="730.0" prefWidth="150.0" styleClass="left_container">
-      <VBox prefHeight="80.0" prefWidth="160.0" styleClass="title_container" AnchorPane.leftAnchor="0.0"
-            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <FontAwesomeIconView glyphName="PLANE" size="30"/>
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Admin"/>
+      <VBox prefHeight="80.0" prefWidth="160.0" styleClass="title_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <FontAwesomeIconView glyphName="PLANE" size="30" />
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Admin" />
       </VBox>
-      <VBox layoutX="40.0" layoutY="265.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+      <VBox layoutX="40.0" layoutY="265.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
          <Button fx:id="dash_admin" mnemonicParsing="false" text="Dashboard">
             <graphic>
-               <FontAwesomeIconView glyphName="HOME" size="20"/>
+               <FontAwesomeIconView glyphName="HOME" size="20" />
             </graphic>
          </Button>
          <Button fx:id="flights_admin" mnemonicParsing="false" text="Flights">
             <graphic>
-               <FontAwesomeIconView glyphName="PLANE" size="20"/>
+               <FontAwesomeIconView glyphName="PLANE" size="20" />
             </graphic>
          </Button>
          <Button fx:id="hotels_admin" mnemonicParsing="false" text="Hotels">
             <graphic>
-               <FontAwesomeIconView glyphName="BED" size="20"/>
+               <FontAwesomeIconView glyphName="BED" size="20" />
             </graphic>
          </Button>
          <Button fx:id="transport_admin" mnemonicParsing="false" text="Transport">
             <graphic>
-               <FontAwesomeIconView glyphName="CAB" size="20"/>
+               <FontAwesomeIconView glyphName="CAB" size="20" />
             </graphic>
          </Button>
          <Button fx:id="offers_admin" mnemonicParsing="false" text="Offers">
             <graphic>
-               <FontAwesomeIconView glyphName="GIFT" size="20"/>
+               <FontAwesomeIconView glyphName="GIFT" size="20" />
             </graphic>
          </Button>
          <Button fx:id="clients_admin" mnemonicParsing="false" text="Clients">
             <graphic>
-               <FontAwesomeIconView glyphName="USERS" size="20"/>
+               <FontAwesomeIconView glyphName="USERS" size="20" />
             </graphic>
          </Button>
          <Button fx:id="agences_admin" mnemonicParsing="false" text="Agences">
             <graphic>
-               <FontAwesomeIconView glyphName="EXCHANGE" size="20"/>
+               <FontAwesomeIconView glyphName="EXCHANGE" size="20" />
             </graphic>
          </Button>
          <Button fx:id="feed_admin" mnemonicParsing="false" text="FeedBack">
             <graphic>
-               <FontAwesomeIconView glyphName="RSS" size="20"/>
+               <FontAwesomeIconView glyphName="RSS" size="20" />
             </graphic>
          </Button>
          <Button fx:id="stats_admin" mnemonicParsing="false" text="Stats">
             <graphic>
-               <FontAwesomeIconView glyphName="LINE_CHART" size="20"/>
+               <FontAwesomeIconView glyphName="LINE_CHART" size="20" />
             </graphic>
          </Button>
          <Button fx:id="chats_admin" mnemonicParsing="false" text="Chats">
             <graphic>
-               <FontAwesomeIconView glyphName="COMMENTS" size="20"/>
+               <FontAwesomeIconView glyphName="COMMENTS" size="20" />
             </graphic>
          </Button>
-         <Line endX="27.492874145507812" endY="2.2137164705782197E-5" startX="-100.0"/>
-         <Button fx:id="logout_admin" mnemonicParsing="false" styleClass="alt_menu_btn" text="Logout">
+         <Line endX="27.492874145507812" endY="2.2137164705782197E-5" startX="-100.0" />
+         <Button fx:id="logout_admin" mnemonicParsing="false" text="Logout">
             <graphic>
-               <FontAwesomeIconView glyphName="EXTERNAL_LINK" size="20"/>
+               <FontAwesomeIconView glyphName="EXTERNAL_LINK" size="20" />
             </graphic>
          </Button>
       </VBox>

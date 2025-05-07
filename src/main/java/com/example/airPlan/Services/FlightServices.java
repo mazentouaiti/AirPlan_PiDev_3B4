@@ -3,9 +3,11 @@ package com.example.airPlan.Services;
 
 import com.example.airPlan.Utiles.DBConnection;
 import com.example.airPlan.models.FlightModel;
+import com.sun.javafx.collections.MappingChange;
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
 
 public class FlightServices implements Services{
     private Connection connection;
@@ -265,5 +267,66 @@ public class FlightServices implements Services{
         flight.setAdminStatus(rs.getString("admin_status"));
         return flight;
     }
+    public Map<String, Integer> getFlightCountByAirline() {
+        Map<String, Integer> stats = new HashMap<>();
+        String sql = "SELECT airline, COUNT(*) as count FROM flights GROUP BY airline";
 
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getString("airline"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting airline stats: " + e.getMessage());
+        }
+        return stats;
+    }
+
+    public Map<String, Integer> getFlightCountByStatus() {
+        Map<String, Integer> stats = new HashMap<>();
+        String sql = "SELECT status, COUNT(*) as count FROM flights GROUP BY status";
+
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getString("status"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting status stats: " + e.getMessage());
+        }
+        return stats;
+    }
+
+    public Map<String, Integer> getPopularRoutes(int limit) {
+        Map<String, Integer> stats = new HashMap<>();
+        String sql = "SELECT CONCAT(origin, ' → ', destination) as route, COUNT(*) as count " +
+                "FROM flights GROUP BY route ORDER BY count DESC LIMIT ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                stats.put(rs.getString("route"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting route stats: " + e.getMessage());
+        }
+        return stats;
+    }
+
+    public Map<String, Integer> getFlightsByMonth() {
+        Map<String, Integer> stats = new HashMap<>();
+        String sql = "SELECT DATE_FORMAT(departureDate, '%Y-%m') as month, COUNT(*) as count " +
+                "FROM flights GROUP BY month";
+
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getString("month"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting monthly stats: " + e.getMessage());
+        }
+        return stats;
+    }
 }
