@@ -107,27 +107,13 @@ public class FlightsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        webEngine = mapWebView.getEngine(); // Initialize FIRST
+        webEngine = mapWebView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                String currentUrl = webEngine.getLocation();
 
-                // Detect CAPTCHA/verification pages (e.g., URLs containing "captcha" or "verify")
-                if (currentUrl.contains("captcha") || currentUrl.contains("verify")) {
-                    Platform.runLater(() -> {
-                        // Open the verification URL in the system browser
-                        loadInExternalBrowser(currentUrl);
-
-                        // Show a prompt to the user
-                        showInformationAlert("Verification Required",
-                                "Complete the verification in your browser, then return to this app and click 'Retry'.");
-                    });
-                }
-            }
-        });
-        loadMap();
+        // Load empty map initially
+        webEngine.load("https://www.google.com/maps");
+        //loadMap();
         try {
             flightServices = new FlightServices();
             initializePriceFilter();
@@ -282,7 +268,10 @@ public class FlightsController implements Initializable {
                     .toList();
 
             flights_listview.setItems(FXCollections.observableArrayList(filteredFlights));
+
+            // Always update map with destination (even if empty)
             updateMap(destination);
+
             if (filteredFlights.isEmpty()) {
                 showInformationAlert("No Results", "No matching flights found");
             }
@@ -413,7 +402,10 @@ public class FlightsController implements Initializable {
                 // Proper URL encoding and Google Maps search format
                 String encodedDest = java.net.URLEncoder.encode(destination, "UTF-8");
                 String url = "https://www.google.com/maps/search/?api=1&query=" + encodedDest;
-                //loadInExternalBrowser(url);
+                webEngine.load(url);
+            } else {
+                // Load empty map if no destination
+                webEngine.load("https://www.google.com/maps");
             }
         } catch (Exception e) {
             showErrorAlert("Map Error", "Failed to search destination: " + e.getMessage());
