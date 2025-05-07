@@ -33,7 +33,7 @@ public class FlightServices implements Services{
             ps.setString(4, flight.getDestination());
             ps.setDate(5, flight.getDepartureDate());
             ps.setDate(6, flight.getReturnDate());
-            ps.setString(7, flight.getClassType());
+            ps.setString(7, flight.getClassType() != null ? flight.getClassType() : "Economy");
             ps.setString(8, flight.getStatus());
             ps.setDouble(9, flight.getPrice());
             ps.setInt(10,flight.getCapacity());

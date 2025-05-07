@@ -260,17 +260,10 @@ public class FlightsController implements Initializable {
         }
     }
     private boolean isValidAirportCode(String input) {
-        return input.matches("[A-Za-z]{3}");
+        return true;
     }
     private void searchFlights() {
         try {
-            String departureInput = depart_field.getText().trim();
-            String destinationInput = destin_field.getText().trim();
-            if ((!departureInput.isEmpty() && !isValidAirportCode(departureInput)) ||
-                    (!destinationInput.isEmpty() && !isValidAirportCode(destinationInput))) {
-                showErrorAlert("Invalid Input", "Please use 3-letter airport codes (e.g., CDG, JFK)");
-                return;
-            }
             String departure = depart_field.getText().trim().toLowerCase();
             String destination = destin_field.getText().trim().toLowerCase();
             LocalDate departureDate = depart_date.getValue();
@@ -282,13 +275,14 @@ public class FlightsController implements Initializable {
                     .filter(flight ->
                             (departure.isEmpty() || flight.getOrigin().toLowerCase().contains(departure)) &&
                                     (destination.isEmpty() || flight.getDestination().toLowerCase().contains(destination)) &&
-                                    (departureDate == null || isSameDate(flight.getDepartureDate(), departureDate)) && // Modification
-                                    checkPriceFilter(flight.getPrice(), priceFilter) && "approved".equals(flight.getAdminStatus())
+                                    (departureDate == null || isSameDate(flight.getDepartureDate(), departureDate)) &&
+                                    checkPriceFilter(flight.getPrice(), priceFilter) &&
+                                    "approved".equals(flight.getAdminStatus())
                     )
                     .toList();
 
             flights_listview.setItems(FXCollections.observableArrayList(filteredFlights));
-            updateMap(destinationInput);
+            updateMap(destination);
             if (filteredFlights.isEmpty()) {
                 showInformationAlert("No Results", "No matching flights found");
             }

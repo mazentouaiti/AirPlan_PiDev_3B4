@@ -31,7 +31,7 @@ public class FlightModel {
         this.airline = airline;
         this.origin = origin;
         this.destination = destination;
-        this.classType = classType;
+        this.classType = "Economy";
         this.status = status;
         this.departureDate = departureDate;
         this.returnDate = returnDate;
