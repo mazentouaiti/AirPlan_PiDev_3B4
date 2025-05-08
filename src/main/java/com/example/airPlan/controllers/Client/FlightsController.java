@@ -2,14 +2,12 @@ package com.example.airPlan.controllers.Client;
 
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.models.FlightModel;
-import com.sun.webkit.network.CookieManager;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,30 +34,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
-
-class ReservedFlight {
-    private FlightModel flight;
-    private int passengers;
-    private double totalPrice;
-
-    public ReservedFlight(FlightModel flight, int passengers, double totalPrice) {
-        this.flight = flight;
-        this.passengers = passengers;
-        this.totalPrice = totalPrice;
-    }
-
-    public FlightModel getFlight() {
-        return flight;
-    }
-
-    public int getPassengers() {
-        return passengers;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-}
 
 public class FlightsController implements Initializable {
 
