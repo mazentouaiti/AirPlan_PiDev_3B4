@@ -147,9 +147,9 @@ public class ChatbotController {
                 .post(body)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(okhttp3.Call call, IOException e) {
                 Platform.runLater(() -> {
                     removeTypingIndicator();
                     addMessage("Bot", "Sorry, I'm having trouble connecting. Please try again later.", false);
@@ -157,7 +157,7 @@ public class ChatbotController {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 Platform.runLater(() -> removeTypingIndicator());
 
                 if (response.isSuccessful()) {
