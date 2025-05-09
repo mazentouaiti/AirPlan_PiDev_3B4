@@ -17,10 +17,25 @@ public class Hebergement {
     private int rating;
     private int capacity;
     private String status;
+    private String favoris;  // Added field
 
     public Hebergement(String name, String type, String city, String address, String country,
                        double pricePerNight, boolean disponibility, String photo, String album,
-                       String description, String options, int rating, int capacity,String status) {
+                       String description, String options, int rating, int capacity, String status) {
+        this(name, type, city, address, country, pricePerNight, disponibility, photo, album,
+                description, options, rating, capacity, status, "unliked"); // Default value for favoris
+    }
+
+    public Hebergement(int acc_id, String name, String type, String city, String address, String country,
+                       double pricePerNight, boolean disponibility, String photo, String album,
+                       String description, String options, int rating, int capacity, String status) {
+        this(acc_id, name, type, city, address, country, pricePerNight, disponibility, photo, album,
+                description, options, rating, capacity, status, "unliked"); // Default value for favoris
+    }
+
+    public Hebergement(String name, String type, String city, String address, String country,
+                       double pricePerNight, boolean disponibility, String photo, String album,
+                       String description, String options, int rating, int capacity, String status, String favoris) {
         this.name = name;
         this.type = type;
         this.city = city;
@@ -34,19 +49,19 @@ public class Hebergement {
         this.options = options;
         this.rating = rating;
         this.capacity = capacity;
-        this.status=status;
+        this.status = status;
+        this.favoris = favoris;
     }
 
     public Hebergement(int acc_id, String name, String type, String city, String address, String country,
                        double pricePerNight, boolean disponibility, String photo, String album,
-                       String description, String options, int rating, int capacity,String status) {
-        this(name, type, city, address, country, pricePerNight, disponibility, photo, album, description, options, rating, capacity,status);
+                       String description, String options, int rating, int capacity, String status, String favoris) {
+        this(name, type, city, address, country, pricePerNight, disponibility, photo, album,
+                description, options, rating, capacity, status, favoris);
         this.acc_id = acc_id;
     }
 
-
-
-
+    // Getters and setters
     public int getId() { return acc_id; }
     public void setId(int acc_id) { this.acc_id = acc_id; }
 
@@ -90,9 +105,12 @@ public class Hebergement {
 
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
+
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+    public String getFavoris() { return favoris; }  // Added getter
+    public void setFavoris(String favoris) { this.favoris = favoris; }  // Added setter
 
     @Override
     public String toString() {
@@ -111,9 +129,8 @@ public class Hebergement {
                 ", options='" + options + '\'' +
                 ", rating=" + rating +
                 ", capacity=" + capacity +
-                ", Status" + status +
-
+                ", status='" + status + '\'' +
+                ", favoris='" + favoris + '\'' +  // Added to toString
                 '}';
     }
-
 }

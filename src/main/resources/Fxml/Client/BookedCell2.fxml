@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="52.0" prefWidth="860.0" styleClass="cell_container" stylesheets="@../../Styles/FlightCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.BookedCellController">
+    <AnchorPane layoutY="4.2" prefHeight="52.0" prefWidth="860.0" styleClass="container" AnchorPane.bottomAnchor="5.399999999999999" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.2">
+        <FontAwesomeIconView glyphName="HOTEL" layoutX="14.4" layoutY="32.31428489685059" size="30" AnchorPane.leftAnchor="14.4" AnchorPane.topAnchor="6.600000000000001" />
+        <Label fx:id="name_lbl" layoutX="70.0" layoutY="12.2" styleClass="price_lbl" text="NAME" AnchorPane.topAnchor="12.2" />
+        <Label fx:id="country_lbl" layoutX="329.0" layoutY="13.0" styleClass="lbl" text="TYPE">
+         <graphic>
+            <FontAwesomeIconView glyphName="MAP_MARKER" />
+         </graphic></Label>
+        <Label fx:id="city_lbl" layoutX="223.0" layoutY="12.0" styleClass="lbl" text="DESTINATION">
+         <graphic>
+            <FontAwesomeIconView glyphName="GLOBE" />
+         </graphic></Label>
+        <Label fx:id="depart_lbl" layoutX="472.0" layoutY="13.8" styleClass="lbl" text="2000-07-04" AnchorPane.topAnchor="13.8" />
+        <Line endX="-100.00003051757812" endY="56.19999313354492" layoutX="534.0" layoutY="-45.0" startX="-100.0" startY="78.33333587646484" />
+        <Label fx:id="total_price_lbl" layoutX="683.0" layoutY="12.8" styleClass="price_lbl" text="PRICE" AnchorPane.topAnchor="12.8" />
+        <Button fx:id="cancel_btn" layoutX="777.0" layoutY="8.0" mnemonicParsing="false" onAction="#onViewClicked" prefHeight="26.0" prefWidth="82.0" text="Cancel" AnchorPane.topAnchor="8.0" />
+      <Label fx:id="arrival_lbl" layoutX="591.0" layoutY="13.0" styleClass="lbl" text="2000-07-04" />
+      <FontAwesomeIconView glyphName="ARROW_RIGHT" layoutX="557.0" layoutY="27.0" size="14" wrappingWidth="24.0" />
+    </AnchorPane>
+</AnchorPane>
