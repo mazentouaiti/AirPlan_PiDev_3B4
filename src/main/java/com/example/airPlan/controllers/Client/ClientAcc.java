@@ -477,13 +477,24 @@ public class ClientAcc {
     private void openHotelInfo(Hebergement hebergement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/hotel_info_client.fxml"));
-            Parent root = loader.load();
+            Parent detailsView = loader.load();
 
             HotelInfoClient hotelInfoController = loader.getController();
             hotelInfoController.setHebergementDetails(hebergement);
 
-            Scene currentScene = scrollPane.getScene();
-            currentScene.setRoot(root);
+            // Set the return action to show the accommodation view again
+            hotelInfoController.setReturnAction(() -> {
+                BorderPane clientParent = (BorderPane) scrollPane.getScene().lookup("#client_parent");
+                if (clientParent != null) {
+                    clientParent.setCenter(scrollPane);
+                }
+            });
+
+            // Get the client_parent BorderPane and set the details view as center
+            BorderPane clientParent = (BorderPane) scrollPane.getScene().lookup("#client_parent");
+            if (clientParent != null) {
+                clientParent.setCenter(detailsView);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

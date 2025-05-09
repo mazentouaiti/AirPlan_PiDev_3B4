@@ -38,6 +38,10 @@ public class HotelInfoClient {
     @FXML private HBox albuminfoo;
     @FXML
     private Button returnButton;
+    private Runnable returnAction;
+    public void setReturnAction(Runnable returnAction) {
+        this.returnAction = returnAction;
+    }
 
     @FXML
     private void initialize() {
@@ -48,19 +52,18 @@ public class HotelInfoClient {
 
 
     public void retournerClient() {
-        try {
-            // Charger la vue accommodation
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
-            Parent root = loader.load();
-
-            // Obtenir la scène depuis le bouton
-            Stage stage = (Stage) returnButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            // Optionnel : ajouter des styles, animations, etc.
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (returnAction != null) {
+            returnAction.run();
+        } else {
+            // Fallback to default behavior if returnAction not set
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) returnButton.getScene().getWindow();
+                stage.setScene(new Scene(root));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
