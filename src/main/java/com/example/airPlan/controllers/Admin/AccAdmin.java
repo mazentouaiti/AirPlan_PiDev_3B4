@@ -10,9 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,15 +33,18 @@ public class AccAdmin implements Initializable {
     private ComboBox<String> typecombifilteragence;
     @FXML
     private ListView<Hebergement> listHebergement;
+    @FXML
+    private BorderPane adminParent;
 
     private ObservableList<Hebergement> list;
     private FilteredList<Hebergement> filteredList;
     private ServiceHebergement service;
-    private Stage stage;
-    private Scene scene;
+    private Parent accView; // Store reference to our own view
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        accView = listHebergement.getParent();
         try {
             service = new ServiceHebergement();
             loadHebergements();
@@ -99,15 +104,20 @@ public class AccAdmin implements Initializable {
     public void ouvrirFenetreDetails(Hebergement hebergement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Admin/hotel_info_admin.fxml"));
-            Parent root = loader.load();
+            Parent detailsView = loader.load();
 
             HotelInfoAdmin controller = loader.getController();
             controller.setHebergementDetails(hebergement);
 
-            Stage stage = (Stage) listHebergement.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            // Pass the accView reference to the details controller
+            controller.setReturnView(accView);
+
+            // Get the scene's root (should be BorderPane)
+            BorderPane root = (BorderPane) listHebergement.getScene().getRoot();
+            root.setCenter(detailsView);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            showErrorAlert("Error", "Failed to load hotel details: " + e.getMessage());
         }
     }
 

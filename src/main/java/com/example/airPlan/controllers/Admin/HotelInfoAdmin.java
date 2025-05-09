@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -38,31 +40,30 @@ public class HotelInfoAdmin {
     @FXML private HBox albuminfoo;
     @FXML
     private Button returnButton;
+    private Runnable returnAction;
+    private Node previousView;
+    private Parent returnView;
+
 
     @FXML
     private void initialize() {
         returnButton.setOnAction(event -> retournerAdmin());
     }
-
-
-
-
-
+    public void setReturnAction(Runnable returnAction) {
+        this.returnAction = returnAction;
+    }
+    public void setReturnView(Parent returnView) {
+        this.returnView = returnView;
+    }
+    public void setPreviousView(Node view) {
+        this.previousView = view;
+    }
 
     public void retournerAdmin() {
-        try {
-            // Charger la vue accommodation
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Admin/admin_acc.fxml"));
-            Parent root = loader.load();
-
-            // Obtenir la scène depuis le bouton
-            Stage stage = (Stage) returnButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            // Optionnel : ajouter des styles, animations, etc.
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (returnView != null) {
+            // Get the root BorderPane from any node in the scene
+            BorderPane root = (BorderPane) returnButton.getScene().getRoot();
+            root.setCenter(returnView);
         }
     }
 
