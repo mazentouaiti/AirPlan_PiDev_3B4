@@ -19,6 +19,7 @@ public class Reservation{
     private double totalPriceAcc;
     private String nameOfReservatedAccommodation;
     private Timestamp reservationTime;
+    private String destination;
 
     // Getters & Setters
     public int getIdReservation() {
@@ -139,5 +140,13 @@ public class Reservation{
 
     public void setReservationTime(Timestamp reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }

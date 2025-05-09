@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -8,19 +9,24 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/clientacc.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.ClientAcc">
    <children>
-      <ScrollPane fx:id="scrollPane" layoutX="0.0" layoutY="244.0" prefHeight="506.0" prefWidth="1000.0" styleClass="main-scroll">
+      <ScrollPane fx:id="scrollPane" layoutX="0.0" layoutY="265.0" prefHeight="486.0" prefWidth="1000.0" styleClass="main-scroll">
          <content>
             <FlowPane fx:id="flowPane" alignment="TOP_CENTER" hgap="20.0" prefHeight="570.0" prefWidth="980.0" vgap="20.0" />
          </content>
       </ScrollPane>
 
-      <TextField fx:id="destinationfiled" layoutX="57.0" layoutY="187.0" prefHeight="26.0" prefWidth="221.0" promptText="Where Are You Going ?" />
-      <FontAwesomeIconView glyphName="GLOBE" layoutX="255.0" layoutY="206.0" size="16" text="" />
-      <ComboBox fx:id="pricecombo" layoutX="296.0" layoutY="187.0" prefHeight="26.0" prefWidth="166.0" promptText="Sort By Price / Rating" />
-      <FontAwesomeIconView glyphName="SORT" layoutX="434.0" layoutY="206.0" size="16" text="" />
+      <TextField fx:id="destinationfiled" layoutX="85.0" layoutY="215.0" prefHeight="26.0" prefWidth="221.0" promptText="Where Are You Going ?" />
+      <FontAwesomeIconView glyphName="GLOBE" layoutX="288.0" layoutY="233.0" size="16" text="" />
+
+      <ComboBox fx:id="pricecombo" layoutX="333.0" layoutY="215.0" prefHeight="26.0" prefWidth="166.0" promptText="   Sort By Price / Rating" />
+      <FontAwesomeIconView glyphName="SORT" layoutX="471.0" layoutY="234.0" size="16" text="" />
+
+      <!-- Add this near your WebView declaration -->
+      <WebView fx:id="weatherWebView" layoutX="0.0" layoutY="244.0" prefHeight="506.0" prefWidth="1000.0" visible="false" />
       <ImageView fitHeight="148.0" fitWidth="308.0" layoutX="692.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/zina1.png" />
@@ -31,10 +37,24 @@
             <Image url="@../../images/zina3.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="140.0" fitWidth="625.0" layoutX="179.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="102.0" fitWidth="605.0" layoutX="218.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/titre.png" />
          </image>
       </ImageView>
+      <Button fx:id="btnbooked" layoutX="905.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="34.0" styleClass="combo-box">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="HOTEL" size="15" />
+         </graphic>
+      </Button>
+      <Button fx:id="btnliked" layoutX="952.0" layoutY="187.0" mnemonicParsing="false" styleClass="combo-box">
+         <graphic>
+            <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/heart_full.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>
