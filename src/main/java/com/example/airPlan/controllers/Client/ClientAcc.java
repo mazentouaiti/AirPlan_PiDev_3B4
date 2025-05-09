@@ -251,10 +251,10 @@ public class ClientAcc {
         carte.setPadding(new Insets(12));
         carte.setSpacing(10);
         carte.setStyle("""
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
-    """);
+        -fx-background-color: #ffffff;
+        -fx-background-radius: 15;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+        """);
 
         // Image
         ImageView imageView = new ImageView();
@@ -307,7 +307,6 @@ public class ClientAcc {
         heartView.setFitWidth(24);
         heartView.setFitHeight(24);
 
-// Initialize heart based on current favoris status
         if ("liked".equals(hebergement.getFavoris())) {
             heartView.setImage(imgHeartFull);
         } else {
@@ -330,15 +329,11 @@ public class ClientAcc {
                     heartView.setImage(imgHeartFull);
                 }
 
-                // Update the database
                 service.updateFavoris(hebergement.getId(), newFavorisStatus);
-
-                // Update the local object
                 hebergement.setFavoris(newFavorisStatus);
 
             } catch (SQLException ex) {
                 System.err.println("Error updating favorite status: " + ex.getMessage());
-                // Revert the UI change if database update failed
                 if ("liked".equals(hebergement.getFavoris())) {
                     heartView.setImage(imgHeartFull);
                 } else {
@@ -350,12 +345,12 @@ public class ClientAcc {
         // Reserve button
         Button btnReserver = new Button("Book");
         btnReserver.setStyle("""
-    -fx-background-color: #588b8b;
-    -fx-text-fill: white;
-    -fx-background-radius: 20;
-    -fx-padding: 6 12;
-    -fx-font-weight: bold;
-    """);
+        -fx-background-color: #588b8b;
+        -fx-text-fill: white;
+        -fx-background-radius: 20;
+        -fx-padding: 6 12;
+        -fx-font-weight: bold;
+        """);
         btnReserver.setVisible(false);
 
         // Footer with reserve button and favorite button
@@ -363,111 +358,102 @@ public class ClientAcc {
         footerBox.setAlignment(Pos.CENTER_RIGHT);
         footerBox.setSpacing(10);
 
-        // Add favorite button first (left side)
         footerBox.getChildren().add(btnFavori);
-
-        // Add growing region to push buttons to the right
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         footerBox.getChildren().add(spacer);
-
-        // Add reserve button (right side)
         footerBox.getChildren().add(btnReserver);
 
-        // Weather info panel (initially hidden)
+        // Weather info panel (now always visible)
         VBox weatherBox = new VBox();
         weatherBox.setStyle("""
-    -fx-background-color: #f8f9fa;
-    -fx-background-radius: 10;
-    -fx-padding: 8;
-    -fx-spacing: 5;
-    """);
-        weatherBox.setVisible(false);
+        -fx-background-color: #f8f9fa;
+        -fx-background-radius: 10;
+        -fx-padding: 8;
+        -fx-spacing: 5;
+        """);
+        weatherBox.setVisible(true); // Changed to always visible
 
         Label weatherLoading = new Label("Loading weather...");
         weatherLoading.setStyle("-fx-text-fill: #666; -fx-font-size: 12px;");
         weatherBox.getChildren().add(weatherLoading);
 
-        // Card hover effects
+        // Fetch weather data immediately (not on hover)
+        new Thread(() -> {
+            try {
+                String weatherData = fetchWeatherData(hebergement.getCity(), hebergement.getCountry());
+                JSONObject json = new JSONObject(weatherData);
+                JSONObject main = json.getJSONObject("main");
+                JSONObject weather = json.getJSONArray("weather").getJSONObject(0);
+
+                double temp = main.getDouble("temp");
+                String description = weather.getString("description");
+                String iconCode = weather.getString("icon");
+
+                Platform.runLater(() -> {
+                    weatherBox.getChildren().clear();
+
+                    HBox weatherHeader = new HBox(5);
+                    weatherHeader.setAlignment(Pos.CENTER_LEFT);
+
+                    ImageView weatherIcon = new ImageView();
+                    weatherIcon.setFitWidth(30);
+                    weatherIcon.setFitHeight(30);
+                    weatherIcon.setImage(new Image("https://openweathermap.org/img/wn/" + iconCode + "@2x.png"));
+
+                    Label weatherTemp = new Label(String.format("%.1f°C", temp));
+                    weatherTemp.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+                    Label weatherDesc = new Label(description.substring(0, 1).toUpperCase() + description.substring(1));
+                    weatherDesc.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+
+                    weatherHeader.getChildren().addAll(weatherIcon, weatherTemp, weatherDesc);
+
+                    HBox weatherDetails = new HBox(10);
+                    weatherDetails.setAlignment(Pos.CENTER);
+
+                    Label feelsLike = new Label(String.format("Feels: %.1f°C", main.getDouble("feels_like")));
+                    feelsLike.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+
+                    Label humidity = new Label(String.format("Humidity: %d%%", main.getInt("humidity")));
+                    humidity.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+
+                    weatherDetails.getChildren().addAll(feelsLike, humidity);
+                    weatherBox.getChildren().addAll(weatherHeader, weatherDetails);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    weatherBox.getChildren().clear();
+                    Label errorLabel = new Label("Weather data unavailable");
+                    errorLabel.setStyle("-fx-text-fill: #ff4444; -fx-font-size: 12px;");
+                    weatherBox.getChildren().add(errorLabel);
+                });
+            }
+        }).start();
+
+        // Card hover effects (removed weather-related parts)
         carte.setOnMouseEntered(e -> {
             btnReserver.setVisible(true);
-            btnFavori.setVisible(true); // Show favorite button on hover
-            weatherBox.setVisible(true);
-
-            // Fetch weather data when hovered
-            new Thread(() -> {
-                try {
-                    String weatherData = fetchWeatherData(hebergement.getCity(), hebergement.getCountry());
-                    JSONObject json = new JSONObject(weatherData);
-                    JSONObject main = json.getJSONObject("main");
-                    JSONObject weather = json.getJSONArray("weather").getJSONObject(0);
-
-                    double temp = main.getDouble("temp");
-                    String description = weather.getString("description");
-                    String iconCode = weather.getString("icon");
-
-                    Platform.runLater(() -> {
-                        weatherBox.getChildren().clear();
-
-                        HBox weatherHeader = new HBox(5);
-                        weatherHeader.setAlignment(Pos.CENTER_LEFT);
-
-                        ImageView weatherIcon = new ImageView();
-                        weatherIcon.setFitWidth(30);
-                        weatherIcon.setFitHeight(30);
-                        weatherIcon.setImage(new Image("https://openweathermap.org/img/wn/" + iconCode + "@2x.png"));
-
-                        Label weatherTemp = new Label(String.format("%.1f°C", temp));
-                        weatherTemp.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-
-                        Label weatherDesc = new Label(description.substring(0, 1).toUpperCase() + description.substring(1));
-                        weatherDesc.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
-
-                        weatherHeader.getChildren().addAll(weatherIcon, weatherTemp, weatherDesc);
-
-                        HBox weatherDetails = new HBox(10);
-                        weatherDetails.setAlignment(Pos.CENTER);
-
-                        Label feelsLike = new Label(String.format("Feels: %.1f°C", main.getDouble("feels_like")));
-                        feelsLike.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
-
-                        Label humidity = new Label(String.format("Humidity: %d%%", main.getInt("humidity")));
-                        humidity.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
-
-                        weatherDetails.getChildren().addAll(feelsLike, humidity);
-                        weatherBox.getChildren().addAll(weatherHeader, weatherDetails);
-                    });
-                } catch (Exception ex) {
-                    Platform.runLater(() -> {
-                        weatherBox.getChildren().clear();
-                        Label errorLabel = new Label("Weather data unavailable");
-                        errorLabel.setStyle("-fx-text-fill: #ff4444; -fx-font-size: 12px;");
-                        weatherBox.getChildren().add(errorLabel);
-                    });
-                }
-            }).start();
-
+            btnFavori.setVisible(true);
             carte.setStyle("""
-        -fx-background-color: #f5f5f5;
-        -fx-background-radius: 15;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 4);
-        """);
+            -fx-background-color: #f5f5f5;
+            -fx-background-radius: 15;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 4);
+            """);
         });
 
         carte.setOnMouseExited(e -> {
             btnReserver.setVisible(false);
-            btnFavori.setVisible(false); // Hide favorite button when not hovering
-            weatherBox.setVisible(false);
+            btnFavori.setVisible(false);
             carte.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-background-radius: 15;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
-        """);
+            -fx-background-color: #ffffff;
+            -fx-background-radius: 15;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+            """);
         });
 
         btnReserver.setOnAction(event -> openReservation(hebergement, event));
 
-        // Card click handlers
         carte.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 openHotelInfo(hebergement);
