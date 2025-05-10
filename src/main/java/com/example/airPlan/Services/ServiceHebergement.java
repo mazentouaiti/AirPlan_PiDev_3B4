@@ -5,7 +5,7 @@ import com.example.airPlan.models.Hebergement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import com.example.airPlan.utils.DBConnection;
+import com.example.airPlan.Utiles.DBConnection;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;

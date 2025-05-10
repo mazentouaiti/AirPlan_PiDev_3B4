@@ -2,7 +2,7 @@ package com.example.airPlan.controllers.Admin;
 
 import com.example.airPlan.models.Hebergement;
 import com.example.airPlan.Services.ServiceHebergement;
-import com.example.airPlan.utils.DBConnection;
+import com.example.airPlan.Utiles.DBConnection;
 import com.example.airPlan.views.AccCellAdminFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
