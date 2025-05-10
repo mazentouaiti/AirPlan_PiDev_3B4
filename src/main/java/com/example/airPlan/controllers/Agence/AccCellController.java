@@ -9,6 +9,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -75,35 +76,43 @@ public class AccCellController implements Initializable {
             }
         });
     }
-    public void setAgencyParent(BorderPane agencyParent) {
-        this.agencyParent = agencyParent;
-    }
     private void openModifyHebergementWindow(Hebergement hebergement) {
-        System.out.println("Attempting to open modification window..."); // Debug
+        System.out.println("Opening modification window for: " + hebergement.getName());
 
         try {
-            System.out.println("Loading FXML...");
+            // 1. Load the FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
-            Parent root = loader.load();
-            System.out.println("FXML loaded successfully");
+            Parent modifyView = loader.load();
 
+            // 2. Get controller and initialize data
             HotelAdd controller = loader.getController();
-            System.out.println("Controller initialized");
-
             controller.initData(hebergement);
-            System.out.println("Data initialized");
 
+            // 3. Verify and update the center content
             if (agencyParent == null) {
-                System.err.println("ERROR: agencyParent is null!");
+                // Fallback: Get BorderPane from current scene if agencyParent wasn't set
+                Node source = (Node) listHebergement; // Or any other node in the scene
+                BorderPane root = (BorderPane) source.getScene().getRoot();
+
+                if (root != null) {
+                    System.out.println("Using scene root as fallback BorderPane");
+                    root.setCenter(modifyView);
+                } else {
+                    throw new IllegalStateException("Could not find BorderPane parent");
+                }
             } else {
-                System.out.println("Setting center content...");
-                agencyParent.setCenter(root);
-                System.out.println("Center content set successfully");
+                System.out.println("Using agencyParent BorderPane");
+                agencyParent.setCenter(modifyView);
             }
+
         } catch (IOException e) {
-            System.err.println("FAILED to load modification view:");
+            System.err.println("FXML Loading Error:");
             e.printStackTrace();
-            showErrorAlert("Navigation Error", "Failed to load modification view: " + e.getMessage());
+            showErrorAlert("Loading Error", "Failed to load modification view: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected Error:");
+            e.printStackTrace();
+            showErrorAlert("Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
 
