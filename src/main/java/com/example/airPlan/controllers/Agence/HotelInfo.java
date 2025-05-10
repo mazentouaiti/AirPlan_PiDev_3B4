@@ -65,10 +65,11 @@ public class HotelInfo {
     public void retournerAccueil() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) returnButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            Parent agencyAccView = loader.load();
+
+            // Get the parent BorderPane from the current scene
+            BorderPane parent = (BorderPane) returnButton.getScene().getRoot();
+            parent.setCenter(agencyAccView);
         } catch (IOException e) {
             e.printStackTrace();
         }

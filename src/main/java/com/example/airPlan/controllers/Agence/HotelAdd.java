@@ -11,8 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -22,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class HotelAdd {
 
@@ -388,7 +385,7 @@ public class HotelAdd {
         }
 
         if (!isValid) {
-            showAlert("Please correct the errors in the form before submitting.", Alert.AlertType.WARNING);
+            showAlert("Please correct the errors in the form before submitting.", "Failed to load agency view", Alert.AlertType.WARNING);
             return;
         }
 
@@ -415,7 +412,7 @@ public class HotelAdd {
                 Hebergement h = new Hebergement(name, type, city, address, country, price, disponibility,
                         photo, album, description, options, ratingValue, capacity, status);
                 sh.ajouter(h);
-                showAlert("Accommodation added successfully!", Alert.AlertType.INFORMATION);
+                showAlert("Accommodation added successfully!", "Failed to load agency view", Alert.AlertType.INFORMATION);
                 clearForm();
             } else {
                 // Editing existing accommodation
@@ -434,19 +431,19 @@ public class HotelAdd {
                 hebergementToEdit.setDisponibility(disponibility);
 
                 sh.modifier(hebergementToEdit);
-                showAlert("Accommodation updated successfully!", Alert.AlertType.INFORMATION);
+                showAlert("Accommodation updated successfully!", "Failed to load agency view", Alert.AlertType.INFORMATION);
                 hebergementToEdit = null;
             }
 
         } catch (NumberFormatException e) {
-            showAlert("Price must be a valid number.", Alert.AlertType.ERROR);
+            showAlert("Price must be a valid number.", "Failed to load agency view", Alert.AlertType.ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("An unexpected error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("An unexpected error occurred: " + e.getMessage(), "Failed to load agency view", Alert.AlertType.ERROR);
         }
     }
 
-    private void showAlert(String message, Alert.AlertType type) {
+    private void showAlert(String message, String failedToLoadAgencyView, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle("Information");
         alert.setHeaderText(null);
@@ -532,10 +529,22 @@ public class HotelAdd {
     }
 
     public void switch_admin(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Fxml/Agences/agency_acc.fxml")));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        try {
+            // 1. Load the target view (agency_acc.fxml)
+            Parent agencyAccView = FXMLLoader.load(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
+
+            // 2. Get the current stage
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // 3. Get the root BorderPane (from Agency.fxml)
+            BorderPane root = (BorderPane) stage.getScene().getRoot();
+
+            // 4. Update the center content (keeps the left menu)
+            root.setCenter(agencyAccView);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Navigation Error", "Failed to load agency view", Alert.AlertType.ERROR);
+        }
     }
 }

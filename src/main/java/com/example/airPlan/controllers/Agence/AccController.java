@@ -153,13 +153,14 @@ public class AccController implements Initializable {
     public void ouvrirFenetreDetails(Hebergement hebergement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_info_agence.fxml"));
-            Parent root = loader.load();
+            Parent hotelInfoView = loader.load();
 
             HotelInfo controller = loader.getController();
             controller.setHebergementDetails(hebergement);
 
-            Stage stage = (Stage) listHebergement.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            // Get the parent BorderPane from the current scene
+            BorderPane parent = (BorderPane) listHebergement.getScene().getRoot();
+            parent.setCenter(hotelInfoView);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,11 +168,18 @@ public class AccController implements Initializable {
 
     @FXML
     public void switch_add(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        try {
+            // Load the hotel_add view
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
+            Parent hotelAddView = loader.load();
+
+            // Get the parent BorderPane from the current scene
+            BorderPane parent = (BorderPane) listHebergement.getScene().getRoot();
+            parent.setCenter(hotelAddView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Navigation Error", "Failed to load hotel add view: " + e.getMessage());
+        }
     }
 
     private void showErrorAlert(String title, String message) {
