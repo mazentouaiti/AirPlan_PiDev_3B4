@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="631.0" prefWidth="808.0" stylesheets="@travelwise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.AffichageFeed">
+<left>
+   <VBox prefWidth="180" spacing="5" styleClass="sidebar">
+      <Label styleClass="sidebar-header" text="Passenger" />
+
+      <HBox styleClass="sidebar-item">
+         <Label text="Dashboard" />
+      </HBox>
+
+      <HBox styleClass="sidebar-item">
+         <Label text="Discover" />
+      </HBox>
+
+      <HBox styleClass="sidebar-item-selected">
+         <Label text="list feed bak" />
+      </HBox>
+
+      <HBox styleClass="sidebar-item">
+         <Label text="Hotels" />
+      </HBox>
+
+      <HBox styleClass="sidebar-item">
+         <Label text="Transport" />
+      </HBox>
+
+      <Separator />
+
+      <Button styleClass="sidebar-button">
+         <graphic>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+               <Label text="Profile" />
+            </HBox>
+         </graphic>
+      </Button>
+
+      <Button styleClass="sidebar-button">
+         <graphic>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+               <Label text="Assistance" />
+            </HBox>
+         </graphic>
+      </Button>
+
+      <Button styleClass="sidebar-button">
+         <graphic>
+            <HBox alignment="CENTER_LEFT" spacing="5">
+               <Label text="Logout" />
+            </HBox>
+         </graphic>
+      </Button>
+
+      <Region VBox.vgrow="ALWAYS" />
+
+      <VBox styleClass="bug-report-box">
+         <Label styleClass="bug-report-title" text="Report Bug?" />
+         <Label styleClass="bug-report-text" text="use this to report any suggestion or ..." wrapText="true" />
+         <Button styleClass="report-button" text="Report" />
+      </VBox>
+   </VBox>
+</left>
+
+<center>
+   <VBox spacing="15" styleClass="content-area">
+      <!-- Search Panel -->
+      <AnchorPane styleClass="search-panel">
+
+
+         <Button onAction="#handleAddButton" styleClass="search-button" text="add feed back" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20" />
+            <Button layoutX="425.0" layoutY="23.0" onAction="#reclamtion" opacity="0.65" styleClass="search-button" text="list reclamtion" />
+      </AnchorPane>
+
+      <!-- Flight List -->
+      <ListView fx:id="listViewFeed" styleClass="flight-list" VBox.vgrow="ALWAYS">
+         <placeholder>
+            <Label text="No flights available" />
+         </placeholder>
+      </ListView>
+   </VBox>
+</center>
+</BorderPane>
