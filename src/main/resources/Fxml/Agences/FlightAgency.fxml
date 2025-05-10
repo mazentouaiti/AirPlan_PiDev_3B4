@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/FlightAgency.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Agence.FlightAgencyController">
 
@@ -61,6 +62,42 @@
          <DatePicker fx:id="arrivalDatePicker" layoutX="200.0" layoutY="191.0" prefHeight="27.0" prefWidth="154.0" promptText="Arrival Date" />
 
          <Button fx:id="confirmBtn" layoutX="254.0" layoutY="317.0" onAction="#handleConfirmAction" prefWidth="79.0" styleClass="btn" text="Confirm" />
+         <Label fx:id="flightNumberError" layoutX="16.0" layoutY="43.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="originError" layoutX="223.0" layoutY="41.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="airlineError" layoutX="11.0" layoutY="98.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="destinationError" layoutX="212.0" layoutY="97.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="capacityError" layoutX="208.0" layoutY="159.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="priceError" layoutX="10.0" layoutY="158.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="departureDateError" layoutX="9.0" layoutY="220.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="arrivalDateError" layoutX="207.0" layoutY="219.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
+         <Label fx:id="statusError" layoutX="11.0" layoutY="291.0" textFill="RED">
+            <font>
+               <Font size="9.0" />
+            </font></Label>
       </AnchorPane>
    </AnchorPane>
 </AnchorPane>

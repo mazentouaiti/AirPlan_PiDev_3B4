@@ -9,10 +9,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -65,6 +67,24 @@ public class FlightAgencyController implements Initializable {
     private AnchorPane managementPanel;
     @FXML
     private TextField destinationField;
+    @FXML
+    private Label statusError;
+    @FXML
+    private Label flightNumberError;
+    @FXML
+    private Label capacityError;
+    @FXML
+    private Label departureDateError;
+    @FXML
+    private Label priceError;
+    @FXML
+    private Label arrivalDateError;
+    @FXML
+    private Label originError;
+    @FXML
+    private Label destinationError;
+    @FXML
+    private Label airlineError;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -77,6 +97,183 @@ public class FlightAgencyController implements Initializable {
         ));
         setupListView();
         loadFlights();
+        setupValidationListeners();
+        flightNumberError.getProperties().put("field", flightNumberField);
+        airlineError.getProperties().put("field", airlineField);
+        originError.getProperties().put("field", originField);
+        destinationError.getProperties().put("field", destinationField);
+        departureDateError.getProperties().put("field", departureDatePicker);
+        arrivalDateError.getProperties().put("field", arrivalDatePicker);
+        priceError.getProperties().put("field", priceField);
+        capacityError.getProperties().put("field", capacityField);
+        statusError.getProperties().put("field", statusComboBox);
+
+        clearAllErrors();
+    }
+    private void setupValidationListeners() {
+        // Flight Number validation
+        flightNumberField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[A-Za-z]{0,2}\\d{0,4}")) {
+                flightNumberField.setText(oldVal);
+            }
+            clearError(flightNumberError, flightNumberField);
+        });
+
+        // Airline validation
+        airlineField.textProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(airlineError, airlineField);
+        });
+
+        // Origin validation
+        originField.textProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(originError, originField);
+        });
+
+        // Destination validation
+        destinationField.textProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(destinationError, destinationField);
+        });
+
+        // Price validation
+        priceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*(\\.\\d{0,2})?")) {
+                priceField.setText(oldVal);
+            }
+            clearError(priceError, priceField);
+        });
+
+        // Capacity validation
+        capacityField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                capacityField.setText(oldVal);
+            }
+            clearError(capacityError, capacityField);
+        });
+
+        // Departure Date validation
+        departureDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(departureDateError, departureDatePicker);
+            if (newVal != null && arrivalDatePicker.getValue() != null &&
+                    newVal.isAfter(arrivalDatePicker.getValue())) {
+                showError(arrivalDateError, "Must be after departure", arrivalDatePicker);
+            } else {
+                clearError(arrivalDateError, arrivalDatePicker);
+            }
+        });
+
+        // Arrival Date validation
+        arrivalDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(arrivalDateError, arrivalDatePicker);
+            if (newVal != null && departureDatePicker.getValue() != null &&
+                    newVal.isBefore(departureDatePicker.getValue())) {
+                showError(arrivalDateError, "Must be after departure", arrivalDatePicker);
+            } else {
+                clearError(arrivalDateError, arrivalDatePicker);
+            }
+        });
+
+        // Status validation
+        statusComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            clearError(statusError, statusComboBox);
+        });
+
+        // Add focus listeners to validate when focus is lost
+        addFocusValidation(flightNumberField, () -> validateFlightNumber());
+        addFocusValidation(airlineField, () -> validateAirline());
+        addFocusValidation(originField, () -> validateOrigin());
+        addFocusValidation(destinationField, () -> validateDestination());
+        addFocusValidation(priceField, () -> validatePrice());
+        addFocusValidation(capacityField, () -> validateCapacity());
+    }
+
+    private void addFocusValidation(Control field, Runnable validation) {
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // When focus is lost
+                validation.run();
+            }
+        });
+    }
+
+    private boolean validateFlightNumber() {
+        if (flightNumberField.getText().isEmpty()) {
+            showError(flightNumberError, "Flight number is required", flightNumberField);
+            return false;
+        } else if (!flightNumberField.getText().matches("[A-Za-z]{2}\\d{3,4}")) {
+            showError(flightNumberError, "Format: 2 letters + 3-4 numbers", flightNumberField);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateAirline() {
+        if (airlineField.getText().isEmpty()) {
+            showError(airlineError, "Airline is required", airlineField);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateOrigin() {
+        if (originField.getText().isEmpty()) {
+            showError(originError, "Origin is required", originField);
+            return false;
+        } else if (originField.getText().length() < 3) {
+            showError(originError, "Minimum 3 characters", originField);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateDestination() {
+        if (destinationField.getText().isEmpty()) {
+            showError(destinationError, "Destination is required", destinationField);
+            return false;
+        } else if (destinationField.getText().length() < 3) {
+            showError(destinationError, "Minimum 3 characters", destinationField);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePrice() {
+        try {
+            double price = Double.parseDouble(priceField.getText());
+            if (price <= 0) {
+                showError(priceError, "Must be positive", priceField);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showError(priceError, "Invalid number", priceField);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateCapacity() {
+        try {
+            int capacity = Integer.parseInt(capacityField.getText());
+            if (capacity <= 0) {
+                showError(capacityError, "Must be positive", capacityField);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showError(capacityError, "Invalid number", capacityField);
+            return false;
+        }
+        return true;
+    }
+
+    // Helper methods
+    private void showError(Label errorLabel, String message, Node field) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        field.getStyleClass().add("error-field");
+    }
+
+    private void clearError(Label errorLabel, Node field) {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
+        field.getStyleClass().remove("error-field");
     }
     @FXML
     private void handleCreateFlight() {
@@ -163,8 +360,133 @@ public class FlightAgencyController implements Initializable {
     }
 
     private boolean validateInputs() {
-        // Add your validation logic here
-        return true;
+        boolean isValid = true;
+
+        // Clear all previous errors
+        clearAllErrors();
+
+        // Flight Number validation
+        if (flightNumberField.getText().isEmpty()) {
+            showError(flightNumberError, "Flight number is required");
+            isValid = false;
+        } else if (!flightNumberField.getText().matches("[A-Za-z]{2}\\d{3,4}")) {
+            showError(flightNumberError, "Format: 2 letters + 3-4 numbers (e.g., AB123)");
+            isValid = false;
+        }
+
+        // Airline validation
+        if (airlineField.getText().isEmpty()) {
+            showError(airlineError, "Airline is required");
+            isValid = false;
+        }
+
+        // Origin validation
+        if (originField.getText().isEmpty()) {
+            showError(originError, "Origin is required");
+            isValid = false;
+        } else if (originField.getText().length() < 3) {
+            showError(originError, "Minimum 3 characters");
+            isValid = false;
+        }
+
+        // Destination validation
+        if (destinationField.getText().isEmpty()) {
+            showError(destinationError, "Destination is required");
+            isValid = false;
+        } else if (destinationField.getText().length() < 3) {
+            showError(destinationError, "Minimum 3 characters");
+            isValid = false;
+        }
+
+        // Date validation
+        if (departureDatePicker.getValue() == null) {
+            showError(departureDateError, "Departure date is required");
+            isValid = false;
+        }
+
+        if (arrivalDatePicker.getValue() == null) {
+            showError(arrivalDateError, "Arrival date is required");
+            isValid = false;
+        } else if (departureDatePicker.getValue() != null &&
+                arrivalDatePicker.getValue().isBefore(departureDatePicker.getValue())) {
+            showError(arrivalDateError, "Must be after departure");
+            isValid = false;
+        }
+
+        // Price validation
+        try {
+            double price = Double.parseDouble(priceField.getText());
+            if (price <= 0) {
+                showError(priceError, "Must be positive");
+                isValid = false;
+            }
+        } catch (NumberFormatException e) {
+            showError(priceError, "Invalid number");
+            isValid = false;
+        }
+
+        // Capacity validation
+        try {
+            int capacity = Integer.parseInt(capacityField.getText());
+            if (capacity <= 0) {
+                showError(capacityError, "Must be positive");
+                isValid = false;
+            }
+        } catch (NumberFormatException e) {
+            showError(capacityError, "Invalid number");
+            isValid = false;
+        }
+
+        // Status validation
+        if (statusComboBox.getValue() == null) {
+            showError(statusError, "Status is required");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void showError(Label errorLabel, String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+
+        // Get the parent node to apply error style (assuming it's a Pane)
+        Node field = (Node) errorLabel.getProperties().get("field");
+        if (field != null) {
+            field.getStyleClass().add("error-field");
+        }
+    }
+
+    private void clearAllErrors() {
+        flightNumberError.setText("");
+        flightNumberError.setVisible(false);
+        airlineError.setText("");
+        airlineError.setVisible(false);
+        originError.setText("");
+        originError.setVisible(false);
+        destinationError.setText("");
+        destinationError.setVisible(false);
+        departureDateError.setText("");
+        departureDateError.setVisible(false);
+        arrivalDateError.setText("");
+        arrivalDateError.setVisible(false);
+        priceError.setText("");
+        priceError.setVisible(false);
+        capacityError.setText("");
+        capacityError.setVisible(false);
+        statusError.setText("");
+        statusError.setVisible(false);
+
+        // Remove error styling from all fields
+        flightNumberField.getStyleClass().remove("error-field");
+        airlineField.getStyleClass().remove("error-field");
+        originField.getStyleClass().remove("error-field");
+        destinationField.getStyleClass().remove("error-field");
+        departureDatePicker.getStyleClass().remove("error-field");
+        arrivalDatePicker.getStyleClass().remove("error-field");
+        priceField.getStyleClass().remove("error-field");
+        capacityField.getStyleClass().remove("error-field");
+        statusComboBox.getStyleClass().remove("error-field");
     }
     private void setupSearchListener() {
         search_field.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -259,10 +581,22 @@ public class FlightAgencyController implements Initializable {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+
+        // Create a TextArea for better error message display
+        TextArea textArea = new TextArea(message);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(textArea, 0, 0);
+
+        alert.getDialogPane().setContent(expContent);
         alert.showAndWait();
     }
 

@@ -19,6 +19,7 @@ public class AgencyController implements Initializable {
         Model.getInstance().getViewFactory().getAgencySelectedMenuItem().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
                 case FLIGHTS -> agency_parent.setCenter(Model.getInstance().getViewFactory().getAgencyFlightsView());
+                case STATS -> agency_parent.setCenter(Model.getInstance().getViewFactory().getAgencyStaticView());
                 case Hotels -> agency_parent.setCenter(Model.getInstance().getViewFactory().getAgencyHotelsView());
                 // Add other cases for additional menu options
                 default -> agency_parent.setCenter(Model.getInstance().getViewFactory().getAgencyFlightsView());

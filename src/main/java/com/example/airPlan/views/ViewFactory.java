@@ -30,6 +30,7 @@ public class ViewFactory {
     //AgencyViews
     private final ObjectProperty<AgencyMenuOptions> agencySelectedMenuItem;
     private AnchorPane agencyFlightsView;
+    private AnchorPane agencyStaticView;
     private AnchorPane agencyHotelsView;
 
     //viewFactory
@@ -156,6 +157,16 @@ public class ViewFactory {
             }
         }
         return agencyFlightsView;
+    }
+    public AnchorPane getAgencyStaticView() {
+        if (agencyStaticView == null) {
+            try {
+                agencyStaticView = new FXMLLoader(getClass().getResource("/Fxml/Agences/Stats.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return agencyStaticView;
     }
     public AnchorPane getAgencyHotelsView() {
         if (agencyHotelsView == null) {

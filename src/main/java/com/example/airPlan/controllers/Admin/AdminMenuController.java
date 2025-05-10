@@ -3,6 +3,7 @@ package com.example.airPlan.controllers.Admin;
 import com.example.airPlan.models.Model;
 import com.example.airPlan.views.AdminMenuOptions;
 import com.example.airPlan.views.ClientMenuOptions;
+
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -30,8 +31,38 @@ public class AdminMenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initMenuButtons();
+
+//        buttonMenuMap.put(dash_admin, AdminMenuOptions.DASHBOARD);
+        buttonMenuMap.put(flights_admin, AdminMenuOptions.FLIGHT);
+//        buttonMenuMap.put(hotels_admin, AdminMenuOptions.HOTELS);
+//        buttonMenuMap.put(transport_admin, AdminMenuOptions.TRANSPORT);
+//        buttonMenuMap.put(offers_admin, AdminMenuOptions.OFFERS);
+//        buttonMenuMap.put(clients_admin, AdminMenuOptions.CLIENTS);
+//        buttonMenuMap.put(agences_admin, AdminMenuOptions.AGENCES);
+//        buttonMenuMap.put(feed_admin, AdminMenuOptions.FEEDBACK);
+//        buttonMenuMap.put(stats_admin, AdminMenuOptions.STATS);
+//        buttonMenuMap.put(chats_admin, AdminMenuOptions.CHATS);
         addListeners();
         setActiveButton(flights_admin);
+
+        menuButtons = Arrays.asList(
+                flights_admin
+        );
+        setActiveButton(flights_admin);
+    }
+
+    private void addListeners() {
+        logout_admin.setOnAction(actionEvent -> onLogout());
+
+        // Add listeners using the buttonMenuMap
+        buttonMenuMap.forEach((button, menuOption) -> {
+            button.setOnAction(event -> {
+                Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(menuOption);
+                setActiveButton(button);
+            });
+        });
+    }
+    private void onFlight_admin() {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.FLIGHT);
     }
 
@@ -78,6 +109,14 @@ public class AdminMenuController implements Initializable {
             Stage stage = (Stage) logout_admin.getScene().getWindow();
             Model.getInstance().getViewFactory().closeStage(stage);
             Model.getInstance().getViewFactory().showLoginView();
+        }
+    }
+    private void setActiveButton(Button activeButton) {
+        for (Button btn : menuButtons) {
+            btn.getStyleClass().remove("active");
+        }
+        if (!activeButton.getStyleClass().contains("active")) {
+            activeButton.getStyleClass().add("active");
         }
     }
 }

@@ -93,4 +93,10 @@ public class FlightCellController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public void setCancelButtonBehavior(Runnable onCancelAction) {
+        view_btn.setText("Cancel");
+        view_btn.setOnAction(event -> onCancelAction.run());
+    }
+
+
 }
