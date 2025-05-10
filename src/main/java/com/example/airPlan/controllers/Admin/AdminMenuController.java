@@ -51,17 +51,17 @@ public class AdminMenuController implements Initializable {
         setActiveButton(flights_admin);
     }
 
-    private void addListeners() {
-        logout_admin.setOnAction(actionEvent -> onLogout());
-
-        // Add listeners using the buttonMenuMap
-        buttonMenuMap.forEach((button, menuOption) -> {
-            button.setOnAction(event -> {
-                Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(menuOption);
-                setActiveButton(button);
-            });
-        });
-    }
+//    private void addListeners() {
+//        logout_admin.setOnAction(actionEvent -> onLogout());
+//
+//        // Add listeners using the buttonMenuMap
+//        buttonMenuMap.forEach((button, menuOption) -> {
+//            button.setOnAction(event -> {
+//                Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(menuOption);
+//                setActiveButton(button);
+//            });
+//        });
+//    }
     private void onFlight_admin() {
         Model.getInstance().getViewFactory().getAdminSelectedMenuItem().set(AdminMenuOptions.FLIGHT);
     }
@@ -111,12 +111,12 @@ public class AdminMenuController implements Initializable {
             Model.getInstance().getViewFactory().showLoginView();
         }
     }
-    private void setActiveButton(Button activeButton) {
-        for (Button btn : menuButtons) {
-            btn.getStyleClass().remove("active");
-        }
-        if (!activeButton.getStyleClass().contains("active")) {
-            activeButton.getStyleClass().add("active");
-        }
-    }
+//    private void setActiveButton(Button activeButton) {
+//        for (Button btn : menuButtons) {
+//            btn.getStyleClass().remove("active");
+//        }
+//        if (!activeButton.getStyleClass().contains("active")) {
+//            activeButton.getStyleClass().add("active");
+//        }
+//    }
 }
