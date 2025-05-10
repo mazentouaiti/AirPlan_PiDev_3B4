@@ -61,12 +61,19 @@ public class ClientAcc {
     private boolean bookedVisible = false;
     private VBox bookedContainer;
     private ListView<Reservation> bookedListView;
+    private BorderPane clientParent; // Store reference to the parent BorderPane
+    private Parent accView; // Store reference to our own view
+
+
 
     private static final String OPENWEATHER_API_KEY = "";
     private static final String OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric";
 
     @FXML
     public void initialize() {
+        // Store reference to our view
+        accView = scrollPane.getParent();
+
         setupUI();
         setupEventHandlers();
         loadHotels();
@@ -479,42 +486,51 @@ public class ClientAcc {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/hotel_info_client.fxml"));
             Parent detailsView = loader.load();
 
-            HotelInfoClient hotelInfoController = loader.getController();
-            hotelInfoController.setHebergementDetails(hebergement);
+            HotelInfoClient controller = loader.getController();
+            controller.setHebergementDetails(hebergement);
 
-            // Set the return action to show the accommodation view again
-            hotelInfoController.setReturnAction(() -> {
-                BorderPane clientParent = (BorderPane) scrollPane.getScene().lookup("#client_parent");
-                if (clientParent != null) {
-                    clientParent.setCenter(scrollPane);
-                }
-            });
+            // Pass the accView reference to the details controller
+            controller.setReturnView(accView);
 
-            // Get the client_parent BorderPane and set the details view as center
-            BorderPane clientParent = (BorderPane) scrollPane.getScene().lookup("#client_parent");
-            if (clientParent != null) {
-                clientParent.setCenter(detailsView);
-            }
+            // Get the scene's root (should be BorderPane)
+            BorderPane root = (BorderPane) scrollPane.getScene().getRoot();
+            root.setCenter(detailsView);
+
         } catch (IOException e) {
             e.printStackTrace();
+            showErrorAlert("Error", "Failed to load hotel details: " + e.getMessage());
         }
+    }
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void openReservation(Hebergement hebergement, ActionEvent event) {
         try {
+            // Store reference to the current view
+            BorderPane clientParent = (BorderPane) scrollPane.getScene().getRoot();
+            Node currentCenter = clientParent.getCenter();
+
+            // Load the reservation view
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/reservationclient.fxml"));
-            Parent root = loader.load();
+            Parent reservationView = loader.load();
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
+            // Get controller and set data
             ReservationClient controller = loader.getController();
             controller.setHebergementData(hebergement);
 
-            Scene newScene = new Scene(root);
-            stage.setScene(newScene);
-            stage.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            // Pass the references for returning
+            controller.setPreviousView(currentCenter, clientParent);
+
+            // Replace the center content
+            clientParent.setCenter(reservationView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to load reservation form");
         }
     }
 
@@ -587,11 +603,17 @@ public class ClientAcc {
             TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), bookedContainer);
             slideIn.setToX(0);
             slideIn.play();
+
+            // Disable main scrollPane while booked panel is visible
+            scrollPane.setDisable(true);
         } else {
             // Hide with animation
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), bookedContainer);
             slideOut.setToX(300);
-            slideOut.setOnFinished(e -> bookedContainer.setVisible(false));
+            slideOut.setOnFinished(e -> {
+                bookedContainer.setVisible(false);
+                scrollPane.setDisable(false); // Re-enable scrollPane
+            });
             slideOut.play();
         }
     }

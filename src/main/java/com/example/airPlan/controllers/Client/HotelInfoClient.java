@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -39,26 +41,51 @@ public class HotelInfoClient {
     @FXML
     private Button returnButton;
     private Runnable returnAction;
-    public void setReturnAction(Runnable returnAction) {
-        this.returnAction = returnAction;
-    }
 
+    private BorderPane clientParent;
+    private Parent returnView;
+
+    public void setReturnView(Parent returnView) {
+        this.returnView = returnView;
+    }
+    private Node previousView;
+    private BorderPane parentContainer;
+
+    public void setPreviousView(Node previousView, BorderPane parentContainer) {
+        this.previousView = previousView;
+        this.parentContainer = parentContainer;
+    }
     @FXML
     private void initialize() {
         returnButton.setOnAction(event -> retournerClient());
     }
 
-
-
-
     public void retournerClient() {
-        if (returnAction != null) {
-            returnAction.run();
+        if (returnView != null) {
+            // Get the root BorderPane from any node in the scene
+            BorderPane root = (BorderPane) returnButton.getScene().getRoot();
+            root.setCenter(returnView);
         } else {
-            // Fallback to default behavior if returnAction not set
+            // Fallback to window replacement if references are missing
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
                 Parent root = loader.load();
+                Stage stage = (Stage) returnButton.getScene().getWindow();
+                stage.setScene(new Scene(root));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void returnToPreviousView() {
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        } else {
+            // Fallback to window replacement
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Client/client_acc.fxml"));
                 Stage stage = (Stage) returnButton.getScene().getWindow();
                 stage.setScene(new Scene(root));
             } catch (IOException e) {

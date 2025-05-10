@@ -2,6 +2,7 @@ package com.example.airPlan.views;
 
 import com.example.airPlan.controllers.Admin.AdminController;
 import com.example.airPlan.controllers.Agence.AgencyController;
+import com.example.airPlan.controllers.Client.ChatbotController;
 import com.example.airPlan.controllers.Client.ClientController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

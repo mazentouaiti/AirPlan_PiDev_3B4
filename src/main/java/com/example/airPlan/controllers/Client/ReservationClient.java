@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -62,6 +63,12 @@ public class ReservationClient {
     private Hebergement currentHebergement;
     private ServiceReservation reservationService;
     private int currentUserId;
+    private Node previousView;
+    private BorderPane parentContainer;
+    public void setPreviousView(Node previousView, BorderPane parentContainer) {
+        this.previousView = previousView;
+        this.parentContainer = parentContainer;
+    }
 
     @FXML
     public void initialize() {
@@ -120,20 +127,18 @@ public class ReservationClient {
 
     @FXML
     private void handleCancelAction(ActionEvent event) {
-        try {
-            // Charger le fichier FXML de ClientAcc
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
-            Parent root = loader.load();
-
-            // Récupérer le stage de la scène actuelle
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Appliquer la nouvelle scène au stage actuel
-            Scene newScene = new Scene(root);
-            stage.setScene(newScene);
-            stage.show();  // Afficher le stage avec la nouvelle scène
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        } else {
+            // Fallback to window replacement
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) btnCancel.getScene().getWindow();
+                stage.setScene(new Scene(root));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -188,6 +193,9 @@ public class ReservationClient {
                 request,
                 imagePath
         );
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        }
 
         //emailll
     /*
