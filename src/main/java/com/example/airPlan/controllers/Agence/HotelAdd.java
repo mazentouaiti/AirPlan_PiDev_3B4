@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -32,14 +33,11 @@ public class HotelAdd {
     @FXML private TextField pricefield;
     @FXML private Label albumlabel;
     @FXML private TextArea descriptionfield;
-    @FXML private HBox getStarBox;
     @FXML private Spinner<Integer> capacityspinner;
     @FXML private CheckBox wifi, pool, meals, air, parking;
     @FXML private ComboBox<String> typeCombo;
     @FXML private Label fileLabel;
     @FXML private HBox starBox;
-    @FXML private Stage stage;
-    @FXML private Scene scene;
 
     // Error Labels
     @FXML private Label errorName;
@@ -60,6 +58,12 @@ public class HotelAdd {
     private Hebergement hebergementToEdit;
     boolean disponibility;
     private BorderPane agencyParent;
+    @FXML
+    private AnchorPane anchoption;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnreturn;
 
 
     @FXML
@@ -535,6 +539,7 @@ public class HotelAdd {
         }
     }
 
+    @FXML
     public void switch_admin(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
@@ -543,6 +548,18 @@ public class HotelAdd {
             AccController controller = loader.getController();
             controller.setAgencyParent(agencyParent);
 
+            agencyParent.setCenter(root);
+        } catch (IOException e) {
+            showAlert("Navigation failed: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    @FXML
+    private void handleBack(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
+            Parent root = loader.load();
+            AccController controller = loader.getController();
+            controller.setAgencyParent(agencyParent);
             agencyParent.setCenter(root);
         } catch (IOException e) {
             showAlert("Navigation failed: " + e.getMessage(), Alert.AlertType.ERROR);

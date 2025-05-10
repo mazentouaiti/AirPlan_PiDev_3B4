@@ -31,7 +31,7 @@ public class AccController implements Initializable {
     private ListView<Hebergement> listHebergement;
     private ObservableList<Hebergement> list;
     private ServiceHebergement service;
-    private BorderPane agencyParent;
+    private BorderPane agency_parent;
 
 
     @Override
@@ -63,6 +63,7 @@ public class AccController implements Initializable {
         });
 
         // Rest of your existing initialize code...
+        // Update the cell factory to pass agencyParent
         listHebergement.setCellFactory(lv -> new ListCell<Hebergement>() {
             @Override
             protected void updateItem(Hebergement hebergement, boolean empty) {
@@ -75,9 +76,11 @@ public class AccController implements Initializable {
                         AnchorPane pane = loader.load();
                         AccCellController controller = loader.getController();
 
+                        // Add this line to pass the parent reference
+                        controller.setAgencyParent(agency_parent);
+
                         controller.setListHebergement(listHebergement);
                         controller.setHebergement(hebergement);
-
                         setGraphic(pane);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -97,8 +100,8 @@ public class AccController implements Initializable {
             }
         });
     }
-    public void setAgencyParent(BorderPane agencyParent) {
-        this.agencyParent = agencyParent;
+    public void setAgencyParent(BorderPane agency_parent) {
+        this.agency_parent = agency_parent;
     }
     private void filterHebergements() {
         String searchText = countryfilteragence.getText().toLowerCase();
@@ -159,9 +162,9 @@ public class AccController implements Initializable {
 
             HotelInfo controller = loader.getController();
             controller.setHebergementDetails(hebergement);
-            controller.setAgencyParent(agencyParent);
+            controller.setAgencyParent(agency_parent);
 
-            agencyParent.setCenter(root);
+            agency_parent.setCenter(root);
         } catch (IOException e) {
             showErrorAlert("Navigation Error", "Failed to load accommodation details: " + e.getMessage());
         }
@@ -174,11 +177,13 @@ public class AccController implements Initializable {
             Parent root = loader.load();
 
             HotelAdd controller = loader.getController();
-            controller.setAgencyParent(agencyParent);
+            // Pass the reference correctly
+            controller.setAgencyParent(agency_parent);
 
-            agencyParent.setCenter(root);
+            agency_parent.setCenter(root);
         } catch (IOException e) {
-            showErrorAlert("Navigation Error", "Failed to load accommodation form: " + e.getMessage());
+            e.printStackTrace();
+            showErrorAlert("Navigation Error", "Failed to load form: " + e.getMessage());
         }
     }
 

@@ -79,19 +79,30 @@ public class AccCellController implements Initializable {
         this.agencyParent = agencyParent;
     }
     private void openModifyHebergementWindow(Hebergement hebergement) {
+        System.out.println("Attempting to open modification window..."); // Debug
+
         try {
+            System.out.println("Loading FXML...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
             Parent root = loader.load();
+            System.out.println("FXML loaded successfully");
 
             HotelAdd controller = loader.getController();
-            controller.initData(hebergement);
-            controller.setAgencyParent(agencyParent);
+            System.out.println("Controller initialized");
 
-            // Get the current stage from any UI component
-            Stage stage = (Stage) btnEdit.getScene().getWindow();
-            stage.getScene().setRoot(root);
-            stage.centerOnScreen();
+            controller.initData(hebergement);
+            System.out.println("Data initialized");
+
+            if (agencyParent == null) {
+                System.err.println("ERROR: agencyParent is null!");
+            } else {
+                System.out.println("Setting center content...");
+                agencyParent.setCenter(root);
+                System.out.println("Center content set successfully");
+            }
         } catch (IOException e) {
+            System.err.println("FAILED to load modification view:");
+            e.printStackTrace();
             showErrorAlert("Navigation Error", "Failed to load modification view: " + e.getMessage());
         }
     }
