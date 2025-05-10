@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,8 +31,8 @@ public class AccController implements Initializable {
     private ListView<Hebergement> listHebergement;
     private ObservableList<Hebergement> list;
     private ServiceHebergement service;
-    private Stage stage;
-    private Scene scene;
+    private BorderPane agencyParent;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,7 +97,9 @@ public class AccController implements Initializable {
             }
         });
     }
-
+    public void setAgencyParent(BorderPane agencyParent) {
+        this.agencyParent = agencyParent;
+    }
     private void filterHebergements() {
         String searchText = countryfilteragence.getText().toLowerCase();
         String selectedFilter = dispocomboagence.getValue();
@@ -149,28 +152,34 @@ public class AccController implements Initializable {
     // ... rest of your existing methods
 
 
-    public void ouvrirFenetreDetails(Hebergement hebergement) {
+    private void ouvrirFenetreDetails(Hebergement hebergement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_info_agence.fxml"));
             Parent root = loader.load();
 
             HotelInfo controller = loader.getController();
             controller.setHebergementDetails(hebergement);
+            controller.setAgencyParent(agencyParent);
 
-            Stage stage = (Stage) listHebergement.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            agencyParent.setCenter(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            showErrorAlert("Navigation Error", "Failed to load accommodation details: " + e.getMessage());
         }
     }
 
     @FXML
-    public void switch_add(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    public void switch_add(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
+            Parent root = loader.load();
+
+            HotelAdd controller = loader.getController();
+            controller.setAgencyParent(agencyParent);
+
+            agencyParent.setCenter(root);
+        } catch (IOException e) {
+            showErrorAlert("Navigation Error", "Failed to load accommodation form: " + e.getMessage());
+        }
     }
 
     private void showErrorAlert(String title, String message) {

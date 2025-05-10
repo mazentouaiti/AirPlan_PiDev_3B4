@@ -12,10 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -41,27 +38,28 @@ public class HotelInfo {
     @FXML private HBox albuminfoo;
     @FXML
     private Button returnButton;
+    private BorderPane agencyParent;
+
 
     @FXML
     private void initialize() {
         returnButton.setOnAction(event -> retournerAccueil());
     }
-
+    public void setAgencyParent(BorderPane agencyParent) {
+        this.agencyParent = agencyParent;
+    }
 
     public void retournerAccueil() {
         try {
-            // Charger la vue accommodation
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
             Parent root = loader.load();
 
-            // Obtenir la scène depuis le bouton
-            Stage stage = (Stage) returnButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            AccController controller = loader.getController();
+            controller.setAgencyParent(agencyParent);
 
-            // Optionnel : ajouter des styles, animations, etc.
+            agencyParent.setCenter(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Failed to return to main view: " + e.getMessage());
         }
     }
 

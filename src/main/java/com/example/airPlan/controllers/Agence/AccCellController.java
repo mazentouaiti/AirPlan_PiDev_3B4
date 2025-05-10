@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 
 import java.io.IOException;
@@ -49,6 +51,7 @@ public class AccCellController implements Initializable {
     @FXML
     private Button btnEdit;
     private ServiceHebergement service = new ServiceHebergement(); // À ajouter
+    private BorderPane agencyParent;
 
 
     @Override
@@ -72,29 +75,24 @@ public class AccCellController implements Initializable {
             }
         });
     }
-
+    public void setAgencyParent(BorderPane agencyParent) {
+        this.agencyParent = agencyParent;
+    }
     private void openModifyHebergementWindow(Hebergement hebergement) {
         try {
-            // Charger le fichier FXML de la scène de modification de l'hébergement
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
             Parent root = loader.load();
 
-            // Récupérer le contrôleur de hotel_add
             HotelAdd controller = loader.getController();
-
-            // Passer les données au contrôleur
             controller.initData(hebergement);
+            controller.setAgencyParent(agencyParent);
 
-            // Obtenir la scène actuelle et changer le root (la vue)
-            Scene currentScene = btnEdit.getScene(); // Ici tu utilises n'importe quel composant de ta fenêtre actuelle pour obtenir la scène
-            currentScene.setRoot(root); // Remplacer le contenu de la scène avec la nouvelle vue
-
-            // Tu peux aussi ajuster des propriétés de la scène si nécessaire
-            // Ajuste la hauteur de la fenêtre
-
+            // Get the current stage from any UI component
+            Stage stage = (Stage) btnEdit.getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.centerOnScreen();
         } catch (IOException e) {
-            e.printStackTrace();
+            showErrorAlert("Navigation Error", "Failed to load modification view: " + e.getMessage());
         }
     }
 

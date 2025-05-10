@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -58,6 +59,8 @@ public class HotelAdd {
     private List<String> selectedOptions = new ArrayList<>();
     private Hebergement hebergementToEdit;
     boolean disponibility;
+    private BorderPane agencyParent;
+
 
     @FXML
     public void initialize() {
@@ -76,6 +79,9 @@ public class HotelAdd {
 
         // Setup real-time validation for text fields
         setupFieldValidations();
+    }
+    public void setAgencyParent(BorderPane agencyParent) {
+        this.agencyParent = agencyParent;
     }
 
     private void setupStarRating() {
@@ -529,11 +535,17 @@ public class HotelAdd {
         }
     }
 
-    public void switch_admin(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Fxml/Agences/agency_acc.fxml")));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    public void switch_admin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
+            Parent root = loader.load();
+
+            AccController controller = loader.getController();
+            controller.setAgencyParent(agencyParent);
+
+            agencyParent.setCenter(root);
+        } catch (IOException e) {
+            showAlert("Navigation failed: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

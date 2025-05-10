@@ -11,7 +11,9 @@ import java.util.ResourceBundle;
 public class AgencyController implements Initializable {
     @FXML
     private BorderPane agency_parent;
-
+    public BorderPane getAgencyParent() {
+        return agency_parent;
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Model.getInstance().getViewFactory().getAgencySelectedMenuItem().addListener((observable, oldValue, newValue) -> {
