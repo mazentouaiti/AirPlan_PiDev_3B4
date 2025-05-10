@@ -33,11 +33,14 @@ public class HotelAdd {
     @FXML private TextField pricefield;
     @FXML private Label albumlabel;
     @FXML private TextArea descriptionfield;
+    @FXML private HBox getStarBox;
     @FXML private Spinner<Integer> capacityspinner;
     @FXML private CheckBox wifi, pool, meals, air, parking;
     @FXML private ComboBox<String> typeCombo;
     @FXML private Label fileLabel;
     @FXML private HBox starBox;
+    @FXML private Stage stage;
+    @FXML private Scene scene;
 
     // Error Labels
     @FXML private Label errorName;
@@ -57,14 +60,6 @@ public class HotelAdd {
     private List<String> selectedOptions = new ArrayList<>();
     private Hebergement hebergementToEdit;
     boolean disponibility;
-    private BorderPane agencyParent;
-    @FXML
-    private AnchorPane anchoption;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnreturn;
-
 
     @FXML
     public void initialize() {
@@ -73,7 +68,7 @@ public class HotelAdd {
         capacityspinner.setValueFactory(capacityFactory);
 
         // Initialize type combo box
-        typeCombo.getItems().addAll("Hotel", "House", "Apartment", "Villa", "Hostel", "Bungalow");
+        typeCombo.getItems().addAll("Hotelsssss", "House", "Apartment", "Villa", "Hostel", "Bungalow");
 
         // Setup option checkboxes
         setupOptionCheckboxes();
@@ -83,9 +78,6 @@ public class HotelAdd {
 
         // Setup real-time validation for text fields
         setupFieldValidations();
-    }
-    public void setAgencyParent(BorderPane agencyParent) {
-        this.agencyParent = agencyParent;
     }
 
     private void setupStarRating() {
@@ -381,7 +373,7 @@ public class HotelAdd {
 
         // Validate rating
         if (rating.get() <= 0) {
-           // starBox.setStyle("-fx-border-color: red;");
+            // starBox.setStyle("-fx-border-color: red;");
             errorRating.setText("Please select a rating");
             errorRating.setTextFill(Color.RED);
             isValid = false;
@@ -539,30 +531,11 @@ public class HotelAdd {
         }
     }
 
-    @FXML
-    public void switch_admin(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
-            Parent root = loader.load();
-
-            AccController controller = loader.getController();
-            controller.setAgencyParent(agencyParent);
-
-            agencyParent.setCenter(root);
-        } catch (IOException e) {
-            showAlert("Navigation failed: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-    @FXML
-    private void handleBack(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml"));
-            Parent root = loader.load();
-            AccController controller = loader.getController();
-            controller.setAgencyParent(agencyParent);
-            agencyParent.setCenter(root);
-        } catch (IOException e) {
-            showAlert("Navigation failed: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
+    public void switch_admin(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/Fxml/Agences/agency_acc.fxml")));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

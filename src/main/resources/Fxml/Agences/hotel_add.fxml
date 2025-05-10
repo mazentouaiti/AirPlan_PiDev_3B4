@@ -53,7 +53,7 @@
                </font></CheckBox>
          </children>
       </AnchorPane>
-      <Button fx:id="btnreturn"  layoutX="896.0" layoutY="706.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="32.0" prefWidth="89.0" styleClass="Button" text="Return">
+      <Button fx:id="btnreturn"  layoutX="896.0" layoutY="706.0" mnemonicParsing="false" onAction="#switch_admin" prefHeight="32.0" prefWidth="89.0" styleClass="Button" text="Return">
          <graphic>
             <FontAwesomeIconView glyphName="CHEVRON_LEFT" size="17" />
          </graphic></Button>

@@ -31,8 +31,8 @@ public class AccController implements Initializable {
     private ListView<Hebergement> listHebergement;
     private ObservableList<Hebergement> list;
     private ServiceHebergement service;
-    private BorderPane agency_parent;
-
+    private Stage stage;
+    private Scene scene;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,7 +44,7 @@ public class AccController implements Initializable {
                 "Status: Waiting",
                 "Status: Accepted",
                 "Status: Rejected",
-                "Type: Hotel",
+                "Type: Hotelsssss",
                 "Type: House",
                 "Type: Apartment",
                 "Type: Villa",
@@ -63,7 +63,6 @@ public class AccController implements Initializable {
         });
 
         // Rest of your existing initialize code...
-        // Update the cell factory to pass agencyParent
         listHebergement.setCellFactory(lv -> new ListCell<Hebergement>() {
             @Override
             protected void updateItem(Hebergement hebergement, boolean empty) {
@@ -76,11 +75,9 @@ public class AccController implements Initializable {
                         AnchorPane pane = loader.load();
                         AccCellController controller = loader.getController();
 
-                        // Add this line to pass the parent reference
-                        controller.setAgencyParent(agency_parent);
-
                         controller.setListHebergement(listHebergement);
                         controller.setHebergement(hebergement);
+
                         setGraphic(pane);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -100,9 +97,7 @@ public class AccController implements Initializable {
             }
         });
     }
-    public void setAgencyParent(BorderPane agency_parent) {
-        this.agency_parent = agency_parent;
-    }
+
     private void filterHebergements() {
         String searchText = countryfilteragence.getText().toLowerCase();
         String selectedFilter = dispocomboagence.getValue();
@@ -155,36 +150,28 @@ public class AccController implements Initializable {
     // ... rest of your existing methods
 
 
-    private void ouvrirFenetreDetails(Hebergement hebergement) {
+    public void ouvrirFenetreDetails(Hebergement hebergement) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_info_agence.fxml"));
             Parent root = loader.load();
 
             HotelInfo controller = loader.getController();
             controller.setHebergementDetails(hebergement);
-            controller.setAgencyParent(agency_parent);
 
-            agency_parent.setCenter(root);
+            Stage stage = (Stage) listHebergement.getScene().getWindow();
+            stage.setScene(new Scene(root));
         } catch (IOException e) {
-            showErrorAlert("Navigation Error", "Failed to load accommodation details: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
-    public void switch_add(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
-            Parent root = loader.load();
-
-            HotelAdd controller = loader.getController();
-            // Pass the reference correctly
-            controller.setAgencyParent(agency_parent);
-
-            agency_parent.setCenter(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showErrorAlert("Navigation Error", "Failed to load form: " + e.getMessage());
-        }
+    public void switch_add(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Agences/hotel_add.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void showErrorAlert(String title, String message) {
@@ -195,6 +182,3 @@ public class AccController implements Initializable {
         alert.showAndWait();
     }
 }
-
-
-
