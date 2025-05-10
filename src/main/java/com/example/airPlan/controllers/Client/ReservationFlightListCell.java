@@ -5,7 +5,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-public class ReservationListCell extends ListCell<Reservation> {
+public class ReservationFlightListCell extends ListCell<Reservation> {
     @Override
     protected void updateItem(Reservation reservation, boolean empty) {
         super.updateItem(reservation, empty);

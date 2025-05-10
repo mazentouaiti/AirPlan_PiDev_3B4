@@ -2,7 +2,6 @@ package com.example.airPlan.views;
 
 import com.example.airPlan.controllers.Admin.AdminController;
 import com.example.airPlan.controllers.Agence.AgencyController;
-import com.example.airPlan.controllers.ChatbotController;
 import com.example.airPlan.controllers.Client.ClientController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -155,22 +154,22 @@ public class ViewFactory {
 
 
     // ************************************************************************************************************
-    public AnchorPane getChatbotView() {
-        if (chatbotView == null) {
-            try {
-                chatbotView = new FXMLLoader(getClass().getResource("/Fxml/chatbot.fxml")).load();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return chatbotView;
-    }
-    public void showChatbotWindow() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml//chatbot.fxml"));
-        ChatbotController chatbotController = new ChatbotController();
-        loader.setController(chatbotController);
-        createStage(loader);
-    }
+//    public AnchorPane getChatbotView() {
+//        if (chatbotView == null) {
+//            try {
+//                chatbotView = new FXMLLoader(getClass().getResource("/Fxml/chatbot.fxml")).load();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return chatbotView;
+//    }
+//    public void showChatbotWindow() {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml//chatbot.fxml"));
+//        ChatbotController chatbotController = new ChatbotController();
+//        loader.setController(chatbotController);
+//        createStage(loader);
+//    }
 
     // ************************************************************************************************************
     private void createStage(FXMLLoader loader) {
