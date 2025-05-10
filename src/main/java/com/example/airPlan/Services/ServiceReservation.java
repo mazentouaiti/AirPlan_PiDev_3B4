@@ -1,7 +1,7 @@
 package com.example.airPlan.Services;
 
 import com.example.airPlan.models.Reservation;
-import com.example.airPlan.utils.DBConnection;
+import com.example.airPlan.Utiles.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
