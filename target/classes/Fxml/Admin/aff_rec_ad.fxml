@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="631.0" prefWidth="808.0" stylesheets="@travelwise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.AffRecAd">
+<BorderPane prefHeight="631.0" prefWidth="808.0" stylesheets="@travelwise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.AffRecAd">
     <left>
         <VBox prefWidth="180" spacing="5" styleClass="sidebar">
             <Label styleClass="sidebar-header" text="Passenger" />

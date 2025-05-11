@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="650.0" prefWidth="716.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.AjouteReclamation">
+<AnchorPane prefHeight="650.0" prefWidth="716.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.AjouteReclamation">
     <children>
         <VBox layoutX="8.0" layoutY="114.0" prefHeight="527.0" prefWidth="700.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
             <padding>

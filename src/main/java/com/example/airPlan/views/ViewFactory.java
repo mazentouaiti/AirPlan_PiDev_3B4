@@ -20,6 +20,7 @@ public class ViewFactory {
     private AnchorPane profileView;
     private AnchorPane hotelsView;
     private AnchorPane chatbotView;
+    private AnchorPane reportView;
 
     //AdminViews
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
@@ -84,6 +85,16 @@ public class ViewFactory {
             }
         }
         return hotelsView;
+    }
+    public AnchorPane getReportView() {
+        if (reportView == null) {
+            try {
+                reportView = new FXMLLoader(getClass().getResource("/Fxml/Client/affichage_reclamation.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return reportView;
     }
 //*********************************************************************************************************
 //    public AnchorPane getProfileView() {

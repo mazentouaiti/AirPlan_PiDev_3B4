@@ -40,7 +40,7 @@ public class ClientMenuController implements Initializable {
         buttonMenuMap.put(acc_btn, ClientMenuOptions.HOTELS);
         //buttonMenuMap.put(trans_btn, ClientMenuOptions.TRANSPORT);
        // buttonMenuMap.put(profile_btn, ClientMenuOptions.PROFILE);
-//        buttonMenuMap.put(report_btn, ClientMenuOptions.REPORT);
+        buttonMenuMap.put(report_btn, ClientMenuOptions.REPORT);
 //        buttonMenuMap.put(assistance_user, ClientMenuOptions.ASSISTANCE);
 //        buttonMenuMap.put(discover_user, ClientMenuOptions.DISCOVER);
 

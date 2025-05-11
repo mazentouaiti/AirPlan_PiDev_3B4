@@ -5,5 +5,6 @@ public enum ClientMenuOptions {
     FLIGHT,
     HOTELS,
     PROFILE,
+    REPORT,
 
 }
