@@ -33,14 +33,14 @@ public class AgencyMenuController implements Initializable {
 //        buttonMenuMap.put(dash_agency, AgencyMenuOptions.DASHBOARD);
         buttonMenuMap.put(flights_agency, AgencyMenuOptions.FLIGHTS);
 //        buttonMenuMap.put(report_btn, AgencyMenuOptions.REPORTS);
-//        buttonMenuMap.put(acc_agency, AgencyMenuOptions.ACCOUNT);
+        buttonMenuMap.put(acc_agency, AgencyMenuOptions.Hotels);
 //        buttonMenuMap.put(trans_agency, AgencyMenuOptions.TRANSACTIONS);
         buttonMenuMap.put(stats_agency, AgencyMenuOptions.STATS);
 //        buttonMenuMap.put(offers_agency, AgencyMenuOptions.OFFERS);
         addListeners();
 
         menuButtons = Arrays.asList(
-                flights_agency , stats_agency
+                flights_agency , stats_agency,acc_agency
         );
         setActiveButton(flights_agency);
     }
