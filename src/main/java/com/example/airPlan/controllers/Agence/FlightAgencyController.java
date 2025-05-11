@@ -110,6 +110,17 @@ public class FlightAgencyController implements Initializable {
 
         clearAllErrors();
     }
+    private boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     private void setupValidationListeners() {
         // Flight Number validation
         flightNumberField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -119,20 +130,30 @@ public class FlightAgencyController implements Initializable {
             clearError(flightNumberError, flightNumberField);
         });
 
-        // Airline validation
+        // Airline validation - prevent numbers
         airlineField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (isNumeric(newVal)) {
+                airlineField.setText(oldVal);
+            }
             clearError(airlineError, airlineField);
         });
 
-        // Origin validation
+        // Origin validation - prevent numbers
         originField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (isNumeric(newVal)) {
+                originField.setText(oldVal);
+            }
             clearError(originError, originField);
         });
 
-        // Destination validation
+        // Destination validation - prevent numbers
         destinationField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (isNumeric(newVal)) {
+                destinationField.setText(oldVal);
+            }
             clearError(destinationError, destinationField);
         });
+
 
         // Price validation
         priceField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -378,6 +399,9 @@ public class FlightAgencyController implements Initializable {
         if (airlineField.getText().isEmpty()) {
             showError(airlineError, "Airline is required");
             isValid = false;
+        } else if (isNumeric(airlineField.getText())) {
+            showError(airlineError, "Airline cannot be a number");
+            isValid = false;
         }
 
         // Origin validation
@@ -387,6 +411,9 @@ public class FlightAgencyController implements Initializable {
         } else if (originField.getText().length() < 3) {
             showError(originError, "Minimum 3 characters");
             isValid = false;
+        } else if (isNumeric(originField.getText())) {
+            showError(originError, "Origin cannot be a number");
+            isValid = false;
         }
 
         // Destination validation
@@ -395,6 +422,9 @@ public class FlightAgencyController implements Initializable {
             isValid = false;
         } else if (destinationField.getText().length() < 3) {
             showError(destinationError, "Minimum 3 characters");
+            isValid = false;
+        } else if (isNumeric(destinationField.getText())) {
+            showError(destinationError, "Destination cannot be a number");
             isValid = false;
         }
 
