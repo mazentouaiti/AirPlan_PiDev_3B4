@@ -17,18 +17,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -37,8 +41,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
 import java.awt.Desktop;
-import java.io.File;
-import java.io.FileWriter;
 
 public class FlightsController implements Initializable {
 
@@ -479,19 +481,43 @@ public class FlightsController implements Initializable {
     }
     // Update the method signature to accept the parameter
     private void generateAndShowInvoice(ReservedFlight reservedFlight) {
-        try {
-            InvoiceService invoiceService = new InvoiceService();
-            String clientName = "Client Name"; // Replace with actual client name
+        // Run in background thread to prevent UI freeze
+        new Thread(() -> {
+            try {
+                // Generate HTML content
+                String htmlContent = generateInvoiceContent(reservedFlight);
 
-            String htmlContent = invoiceService.generateFlightInvoice(
-                    reservedFlight,
+                // Show invoice on JavaFX thread
+                Platform.runLater(() -> {
+                    try {
+                        showHtmlInvoice(htmlContent);
+                        showInformationAlert("Success", "Invoice generated successfully!");
+                    } catch (Exception e) {
+                        showErrorAlert("Display Error", "Failed to show invoice: " + e.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() ->
+                        showErrorAlert("Generation Error", "Failed to generate invoice: " + e.getMessage()));
+            }
+        }).start();
+    }
+    private String generateInvoiceContent(ReservedFlight reservedFlight) throws Exception {
+        InvoiceService invoiceService = new InvoiceService();
+        String clientName = getClientName(); // Implement this method
+
+        if (reservedFlight != null) {
+            return invoiceService.generateFlightInvoice(reservedFlight, clientName);
+        } else {
+            return invoiceService.generateMultiFlightInvoice(
+                    new ArrayList<>(reservedFlightsListItems),
                     clientName
             );
-
-            showHtmlInvoice(htmlContent);
-        } catch (Exception e) {
-            showErrorAlert("Invoice Error", "Failed to generate invoice: " + e.getMessage());
         }
+    }
+    private String getClientName() {
+        // Implement proper client name lookup
+        return "Client Name"; // Replace with actual implementation
     }
     @FXML
     private void handleReserveAll() {
@@ -548,25 +574,44 @@ public class FlightsController implements Initializable {
 
 
 
-    private void showHtmlInvoice(String htmlContent) {
-        try {
-            File tempFile = File.createTempFile("invoice_", ".html");
-            try (FileWriter writer = new FileWriter(tempFile)) {
-                writer.write(htmlContent);
-            }
+    private void showHtmlInvoice(String htmlContent) throws Exception {
+        // Create temp file with proper permissions
+        File tempFile = File.createTempFile("invoice_", ".html");
+        tempFile.setReadable(true, false);
+        tempFile.setWritable(true, false);
 
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(tempFile.toURI());
-            } else {
-                HostServices hostServices = App.getHostServicesInstance();
-                if (hostServices != null) {
-                    hostServices.showDocument(tempFile.toURI().toString());
-                }
-            }
-            tempFile.deleteOnExit();
-        } catch (Exception e) {
-            showErrorAlert("Invoice Error", "Failed to display invoice: " + e.getMessage());
+        // Write content with proper encoding
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
+            writer.write(htmlContent);
+            writer.flush();
         }
+
+        // Try desktop browser first
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            Desktop.getDesktop().browse(tempFile.toURI());
+        }
+        // Fallback to HostServices
+        else {
+            HostServices hostServices = App.getHostServicesInstance();
+            if (hostServices != null) {
+                hostServices.showDocument(tempFile.toURI().toString());
+            } else {
+                // Final fallback - show in WebView
+                Platform.runLater(() -> {
+                    WebView webView = new WebView();
+                    webView.getEngine().loadContent(htmlContent);
+
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(webView));
+                    stage.setTitle("Flight Invoice");
+                    stage.show();
+                });
+            }
+        }
+
+        // Schedule file deletion when JVM exits
+        tempFile.deleteOnExit();
     }
 }
 
