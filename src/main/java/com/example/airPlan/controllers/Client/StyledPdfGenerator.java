@@ -53,7 +53,7 @@ public class StyledPdfGenerator {
             addStyledRow(table, "Type", type, labelFont, normalFont);
             addStyledRow(table, "Options", options, labelFont, normalFont);
             addStyledRow(table, "Price", price, labelFont, normalFont);
-            addStyledRow(table, "Rating", rating, labelFont, normalFont);
+            addStyledRow(table, "Rating", String.valueOf(rating), labelFont, normalFont);
             addStyledRow(table, "Arrival", dateArrival, labelFont, normalFont);
             addStyledRow(table, "Departure", dateDeparture, labelFont, normalFont);
             addStyledRow(table, "Adults", String.valueOf(nbAdults), labelFont, normalFont);

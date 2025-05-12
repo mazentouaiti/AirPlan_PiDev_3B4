@@ -1,5 +1,6 @@
 package com.example.airPlan.controllers.Client;
 
+import com.example.airPlan.Utiles.DBConnection;
 import com.example.airPlan.models.Hebergement;
 import com.example.airPlan.models.Reservation;
 import com.example.airPlan.Services.ServiceReservation;
@@ -20,6 +21,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javafx.embed.swing.SwingFXUtils;
 import java.io.File;
@@ -144,7 +149,7 @@ public class ReservationClient {
 
 
     @FXML
-    private void handleSubmit(ActionEvent event) {
+    private void handleSubmit(ActionEvent event) throws SQLException {
         if (departuredate.getValue() == null || arrivaldate.getValue() == null) {
             showAlert("Please fill in all required fields.", Alert.AlertType.WARNING);
             return;
@@ -214,13 +219,28 @@ public class ReservationClient {
 
 
 
+    private boolean validateCapacity(int hebergementId, int roomsToReserve) throws SQLException {
+        String sql = "SELECT capacity FROM hebergement WHERE acc_id = ?";
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, hebergementId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int currentCapacity = rs.getInt("capacity");
+                return currentCapacity >= roomsToReserve;
+            }
+            return false;
+        }
+    }
+
+
     private void ajouterReservation() {
         try {
             Reservation reservation = new Reservation();
 
             reservation.setIdUser(1); // à adapter
             reservation.setIdAcc(currentHebergement.getId());
-            reservation.setTypeReservation(" Accommodation - "+currentHebergement.getType());
+            reservation.setTypeReservation(currentHebergement.getType());
+            reservation.setDestination(currentHebergement.getCountry()+", "+currentHebergement.getCity());
             reservation.setNumberOfRooms((Integer) roomspinner.getValue());
             reservation.setNumberOfAdults((Integer) adultspinner.getValue());
             reservation.setNumberOfChildren((Integer) childrenspinner.getValue());
@@ -253,10 +273,14 @@ public class ReservationClient {
 
 
 
-    private boolean validateForm() {
+    private boolean validateForm() throws SQLException {
 
         if (currentHebergement == null) {
             showAlert("No accommodation selected.", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (!validateCapacity(currentHebergement.getId(), (Integer) roomspinner.getValue())) {
+            showAlert("Not enough capacity available for the selected number of rooms.", Alert.AlertType.WARNING);
             return false;
         }
 
@@ -275,17 +299,36 @@ public class ReservationClient {
             return false;
         }
 
-        int arrivalYear = arrivaldate.getValue().getYear();
-        int departureYear = departuredate.getValue().getYear();
+        // int arrivalYear = arrivaldate.getValue().getYear();
+        // Get current date
+        LocalDate currentDate = LocalDate.now();
+
+// Get arrival and departure dates from your date pickers
+        LocalDate arrivalDate = arrivaldate.getValue();
+        LocalDate departureDate = departuredate.getValue();
+
+// Validate years (2025 or 2026 only)
+        int arrivalYear = arrivalDate.getYear();
+        int departureYear = departureDate.getYear();
         if (!((arrivalYear == 2025 || arrivalYear == 2026) && (departureYear == 2025 || departureYear == 2026))) {
             showAlert("Arrival and Departure dates must be in 2025 or 2026.", Alert.AlertType.WARNING);
             return false;
         }
 
-        if (arrivaldate.getValue().isBefore(departuredate.getValue())) {
-            showAlert("Departure date must be before arrival date.", Alert.AlertType.WARNING);
+// Validate arrival date is not before current date
+        if (arrivalDate.isBefore(currentDate)) {
+            showAlert("Arrival date cannot be before today's date.", Alert.AlertType.WARNING);
             return false;
         }
+
+// Validate departure date is after arrival date
+        if (departureDate.isBefore(arrivalDate)) {
+            showAlert("Departure date must be after arrival date.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+
+
 
         // Validate spinners
         if (adultspinner.getValue() == null ) {
