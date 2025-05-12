@@ -12,7 +12,30 @@ import java.util.*;
 public class FlightServices implements Services{
     private Connection connection;
     public FlightServices() {connection= DBConnection.getInstance().getConnection();}
+    private boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     public void addFlight(FlightModel flight) {
+        if (isNumeric(flight.getOrigin())) {
+            System.out.println("Origin cannot be a number");
+            return;
+        }
+        if (isNumeric(flight.getDestination())) {
+            System.out.println("Destination cannot be a number");
+            return;
+        }
+        if (isNumeric(flight.getAirline())) {
+            System.out.println("Airline cannot be a number");
+            return;
+        }
         String checkSql = "SELECT COUNT(*) FROM flights WHERE flight_number = ?";
         try (PreparedStatement checkPs = connection.prepareStatement(checkSql)) {
             checkPs.setString(1, flight.getFlightNumber());
@@ -74,6 +97,18 @@ public class FlightServices implements Services{
         return flights;
     }
     public void updateFlight(FlightModel flight)  {
+        if (isNumeric(flight.getOrigin())) {
+            System.out.println("Origin cannot be a number");
+            return;
+        }
+        if (isNumeric(flight.getDestination())) {
+            System.out.println("Destination cannot be a number");
+            return;
+        }
+        if (isNumeric(flight.getAirline())) {
+            System.out.println("Airline cannot be a number");
+            return;
+        }
         String sql = "UPDATE flights SET flight_number=?, airline=?, origin=?, destination=?, departureDate=?, return_date=?, class_type=?, status=?, price=? , capacity=? WHERE flight_id=?";
         try  {
             PreparedStatement ps = connection.prepareStatement(sql);
