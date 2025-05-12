@@ -1,9 +1,13 @@
 package com.example.airPlan.controllers.Client;
 
+import com.example.airPlan.App;
 import com.example.airPlan.Services.FlightServices;
+import com.example.airPlan.Services.InvoiceService;
 import com.example.airPlan.models.FlightModel;
+import com.example.airPlan.controllers.Client.ReservedFlight;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -23,17 +27,18 @@ import javafx.util.converter.LocalDateStringConverter;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.*;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileWriter;
 
 public class FlightsController implements Initializable {
 
@@ -353,7 +358,12 @@ public class FlightsController implements Initializable {
 
         double total = basePrice * multiplier * passengers;
 
-        reservedFlightsListItems.add(new ReservedFlight(selectedFlight, passengers, total));
+        ReservedFlight reservedFlight = new ReservedFlight(selectedFlight, passengers, classType, total);
+        reservedFlightsListItems.add(reservedFlight);
+
+        // Generate and show HTML invoice
+        generateAndShowInvoice(reservedFlight);
+
         showInformationAlert("Success", "Reservation confirmed!");
         hideReservationPanel();
         updateTotalPriceDisplay();
@@ -466,6 +476,97 @@ public class FlightsController implements Initializable {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), reservedFlights);
         slideOut.setToX(600);
         slideOut.play();
+    }
+    // Update the method signature to accept the parameter
+    private void generateAndShowInvoice(ReservedFlight reservedFlight) {
+        try {
+            InvoiceService invoiceService = new InvoiceService();
+            String clientName = "Client Name"; // Replace with actual client name
+
+            String htmlContent = invoiceService.generateFlightInvoice(
+                    reservedFlight,
+                    clientName
+            );
+
+            showHtmlInvoice(htmlContent);
+        } catch (Exception e) {
+            showErrorAlert("Invoice Error", "Failed to generate invoice: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void handleReserveAll() {
+        if (reservedFlightsListItems.isEmpty()) {
+            showErrorAlert("No Flights", "Please add flights to reserve first");
+            return;
+        }
+
+        // Show confirmation dialog with more details
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Reservation");
+        confirm.setHeaderText("Reservation Summary");
+        confirm.setContentText(String.format(
+                "You are about to reserve %d flights\n" +
+                        "Total Passengers: %d\n" +
+                        "Total Price: %s\n\n" +
+                        "Proceed to generate invoice?",
+                reservedFlightsListItems.size(),
+                reservedFlightsListItems.stream().mapToInt(ReservedFlight::getPassengers).sum(),
+                priceLabel.getText()
+        ));
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Call the parameterless version for all reservations
+            generateAndShowInvoiceForAll();
+        }
+    }
+    // New method for handling all reservations
+    private void generateAndShowInvoiceForAll() {
+        try {
+            InvoiceService invoiceService = new InvoiceService();
+            String clientName = "Client Name"; // Replace with actual client name
+
+            String htmlContent = invoiceService.generateMultiFlightInvoice(
+                    new ArrayList<>(reservedFlightsListItems),
+                    clientName
+            );
+
+            // Create and show invoice
+            showHtmlInvoice(htmlContent);
+
+            // Clear reservations after successful generation
+            reservedFlightsListItems.clear();
+            updatePassengerCounter();
+            updateTotalPriceDisplay();
+
+            showInformationAlert("Success", "Invoice generated successfully!");
+        } catch (Exception e) {
+            showErrorAlert("Invoice Error", "Failed to generate invoice: " + e.getMessage());
+        }
+    }
+
+
+
+
+    private void showHtmlInvoice(String htmlContent) {
+        try {
+            File tempFile = File.createTempFile("invoice_", ".html");
+            try (FileWriter writer = new FileWriter(tempFile)) {
+                writer.write(htmlContent);
+            }
+
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(tempFile.toURI());
+            } else {
+                HostServices hostServices = App.getHostServicesInstance();
+                if (hostServices != null) {
+                    hostServices.showDocument(tempFile.toURI().toString());
+                }
+            }
+            tempFile.deleteOnExit();
+        } catch (Exception e) {
+            showErrorAlert("Invoice Error", "Failed to display invoice: " + e.getMessage());
+        }
     }
 }
 

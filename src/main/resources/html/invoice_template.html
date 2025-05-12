@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel & Business Airplane Invoice</title>
+    <title>Flight Reservation Invoice</title>
     <style>
         :root {
             --primary: #3a86ff;
@@ -13,22 +13,17 @@
             --success: #28a745;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f5f7fa;
-            color: var(--dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
         }
 
         .invoice-container {
-            max-width: 800px;
-            margin: 2rem auto;
             background: white;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
@@ -59,14 +54,10 @@
             margin-bottom: 1.5rem;
         }
 
-        .company-logo i {
-            font-size: 2.5rem;
-            margin-right: 1rem;
-        }
-
-        .company-logo h1 {
-            font-weight: 700;
+        .company-name {
             font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 1rem;
         }
 
         .invoice-title {
@@ -76,10 +67,6 @@
         .invoice-title h2 {
             font-size: 2rem;
             margin-bottom: 0.5rem;
-        }
-
-        .invoice-title p {
-            opacity: 0.9;
         }
 
         .invoice-body {
@@ -93,7 +80,7 @@
             margin-bottom: 2rem;
         }
 
-        .detail-block h3 {
+        .section-title {
             font-size: 1.1rem;
             margin-bottom: 1rem;
             color: var(--primary);
@@ -107,20 +94,16 @@
             margin-bottom: 0.5rem;
         }
 
-        .detail-item strong {
+        .detail-label {
+            font-weight: bold;
             min-width: 120px;
         }
 
         .flight-details {
-            background: #f8f9fa;
+            background: var(--light);
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-        }
-
-        .flight-details h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
         }
 
         .flight-info {
@@ -129,10 +112,6 @@
             align-items: center;
             gap: 1rem;
             margin: 1.5rem 0;
-        }
-
-        .airport {
-            text-align: center;
         }
 
         .airport-code {
@@ -172,37 +151,30 @@
             color: var(--secondary);
         }
 
-        .items-table {
+        table {
             width: 100%;
             border-collapse: collapse;
             margin: 2rem 0;
         }
 
-        .items-table thead {
+        th {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-        }
-
-        .items-table th {
             padding: 1rem;
             text-align: left;
         }
 
-        .items-table td {
+        td {
             padding: 1rem;
             border-bottom: 1px solid #eee;
         }
 
-        .items-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .text-right {
-            text-align: right;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         .total-section {
-            background: #f8f9fa;
+            background: var(--light);
             border-radius: 8px;
             padding: 1.5rem;
             margin-top: 2rem;
@@ -227,7 +199,7 @@
         .invoice-footer {
             padding: 2rem;
             text-align: center;
-            background: #f8f9fa;
+            background: var(--light);
             color: #666;
             font-size: 0.9rem;
         }
@@ -242,116 +214,102 @@
             margin-top: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
+        .print-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
 
-            .flight-info {
-                grid-template-columns: 1fr;
-                text-align: center;
+        @media print {
+            body {
+                background: none;
+                padding: 0;
             }
-
-            .flight-route {
+            .print-btn {
                 display: none;
             }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="invoice-container">
     <div class="invoice-header">
         <div class="company-logo">
-            <i class="fas fa-plane"></i>
-            <h1>Skyline Travel & Business</h1>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 16.21v-1.895L14 8V4a2 2 0 0 0-4 0v4l-8 6.315v1.895l8-2.526V18l-2 2v2h8v-2l-2-2v-4.316l8 2.526zm-10 3.79h4v-1.586l-2-2v-3.171l2-.632V16h-4v4z"/>
+            </svg>
+            <h1 class="company-name">Skyline Travel & Business</h1>
         </div>
         <div class="invoice-title">
-            <h2>INVOICE</h2>
-            <p>#INV-2023-4567</p>
-            <p>Issued: May 15, 2023</p>
-            <p>Due: May 30, 2023</p>
+            <h2>FLIGHT INVOICE</h2>
+            <p id="invoice-number">#INV-{{invoiceNumber}}</p>
+            <p id="issue-date">Issued: {{issueDate}}</p>
+            <p id="due-date">Due: {{dueDate}}</p>
         </div>
     </div>
 
     <div class="invoice-body">
         <div class="details-grid">
             <div class="detail-block">
-                <h3>Bill To</h3>
+                <h3 class="section-title">Bill To</h3>
                 <div class="detail-item">
-                    <strong>Client:</strong>
-                    <span>Acme Corporation</span>
+                    <span class="detail-label">Client:</span>
+                    <span id="client-name">{{clientName}}</span>
                 </div>
                 <div class="detail-item">
-                    <strong>Attn:</strong>
-                    <span>John Smith</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Address:</strong>
-                    <span>123 Business Ave, Suite 400</span>
-                </div>
-                <div class="detail-item">
-                    <strong>City:</strong>
-                    <span>New York, NY 10001</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Email:</strong>
-                    <span>jsmith@acme.com</span>
+                    <span class="detail-label">Reservation Date:</span>
+                    <span id="reservation-date">{{reservationDate}}</span>
                 </div>
             </div>
 
             <div class="detail-block">
-                <h3>Flight Details</h3>
+                <h3 class="section-title">Flight Details</h3>
                 <div class="detail-item">
-                    <strong>Booking Ref:</strong>
-                    <span>SKY-7890-2023</span>
+                    <span class="detail-label">Booking Ref:</span>
+                    <span id="booking-ref">{{bookingRef}}</span>
                 </div>
                 <div class="detail-item">
-                    <strong>Travel Date:</strong>
-                    <span>June 10, 2023</span>
+                    <span class="detail-label">Airline:</span>
+                    <span id="airline">{{airline}}</span>
                 </div>
                 <div class="detail-item">
-                    <strong>Flight No:</strong>
-                    <span>AA 2456</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Class:</strong>
-                    <span>Business</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Passengers:</strong>
-                    <span>2</span>
+                    <span class="detail-label">Flight Status:</span>
+                    <span id="flight-status">{{flightStatus}}</span>
                 </div>
             </div>
         </div>
 
         <div class="flight-details">
-            <h3>Flight Itinerary</h3>
+            <h3 class="section-title">Flight Itinerary</h3>
             <div class="flight-info">
                 <div class="airport">
-                    <div class="airport-code">JFK</div>
-                    <div class="airport-name">John F. Kennedy Intl</div>
-                    <div class="flight-time">08:00 AM</div>
-                    <div class="flight-date">June 10, 2023</div>
+                    <div class="airport-code" id="origin-code">{{originCode}}</div>
+                    <div class="airport-name" id="origin-name">{{originName}}</div>
+                    <div id="departure-time">{{departureTime}}</div>
+                    <div id="departure-date">{{departureDate}}</div>
                 </div>
 
                 <div class="flight-route"></div>
 
                 <div class="airport">
-                    <div class="airport-code">LAX</div>
-                    <div class="airport-name">Los Angeles Intl</div>
-                    <div class="flight-time">11:30 AM</div>
-                    <div class="flight-date">June 10, 2023</div>
+                    <div class="airport-code" id="destination-code">{{destinationCode}}</div>
+                    <div class="airport-name" id="destination-name">{{destinationName}}</div>
+                    <div id="arrival-time">{{arrivalTime}}</div>
+                    <div id="arrival-date">{{arrivalDate}}</div>
                 </div>
             </div>
 
             <div class="detail-item">
-                <strong>Duration:</strong>
-                <span>6h 30m (non-stop)</span>
+                <span class="detail-label">Duration:</span>
+                <span id="duration">{{duration}}</span>
             </div>
             <div class="detail-item">
-                <strong>Aircraft:</strong>
-                <span>Boeing 787-9 Dreamliner</span>
+                <span class="detail-label">Aircraft:</span>
+                <span id="aircraft">{{aircraft}}</span>
             </div>
         </div>
 
@@ -359,61 +317,29 @@
             <thead>
             <tr>
                 <th>Description</th>
-                <th>Qty</th>
-                <th class="text-right">Unit Price</th>
-                <th class="text-right">Amount</th>
+                <th>Class</th>
+                <th>Passengers</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Business Class Ticket (JFK-LAX)</td>
-                <td>2</td>
-                <td class="text-right">$1,250.00</td>
-                <td class="text-right">$2,500.00</td>
-            </tr>
-            <tr>
-                <td>Priority Boarding</td>
-                <td>2</td>
-                <td class="text-right">$35.00</td>
-                <td class="text-right">$70.00</td>
-            </tr>
-            <tr>
-                <td>Extra Luggage (2 x 10kg)</td>
-                <td>2</td>
-                <td class="text-right">$75.00</td>
-                <td class="text-right">$150.00</td>
-            </tr>
-            <tr>
-                <td>Travel Insurance</td>
-                <td>1</td>
-                <td class="text-right">$89.00</td>
-                <td class="text-right">$89.00</td>
-            </tr>
-            <tr>
-                <td>Concierge Service</td>
-                <td>1</td>
-                <td class="text-right">$120.00</td>
-                <td class="text-right">$120.00</td>
-            </tr>
+            {{flightItems}}
             </tbody>
         </table>
 
         <div class="total-section">
             <div class="total-row">
                 <span>Subtotal:</span>
-                <span>$2,929.00</span>
+                <span id="subtotal">{{subtotal}}</span>
             </div>
             <div class="total-row">
                 <span>Tax (7.5%):</span>
-                <span>$219.68</span>
-            </div>
-            <div class="total-row">
-                <span>Service Fee:</span>
-                <span>$50.00</span>
+                <span id="tax">{{taxAmount}}</span>
             </div>
             <div class="total-row grand-total">
                 <span>Total Due:</span>
-                <span>$3,198.68</span>
+                <span id="total">{{total}}</span>
             </div>
         </div>
     </div>
@@ -422,7 +348,8 @@
         <p>Thank you for choosing Skyline Travel & Business for your corporate travel needs.</p>
         <p>Payment is due within 15 days. Please make checks payable to Skyline Travel & Business.</p>
         <p>For any questions regarding this invoice, contact accounting@skylinetravel.com</p>
-        <div class="status-badge">PAID</div>
+        <button class="print-btn" onclick="window.print()">Print Invoice</button>
+        <div class="status-badge">{{paymentStatus}}</div>
     </div>
 </div>
 </body>
