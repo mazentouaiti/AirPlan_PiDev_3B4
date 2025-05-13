@@ -519,14 +519,29 @@ public class FlightsController implements Initializable {
         // Mark all reservations as paid
         reservedFlightsListItems.forEach(ReservedFlight::markAsPaid);
 
-        Alert invoiceConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        invoiceConfirmation.setTitle("Reservation Complete");
-        invoiceConfirmation.setHeaderText("Payment successful! All flights reserved.");
-        invoiceConfirmation.setContentText("Do you want to view the invoice now?");
+        // If there's only one flight, use the single flight invoice
+        if (reservedFlightsListItems.size() == 1) {
+            ReservedFlight singleFlight = reservedFlightsListItems.get(0);
+            Alert invoiceConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            invoiceConfirmation.setTitle("Reservation Complete");
+            invoiceConfirmation.setHeaderText("Payment successful! Flight reserved.");
+            invoiceConfirmation.setContentText("Do you want to view the invoice now?");
 
-        Optional<ButtonType> result = invoiceConfirmation.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            showInvoiceInWebView(null); // Show multi-flight invoice
+            Optional<ButtonType> result = invoiceConfirmation.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                showInvoiceInWebView(singleFlight);
+            }
+        } else {
+            // For multiple flights, use the multi-flight invoice
+            Alert invoiceConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            invoiceConfirmation.setTitle("Reservation Complete");
+            invoiceConfirmation.setHeaderText("Payment successful! All flights reserved.");
+            invoiceConfirmation.setContentText("Do you want to view the invoice now?");
+
+            Optional<ButtonType> result = invoiceConfirmation.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                showInvoiceInWebView(null); // Show multi-flight invoice
+            }
         }
     }
 
