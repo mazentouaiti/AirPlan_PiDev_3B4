@@ -1,9 +1,11 @@
 package com.example.airPlan.controllers.Client;
 
+import com.example.airPlan.Services.HotelInvoiceService;
 import com.example.airPlan.Utiles.DBConnection;
 import com.example.airPlan.models.Hebergement;
 import com.example.airPlan.models.Reservation;
 import com.example.airPlan.Services.ServiceReservation;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -150,71 +153,28 @@ public class ReservationClient {
 
     @FXML
     private void handleSubmit(ActionEvent event) throws SQLException {
-        if (departuredate.getValue() == null || arrivaldate.getValue() == null) {
-            showAlert("Please fill in all required fields.", Alert.AlertType.WARNING);
-            return;
-        }
-
         if (!validateForm()) {
             return;
         }
 
-        ajouterReservation();
+        try {
+            Reservation reservation = ajouterReservation();
 
-        //pdf
-        String countryCity = CountryCity.getText();
-        String hebergementName = nameheber.getText();
-        String options = optionheber.getText();
-        String price = priceheber.getText();
-        String type = typeheber.getText();
-        String rating = ratingheber.getText();
-        String dateArrival = arrivaldate.getValue().toString();
-        String dateDeparture = departuredate.getValue().toString();
-        String request = requestarea.getText();
-        int nbAdults = (int) adultspinner.getValue();
-        int nbChildren = (int) childrenspinner.getValue();
-        int nbRooms = (int) roomspinner.getValue();
+            if (reservation != null) {
+                // Show WebView invoice
+                showHotelInvoice(reservation);
 
-// Récupérer l’image (enregistrée temporairement pour le PDF si tu veux l’y inclure)
-        Image fxImage = imagehebergement.getImage();
+                // Show success message
+                showAlert("Success", "Reservation completed successfully!", Alert.AlertType.INFORMATION);
 
-        String imagePath = "C:\\Users\\jmaae\\IdeaProjects\\Hotels\\src\\main\\resources\\com\\example\\hotels\\images\\passeport.png";
-
-
-        StyledPdfGenerator generator = new StyledPdfGenerator();
-        generator.generatePdf(
-                "ReservationConfirmation.pdf",
-                countryCity,
-                hebergementName,
-                type,
-                options,
-                price,
-                rating,
-                dateArrival,
-                dateDeparture,
-                nbAdults,
-                nbChildren,
-                nbRooms,
-                request,
-                imagePath
-        );
-        if (parentContainer != null && previousView != null) {
-            parentContainer.setCenter(previousView);
+                // Return to previous view
+                if (parentContainer != null && previousView != null) {
+                    parentContainer.setCenter(previousView);
+                }
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to complete reservation: " + e.getMessage(), Alert.AlertType.ERROR);
         }
-
-        //emailll
-    /*
-        String clientEmail = emailresField.getText();  // champ pour l'email du client
-        String clientName = nameresField.getText();  // champ pour le nom du client
-
-        // Appelle la méthode d'envoi d'email pour envoyer une confirmation
-        BrevoEmailSender.sendEmail(clientEmail, clientName);
-
-        // Affiche une alerte pour indiquer que la réservation a été effectuée avec succès
-        showAlert("Reservation successful! A confirmation email has been sent.", Alert.AlertType.INFORMATION);
-
-    */
-
     }
 
 
@@ -233,14 +193,14 @@ public class ReservationClient {
     }
 
 
-    private void ajouterReservation() {
+    private Reservation ajouterReservation() {
         try {
             Reservation reservation = new Reservation();
 
-            reservation.setIdUser(1); // à adapter
+            reservation.setIdUser(currentUserId);
             reservation.setIdAcc(currentHebergement.getId());
             reservation.setTypeReservation(currentHebergement.getType());
-            reservation.setDestination(currentHebergement.getCountry()+", "+currentHebergement.getCity());
+            reservation.setDestination(currentHebergement.getCountry() + ", " + currentHebergement.getCity());
             reservation.setNumberOfRooms((Integer) roomspinner.getValue());
             reservation.setNumberOfAdults((Integer) adultspinner.getValue());
             reservation.setNumberOfChildren((Integer) childrenspinner.getValue());
@@ -251,7 +211,7 @@ public class ReservationClient {
             // Calculate prices
             long nights = ChronoUnit.DAYS.between(arrivaldate.getValue(), departuredate.getValue());
             double adultPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfAdults();
-            double childPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfChildren() * 0.5; // 50% for children
+            double childPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfChildren() * 0.5;
             double totalPrice = adultPrice + childPrice;
 
             reservation.setPriceAdultsAcc(adultPrice);
@@ -262,10 +222,10 @@ public class ReservationClient {
             ServiceReservation service = new ServiceReservation();
             service.addReservation(reservation);
 
-            showAlert("Réservation enregistrée avec succès.", Alert.AlertType.INFORMATION);
+            return reservation; // Return the created reservation
         } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la réservation : " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to create reservation: " + e.getMessage(), Alert.AlertType.ERROR);
+            return null;
         }
     }
 
@@ -353,7 +313,45 @@ public class ReservationClient {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    private void showHotelInvoice(Reservation reservation) {
+        try {
+            // Generate HTML content
+            String htmlContent = generateHotelInvoiceContent(reservation);
 
+            // Create and show WebView window
+            Platform.runLater(() -> {
+                WebView webView = new WebView();
+                webView.getEngine().loadContent(htmlContent);
+
+                Stage stage = new Stage();
+                stage.setTitle("Hotel Booking Confirmation");
+                stage.setScene(new Scene(webView, 900, 700));
+                stage.show();
+            });
+
+        } catch (Exception e) {
+            Platform.runLater(() ->
+                    showAlert("Invoice Error", "Failed to generate hotel invoice: " + e.getMessage(), Alert.AlertType.ERROR));
+        }
+    }
+
+    private String generateHotelInvoiceContent(Reservation reservation) throws Exception {
+        HotelInvoiceService invoiceService = new HotelInvoiceService();
+        return invoiceService.generateHotelInvoice(
+                reservation,
+                currentHebergement,
+                nameresField.getText(),
+                emailresField.getText(),
+                "123456789" // Add phone field if needed
+        );
+    }
 
 
 }

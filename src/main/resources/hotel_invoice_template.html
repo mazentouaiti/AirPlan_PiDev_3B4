@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Booking Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 20px;
+    }
+    .hotel-image {
+      max-width: 300px;
+      max-height: 200px;
+      margin: 0 auto;
+      display: block;
+    }
+    .details-section {
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    .total-row {
+      font-weight: bold;
+      background-color: #f2f2f2;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #777;
+    }
+    @media print {
+      .no-print { display: none; }
+      body { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>Hotel Booking Confirmation</h1>
+  <p>Confirmation #{{bookingReference}}</p>
+  <p>Issued on {{issueDate}}</p>
+</div>
+
+<div class="details-section">
+  <h2>Hotel Information</h2>
+  <img src="{{hotelImage}}" alt="Hotel Image" class="hotel-image">
+  <p><strong>{{hotelName}}</strong></p>
+  <p>{{hotelAddress}}, {{hotelCity}}, {{hotelCountry}}</p>
+  <p>Rating: {{hotelRating}}</p>
+</div>
+
+<div class="details-section">
+  <h2>Guest Information</h2>
+  <p><strong>Name:</strong> {{guestName}}</p>
+  <p><strong>Email:</strong> {{guestEmail}}</p>
+  <p><strong>Phone:</strong> {{guestPhone}}</p>
+</div>
+
+<div class="details-section">
+  <h2>Booking Details</h2>
+  <table>
+    <tr>
+      <th>Check-In</th>
+      <th>Check-Out</th>
+      <th>Nights</th>
+      <th>Rooms</th>
+      <th>Adults</th>
+      <th>Children</th>
+    </tr>
+    <tr>
+      <td>{{checkInDate}}</td>
+      <td>{{checkOutDate}}</td>
+      <td>{{numberOfNights}}</td>
+      <td>{{numberOfRooms}}</td>
+      <td>{{numberOfAdults}}</td>
+      <td>{{numberOfChildren}}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="details-section">
+  <h2>Pricing Summary</h2>
+  <table>
+    <tr>
+      <th>Description</th>
+      <th>Rate</th>
+      <th>Quantity</th>
+      <th>Total</th>
+    </tr>
+    <tr>
+      <td>{{roomType}} (per night)</td>
+      <td>{{roomRate}} TND</td>
+      <td>{{numberOfNights}} nights × {{numberOfRooms}} rooms</td>
+      <td>{{roomSubtotal}} TND</td>
+    </tr>
+    <tr class="total-row">
+      <td colspan="3">Subtotal</td>
+      <td>{{subtotal}} TND</td>
+    </tr>
+    <tr>
+      <td colspan="3">Taxes & Fees</td>
+      <td>{{taxes}} TND</td>
+    </tr>
+    <tr class="total-row">
+      <td colspan="3">Total Amount</td>
+      <td>{{totalAmount}} TND</td>
+    </tr>
+  </table>
+</div>
+
+<div class="details-section">
+  <h2>Special Requests</h2>
+  <p>{{specialRequests}}</p>
+</div>
+
+<div class="footer no-print">
+  <p>Thank you for your booking! For any questions, please contact {{hotelPhone}} or {{hotelEmail}}</p>
+</div>
+</body>
+</html>
