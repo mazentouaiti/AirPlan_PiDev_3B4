@@ -1,13 +1,13 @@
 package com.example.airPlan.controllers.Client;
 
-import com.example.airPlan.App;
+
 import com.example.airPlan.Services.FlightServices;
 import com.example.airPlan.Services.InvoiceService;
 import com.example.airPlan.models.FlightModel;
-import com.example.airPlan.controllers.Client.ReservedFlight;
+
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
-import javafx.application.HostServices;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,7 +30,7 @@ import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
-import java.awt.Desktop;
+
 
 public class FlightsController implements Initializable {
 
@@ -62,12 +62,11 @@ public class FlightsController implements Initializable {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private FlightModel selectedFlight;
     private WebEngine webEngine;
-    private ObservableList<ReservedFlight> reservedFlightsListItems = FXCollections.observableArrayList();
+    private final ObservableList<ReservedFlight> reservedFlightsListItems = FXCollections.observableArrayList();
 
 
     @FXML    private TextField resv_dest_field;
     @FXML    private ComboBox<String> resv_classcombo;
-    @FXML    private Label reservationTitle;
     @FXML    private Spinner<Integer> resv_passenger_number;
     @FXML    private TextField resv_num_field;
     @FXML    private Button resv_cancel_btn;
@@ -200,6 +199,7 @@ public class FlightsController implements Initializable {
         });
     }
     private void setupSearchHandler() {
+
         search_btn.setOnAction(event -> searchFlights());
     }
     private void refreshFlightData() {
@@ -211,7 +211,8 @@ public class FlightsController implements Initializable {
             List<FlightModel> flights = flightServices.getAllFlights();
             flightsList = FXCollections.observableArrayList(
                     flights.stream()
-                            .filter(flight -> "approved".equals(flight.getAdminStatus()))
+                            .filter(flight -> "approved".equals(flight.getAdminStatus())&&
+                            !"Cancelled".equals(flight.getStatus()))
                             .toList()
             );
             flights_listview.setItems(flightsList);
@@ -228,9 +229,6 @@ public class FlightsController implements Initializable {
             search_btn.setDisable(false);
         }
     }
-    private boolean isValidAirportCode(String input) {
-        return true;
-    }
     private void searchFlights() {
         try {
             String departure = depart_field.getText().trim().toLowerCase();
@@ -246,7 +244,7 @@ public class FlightsController implements Initializable {
                                     (destination.isEmpty() || flight.getDestination().toLowerCase().contains(destination)) &&
                                     (departureDate == null || isSameDate(flight.getDepartureDate(), departureDate)) &&
                                     checkPriceFilter(flight.getPrice(), priceFilter) &&
-                                    "approved".equals(flight.getAdminStatus())
+                                    "approved".equals(flight.getAdminStatus()) && !"cancelled".equals(flight.getStatus())
                     )
                     .toList();
 
@@ -307,6 +305,10 @@ public class FlightsController implements Initializable {
         mainContent.setEffect(null);
     }
     public void showReservationPanel(FlightModel flight) {
+        if ("cancelled".equals(flight.getStatus())) {
+            showErrorAlert("Flight Cancelled", "This flight has been cancelled and cannot be reserved.");
+            return;
+        }
         this.selectedFlight = flight;
 
         // Populate form
@@ -375,18 +377,7 @@ public class FlightsController implements Initializable {
         updateTotalPriceDisplay();
     }
 
-    private void loadInExternalBrowser(String url) {
-        try {
-            java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
-        } catch (Exception e) {
-            showErrorAlert("Browser Error", "Failed to open browser: " + e.getMessage());
-        }
-    }
-    @FXML
-    public void loadMap() {
-        // Load empty Google Maps in WebView
-        webEngine.load("https://www.google.com/maps");
-    }
+
     private void updateMap(String destination) {
         try {
             if (!destination.isEmpty()) {
@@ -400,13 +391,6 @@ public class FlightsController implements Initializable {
             }
         } catch (Exception e) {
             showErrorAlert("Map Error", "Failed to search destination: " + e.getMessage());
-        }
-    }
-    private String encodeURIComponent(String s) {
-        try {
-            return java.net.URLEncoder.encode(s, "UTF-8");
-        } catch (Exception e) {
-            return s.replace(" ", "+");
         }
     }
     private void initializeReservedFlightsListView() {
@@ -484,48 +468,7 @@ public class FlightsController implements Initializable {
         slideOut.setToX(600);
         slideOut.play();
     }
-    // Update the method signature to accept the parameter
-    private void generateAndShowInvoice(ReservedFlight reservedFlight) {
-        showInvoiceInWebView(reservedFlight);
-    }
-    private void displayInvoice(String htmlContent) throws Exception {
-        // Validate HTML content
-        if (htmlContent == null || htmlContent.trim().isEmpty()) {
-            throw new Exception("Generated invoice content is empty");
-        }
 
-        // Create temp file
-        File tempFile;
-        try {
-            tempFile = File.createTempFile("invoice_", ".html");
-            tempFile.deleteOnExit();
-        } catch (IOException e) {
-            throw new Exception("Could not create temporary file: " + e.getMessage(), e);
-        }
-
-        // Write content
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write(htmlContent);
-        } catch (IOException e) {
-            throw new Exception("Could not write invoice to file: " + e.getMessage(), e);
-        }
-
-        // Display in browser
-        try {
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(tempFile.toURI());
-            } else {
-                HostServices hostServices = App.getHostServicesInstance();
-                if (hostServices != null) {
-                    hostServices.showDocument(tempFile.toURI().toString());
-                } else {
-                    throw new Exception("No available method to display the invoice");
-                }
-            }
-        } catch (Exception e) {
-            throw new Exception("Could not display invoice: " + e.getMessage(), e);
-        }
-    }
 
     private String generateInvoiceContent(ReservedFlight reservedFlight) throws Exception {
         InvoiceService invoiceService = new InvoiceService();
@@ -585,53 +528,8 @@ public class FlightsController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             showInvoiceInWebView(null); // Show multi-flight invoice
         }
-    }    // New method for handling all reservations
-    private void generateAndShowInvoiceForAll() {
-        showInvoiceInWebView(null); // Null indicates multi-flight invoice
     }
 
-
-
-
-    private void showHtmlInvoice(String htmlContent) throws Exception {
-        // Create temp file with proper permissions
-        File tempFile = File.createTempFile("invoice_template", ".html");
-        tempFile.setReadable(true, false);
-        tempFile.setWritable(true, false);
-
-        // Write content with proper encoding
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
-            writer.write(htmlContent);
-            writer.flush();
-        }
-
-        // Try desktop browser first
-        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            Desktop.getDesktop().browse(tempFile.toURI());
-        }
-        // Fallback to HostServices
-        else {
-            HostServices hostServices = App.getHostServicesInstance();
-            if (hostServices != null) {
-                hostServices.showDocument(tempFile.toURI().toString());
-            } else {
-                // Final fallback - show in WebView
-                Platform.runLater(() -> {
-                    WebView webView = new WebView();
-                    webView.getEngine().loadContent(htmlContent);
-
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(webView));
-                    stage.setTitle("Flight Invoice");
-                    stage.show();
-                });
-            }
-        }
-
-        // Schedule file deletion when JVM exits
-        tempFile.deleteOnExit();
-    }
     private void showInvoiceInWebView(ReservedFlight reservedFlight) {
         try {
             // Validate input
@@ -670,19 +568,15 @@ public class FlightsController implements Initializable {
         return "Flight Invoice";
     }
     private void createInvoiceWindow(String htmlContent, String title) {
-        // Create WebView and configure it
         WebView webView = new WebView();
         WebEngine webEngine = webView.getEngine();
 
-        // Set preferred size
         webView.setPrefSize(900, 700);
         webView.setContextMenuEnabled(true);
 
-        // Create the window
         Stage invoiceWindow = new Stage();
         invoiceWindow.setTitle(title);
 
-        // Add print button
         Button printBtn = new Button("Print Invoice");
         printBtn.setStyle("-fx-font-weight: bold; -fx-padding: 8 15;");
         printBtn.setOnAction(e -> {

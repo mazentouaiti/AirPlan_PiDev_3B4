@@ -40,13 +40,12 @@ public class FlightAdminController implements Initializable {
         flight_status.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             filterFlightsByStatus(newVal);
         });
+        FlightListView.setPlaceholder(new Label("Loading flights..."));
 
-        // Add search field listener
         search_field.textProperty().addListener((observable, oldValue, newValue) -> {
             searchFlights(newValue);
         });
 
-        // Activate reset button
         resetAll_to_pending.setOnAction(event -> onResetAllClicked());
 
         setupListView();
@@ -67,12 +66,20 @@ public class FlightAdminController implements Initializable {
             if ((flight.getFlightNumber() != null && flight.getFlightNumber().toLowerCase().contains(lowerCaseSearch)) ||
                     (flight.getOrigin() != null && flight.getOrigin().toLowerCase().contains(lowerCaseSearch)) ||
                     (flight.getDestination() != null && flight.getDestination().toLowerCase().contains(lowerCaseSearch)) ||
-                    (flight.getAirline() != null && flight.getAirline().toLowerCase().contains(lowerCaseSearch))) {
+                    (flight.getAirline() != null && flight.getAirline().toLowerCase().contains(lowerCaseSearch)) ||
+                    (flight.getFlightNumber() != null && flight.getFlightNumber().toLowerCase().contains(lowerCaseSearch)) ||
+                    (flight.getStatus() != null && flight.getStatus().toLowerCase().contains(lowerCaseSearch))
+            ) {
                 filteredFlights.add(flight);
             }
         }
 
         FlightListView.setItems(filteredFlights);
+        if (filteredFlights.isEmpty()) {
+            Label placeholder = new Label("No flights match your search");
+            placeholder.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+            FlightListView.setPlaceholder(placeholder);
+        }
     }
     private void filterFlightsByStatus(String status) {
         List<FlightModel> allFlights = flightService.getAllFlights();
@@ -91,25 +98,29 @@ public class FlightAdminController implements Initializable {
         }
 
         FlightListView.setItems(filteredFlights);
+        if (filteredFlights.isEmpty()) {
+            Label placeholder = new Label();
+            if ("Pending".equals(status)) {
+                placeholder.setText("No flights pending");
+            } else if ("Approved".equals(status)) {
+                placeholder.setText("No approved flights");
+            } else if ("Rejected".equals(status)) {
+                placeholder.setText("No rejected flights");
+            } else {
+                placeholder.setText("No flights found");
+            }
+            placeholder.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+            FlightListView.setPlaceholder(placeholder);
+        }
     }
 
-    private FadeTransition createFadeAnimation(Button button) {
-        FadeTransition fade = new FadeTransition(Duration.millis(200), button);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        return fade;
-    }
 
-
-    private FadeTransition createFadeOutAnimation(Button button) {
-        FadeTransition fade = new FadeTransition(Duration.millis(150), button);
-        fade.setToValue(0);
-        return fade;
-    }
 
 
     private void setupListView() {
+
         FlightListView.setCellFactory(param -> createFlightCell());
+        FlightListView.setPlaceholder(new Label("No flights found"));
     }
     private ListCell<FlightModel> createFlightCell() {
         return new ListCell<FlightModel>() {
@@ -150,35 +161,6 @@ public class FlightAdminController implements Initializable {
         filterFlightsByStatus(flight_status.getValue());
     }
 
-    @FXML
-    private void onAcceptAllClicked() {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Approval");
-        confirmation.setHeaderText("Approve all pending flights");
-        confirmation.setContentText("Are you sure you want to approve all pending flights?");
-
-        Optional<ButtonType> result = confirmation.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            flightService.approveAllPendingFlights();
-            showAlert("Success", "All pending flights have been approved.");
-            loadFlights(); // Refresh the list
-        }
-    }
-
-    @FXML
-    private void onRejectAllClicked() {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Rejection");
-        confirmation.setHeaderText("Reject all pending flights");
-        confirmation.setContentText("Are you sure you want to reject all pending flights?");
-
-        Optional<ButtonType> result = confirmation.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            flightService.rejectAllPendingFlights();
-            showAlert("Success", "All pending flights have been rejected.");
-            loadFlights(); // Refresh the list
-        }
-    }
     @FXML
     private void onResetAllClicked() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
