@@ -1,109 +1,136 @@
-
 .chat-container {
-    -fx-background-color: #f5f5f5;
-    -fx-padding: 15px;
-    -fx-spacing: 10px;
-    -fx-pref-width: 350px;
-    -fx-pref-height: 500px;
+    -fx-background-color: #ffffff;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+    -fx-pref-width: 380px;
+    -fx-pref-height: 600px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
 }
-
 
 .header {
     -fx-alignment: CENTER_LEFT;
-    -fx-spacing: 10px;
-    -fx-padding: 0 0 10px 0;
-    -fx-border-color: #e0e0e0;
+    -fx-spacing: 12px;
+    -fx-padding: 15px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e9ecef;
     -fx-border-width: 0 0 1px 0;
 }
 
+.bot-avatar {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
 .header-title {
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #588b8b;
 }
 
-.header-date {
-    -fx-font-size: 14px;
-    -fx-text-fill: #666666;
+.header-status {
+    -fx-font-size: 12px;
+    -fx-text-fill: #65676B;
 }
 
-
-.chat-list-view {
-    -fx-background-color: transparent;
-    -fx-padding: 5px;
+.chat-area {
+    -fx-background-color: #f0f2f5;
+    -fx-padding: 10px;
     -fx-border-width: 0;
 }
 
-.chat-list-view .list-cell {
-    -fx-background-color: transparent;
+.message-container {
+    -fx-spacing: 8px;
     -fx-padding: 5px;
 }
 
-
 .input-container {
-    -fx-padding: 10px 0 0 0;
-    -fx-border-color: #e0e0e0;
+    -fx-padding: 12px 15px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e9ecef;
     -fx-border-width: 1px 0 0 0;
+    -fx-spacing: 10px;
 }
 
 .input-field {
-    -fx-pref-width: 280px;
-    -fx-pref-height: 35px;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
     -fx-background-radius: 20px;
     -fx-border-radius: 20px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccd0d5;
+    -fx-border-width: 1px;
     -fx-padding: 0 15px;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: #588b8b;
 }
 
 .send-button {
     -fx-pref-width: 60px;
-    -fx-pref-height: 35px;
+    -fx-pref-height: 40px;
     -fx-background-color: #588b8b;
-    -fx-text-fill: white;
     -fx-background-radius: 20px;
     -fx-border-radius: 20px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
+
 }
 
 .send-button:hover {
-    -fx-background-color: #3367d6;
+    -fx-background-color: #4a7b7b;
 }
 
-.bot-message-container {
-    -fx-alignment: CENTER_LEFT;
-    -fx-spacing: 10px;
-}
-
-.user-message-container {
-    -fx-alignment: CENTER_RIGHT;
-    -fx-spacing: 10px;
-}
-
-.bot-message-bubble {
-    -fx-background-color: #588b8b;
-    -fx-background-radius: 15px 15px 15px 0;
+/* Message bubbles */
+.message-bubble {
+    -fx-background-radius: 18px;
     -fx-padding: 10px 15px;
-    -fx-max-width: 250px;
-}
-
-.user-message-bubble {
-    -fx-background-color: #ffc2b5;
-    -fx-background-radius: 15px 15px 0 15px;
-    -fx-padding: 10px 15px;
-    -fx-max-width: 250px;
-}
-
-.bot-message-text {
-    -fx-text-fill: #EEEE;
-    -fx-font-size: 1.3em;
+    -fx-max-width: 280px;
     -fx-wrap-text: true;
-}
-
-.user-message-text {
-    -fx-text-fill: #588b8b;
     -fx-font-size: 14px;
-    -fx-wrap-text: true;
 }
 
-.bot-avatar {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+.user-message {
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 18px 0 18px 18px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.bot-message {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0 18px 18px 18px;
+    -fx-text-fill: #050505;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 3, 0, 0, 1);
+}
+
+.message-time {
+    -fx-font-size: 11px;
+    -fx-text-fill: #65676B;
+    -fx-padding: 2px 0 0 5px;
+}
+
+.message-container {
+    -fx-spacing: 8px;
+    -fx-padding: 5px;
+}
+
+/* Typing indicator styles */
+.typing-indicator {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-padding: 10px 15px;
+    -fx-max-width: 80px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 3, 0, 0, 1);
+}
+
+.typing-dot {
+    -fx-fill: #888888;
+    -fx-opacity: 0.4;
+}
+
+.typing-container {
+    -fx-alignment: center-left;
+    -fx-padding: 5px;
 }

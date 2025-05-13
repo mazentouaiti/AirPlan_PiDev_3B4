@@ -91,8 +91,6 @@ public class HotelInfoAdmin {
 
         return stars.toString();
     }
-
-
     private Stage imagePreviewStage = null;
     private int currentImageIndex = 0;
     private List<Image> imageList = new ArrayList<>();

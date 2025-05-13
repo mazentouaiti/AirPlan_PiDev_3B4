@@ -6,6 +6,9 @@ import com.example.airPlan.Services.ServiceHebergement;
 import com.example.airPlan.models.Reservation;
 import com.example.airPlan.views.AccCellBookedFactory;
 import com.example.airPlan.views.AccCellFavorisFactory;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -13,10 +16,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -24,6 +30,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -45,6 +55,11 @@ public class ClientAcc {
     @FXML private WebView weatherWebView;
     @FXML private Button btnliked;
     @FXML private Button btnbooked;
+    @FXML private Button btnchat;
+
+
+    private StackPane chatContainer; // Add this as a class field
+    private boolean chatInitialized = false; // Add this flag
     // favorite pane
     private boolean favoritesVisible = false;
     private VBox favoritesContainer;
@@ -76,6 +91,16 @@ public class ClientAcc {
         loadHotels();
         btnliked.setOnAction(e -> toggleFavorites());
         btnbooked.setOnAction(e -> toggleBooked());
+        accView = scrollPane.getParent();
+
+        setupUI();
+        setupEventHandlers();
+        loadHotels();
+        btnliked.setOnAction(e -> toggleFavorites());
+        btnbooked.setOnAction(e -> toggleBooked());
+
+
+
     }
 
     private void setupUI() {
@@ -630,5 +655,89 @@ public class ClientAcc {
             alert.showAndWait();
         }
     }
+
+
+    private void initializeChatPanel() {
+        try {
+            // Load the chatbot view
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/chatbot2.fxml"));
+            Parent chatView = loader.load();
+
+            // Create the chat container with bottom-left alignment
+            chatContainer = new StackPane();
+            chatContainer.setAlignment(Pos.BOTTOM_LEFT);
+
+            // Add close button (X)
+            Button closeButton = new Button("×");
+            closeButton.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #588b8b; " +
+                    "-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 5;");
+            closeButton.setOnAction(e -> toggleChat());
+
+            // Position close button at top-right of chat
+            StackPane.setAlignment(closeButton, Pos.TOP_RIGHT);
+            StackPane.setMargin(closeButton, new Insets(5));
+
+            // Add chat view and close button to container
+            chatContainer.getChildren().addAll(chatView, closeButton);
+            chatContainer.setVisible(false);
+
+            // Position the container absolutely in the bottom-left corner
+            AnchorPane.setBottomAnchor(chatContainer, 20.0);  // 20px from bottom
+            AnchorPane.setLeftAnchor(chatContainer, 20.0);    // 20px from left
+            AnchorPane.setRightAnchor(chatContainer, null);
+            AnchorPane.setTopAnchor(chatContainer, null);
+
+            // Add to main scene
+            ((AnchorPane)scrollPane.getParent()).getChildren().add(chatContainer);
+
+            chatInitialized = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "Failed to load chatbot");
+        }
+    }
+
+    @FXML
+    private void openChatbot(ActionEvent event) {
+        toggleChat();
+    }
+
+    private void toggleChat() {
+        if (!chatInitialized) {
+            initializeChatPanel();
+        }
+
+        if (chatContainer.isVisible()) {
+            // Hide chat
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), chatContainer);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(e -> {
+                chatContainer.setVisible(false);
+                scrollPane.setEffect(null); // Remove blur
+            });
+            fadeOut.play();
+        } else {
+            // Show chat
+            chatContainer.setOpacity(0);
+            chatContainer.setVisible(true);
+
+            // Apply blur effect to background
+            BoxBlur blur = new BoxBlur(5, 5, 3);
+            scrollPane.setEffect(blur);
+
+            // Fade in animation
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), chatContainer);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        }
+    }
+
+
+
+
+
+
 }
 

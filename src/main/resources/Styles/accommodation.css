@@ -110,3 +110,31 @@
     -fx-scale-y: 1.03;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);
 }
+
+/* Style for combo box list cells */
+.combo-box .list-cell {
+    -fx-background-color: whitesmoke;  /* Base color */
+    -fx-text-fill: black;             /* Text color */
+}
+
+/* Hover state for list cells */
+.combo-box .list-cell:hover {
+    -fx-background-color: #e0e0e0;    /* Slightly darker on hover */
+}
+
+/* Selected/focused state for list cells */
+.combo-box .list-cell:filled:selected,
+.combo-box .list-cell:filled:focused {
+
+        -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA); /* Dégradé vertical */
+
+       /* Your theme color */
+    -fx-text-fill: white;             /* White text for contrast */
+}
+
+/* Ensure the list view itself has proper styling */
+.combo-box .list-view {
+    -fx-background-color: whitesmoke;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3;
+}

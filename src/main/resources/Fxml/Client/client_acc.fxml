@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/clientacc.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.ClientAcc">
+<AnchorPane fx:id="mainPane" prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/clientacc.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.ClientAcc">
    <children>
       <ScrollPane fx:id="scrollPane" layoutX="0.0" layoutY="265.0" prefHeight="486.0" prefWidth="1000.0" styleClass="main-scroll">
          <content>
@@ -20,10 +20,10 @@
       </ScrollPane>
 
       <TextField fx:id="destinationfiled" layoutX="85.0" layoutY="215.0" prefHeight="26.0" prefWidth="221.0" promptText="Where Are You Going ?" />
-      <FontAwesomeIconView glyphName="GLOBE" layoutX="288.0" layoutY="233.0" size="16" text="" />
+      <FontAwesomeIconView glyphName="GLOBE" layoutX="286.0" layoutY="234.0" size="16" text="" />
 
       <ComboBox fx:id="pricecombo" layoutX="333.0" layoutY="215.0" prefHeight="26.0" prefWidth="166.0" promptText="   Sort By Price / Rating" />
-      <FontAwesomeIconView glyphName="SORT" layoutX="471.0" layoutY="234.0" size="16" text="" />
+      <FontAwesomeIconView glyphName="SORT" layoutX="472.0" layoutY="234.0" size="16" text="" />
 
       <!-- Add this near your WebView declaration -->
       <WebView fx:id="weatherWebView" layoutX="0.0" layoutY="244.0" prefHeight="506.0" prefWidth="1000.0" visible="false" />
@@ -44,7 +44,7 @@
       </ImageView>
       <Button fx:id="btnbooked" layoutX="520.0" layoutY="214.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="34.0" styleClass="combo-box">
          <graphic>
-            <FontAwesomeIconView fill="WHITE" glyphName="HOTEL" size="15" />
+            <FontAwesomeIconView fill="WHITE" glyphName="HOTEL" size="18" />
          </graphic>
       </Button>
       <Button fx:id="btnliked" layoutX="568.0" layoutY="214.0" mnemonicParsing="false" styleClass="combo-box">
@@ -56,5 +56,9 @@
             </ImageView>
          </graphic>
       </Button>
+      <Button fx:id="btnchat" layoutX="616.0" layoutY="214.0" mnemonicParsing="false" onAction="#openChatbot" styleClass="combo-box">
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="COMMENTS" size="18" />
+         </graphic></Button>
    </children>
 </AnchorPane>

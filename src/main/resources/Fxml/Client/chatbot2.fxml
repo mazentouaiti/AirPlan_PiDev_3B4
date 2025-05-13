@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="0" styleClass="chat-container" stylesheets="@../../Styles/chatbot.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.ChatbotController">
+<VBox spacing="0" styleClass="chat-container" stylesheets="@../../Styles/chatbot.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.ChatbotController">
     <HBox styleClass="header">
         <ImageView fitHeight="48.0" fitWidth="47.0" styleClass="bot-avatar">
             <Image url="@../../images/bot-avatar.png" />
