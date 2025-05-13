@@ -44,7 +44,7 @@ public class AccController implements Initializable {
                 "Status: Waiting",
                 "Status: Accepted",
                 "Status: Rejected",
-                "Type: Hotelsssss",
+                "Type: Hotel",
                 "Type: House",
                 "Type: Apartment",
                 "Type: Villa",

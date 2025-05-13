@@ -65,7 +65,7 @@ public class HotelAdd {
         capacityspinner.setValueFactory(capacityFactory);
 
         // Initialize type combo box
-        typeCombo.getItems().addAll("Hotelsssss", "House", "Apartment", "Villa", "Hostel", "Bungalow");
+        typeCombo.getItems().addAll("Hotel", "House", "Apartment", "Villa", "Hostel", "Bungalow");
 
         // Setup option checkboxes
         setupOptionCheckboxes();

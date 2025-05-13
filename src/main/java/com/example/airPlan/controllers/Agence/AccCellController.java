@@ -117,10 +117,9 @@ public class AccCellController implements Initializable {
     }
 
     private void deleteHebergement(Hebergement selectedHebergement) {
-        // Afficher une boîte de dialogue de confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer l’hébergement");
+        alert.setHeaderText("Supprimer l'hébergement");
         alert.setContentText("Êtes-vous sûr de vouloir supprimer cet hébergement ?");
 
         alert.showAndWait().ifPresent(response -> {
@@ -129,13 +128,20 @@ public class AccCellController implements Initializable {
                 service.supprimer(selectedHebergement.getId());
 
                 if (listHebergement != null) {
-                    // Supprimer directement de la liste affichée
-                    listHebergement.getItems().remove(selectedHebergement);
+                    // Create a new modifiable list from the current items
+                    ObservableList<Hebergement> currentItems = FXCollections.observableArrayList(listHebergement.getItems());
 
-                    // Mettre à jour la liste filtrée et rafraîchir la vue
-                    filteredList.setPredicate(p -> p != selectedHebergement);
-                    listHebergement.setItems(filteredList);
-                    setListHebergement(listHebergement); // 🔥 AJOUTE refresh ici 🔥
+                    // Remove the item from the modifiable list
+                    currentItems.remove(selectedHebergement);
+
+                    // Set the updated list back to the ListView
+                    listHebergement.setItems(currentItems);
+
+                    // If you're using a filtered list, update it as well
+                    if (filteredList != null) {
+                        filteredList = new FilteredList<>(currentItems, p -> true);
+                        listHebergement.setItems(filteredList);
+                    }
                 } else {
                     System.out.println("⚠️ listHebergement est null, impossible de rafraîchir.");
                 }
