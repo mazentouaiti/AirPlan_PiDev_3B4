@@ -118,9 +118,10 @@ public class AccCellController implements Initializable {
 
     private void deleteHebergement(Hebergement selectedHebergement) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer l'hébergement");
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer cet hébergement ?");
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Delete Accommodation");
+        alert.setContentText("Are you sure you want to delete this accommodation?");
+
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
