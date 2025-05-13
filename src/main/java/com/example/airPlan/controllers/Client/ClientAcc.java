@@ -24,11 +24,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.json.JSONObject;
-
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -177,7 +174,7 @@ public class ClientAcc {
 
         // Position the container - right anchor 30px, y-coordinate at 244px as requested
         AnchorPane.setRightAnchor(favoritesContainer, 30.0);
-        AnchorPane.setTopAnchor(favoritesContainer, 244.0);  // Set to 244 y-coordinate
+        AnchorPane.setTopAnchor(favoritesContainer, 258.0);  // Set to 244 y-coordinate
         AnchorPane.setBottomAnchor(favoritesContainer, null); // Remove bottom anchor
 
         // Add to the main scene
@@ -579,7 +576,7 @@ public class ClientAcc {
 
         // Position the container
         AnchorPane.setRightAnchor(bookedContainer, 30.0);
-        AnchorPane.setTopAnchor(bookedContainer, 244.0);
+        AnchorPane.setTopAnchor(bookedContainer, 258.0);
         AnchorPane.setBottomAnchor(bookedContainer, null);
 
         // Add to the main scene
