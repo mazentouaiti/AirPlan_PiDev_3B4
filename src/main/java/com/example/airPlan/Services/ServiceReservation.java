@@ -76,7 +76,7 @@ public class ServiceReservation {
         }
     }
 
-    public void deleteReservation(int reservationId) throws SQLException {
+   /* public void deleteReservation(int reservationId) throws SQLException {
         String sql = "DELETE FROM reservation WHERE id_reservation = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -92,7 +92,49 @@ public class ServiceReservation {
             System.err.println("Erreur lors de la suppression de la réservation: " + e.getMessage());
             throw e;
         }
-    }
+    }*/
+   public void deleteReservation(int reservationId) throws SQLException {
+       // Start transaction
+       connection.setAutoCommit(false);
+
+       try {
+           // Step 1: Get reservation details before deleting
+           Reservation reservation = getReservationById(reservationId);
+           if (reservation == null) {
+               throw new SQLException("Reservation not found with ID: " + reservationId);
+           }
+
+           // Step 2: Delete the reservation
+           String deleteSql = "DELETE FROM reservation WHERE id_reservation = ?";
+           try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql)) {
+               deleteStmt.setInt(1, reservationId);
+               int affectedRows = deleteStmt.executeUpdate();
+
+               if (affectedRows == 0) {
+                   throw new SQLException("No reservation found with ID: " + reservationId);
+               }
+           }
+
+           // Step 3: Restore capacity in hebergement table
+           String updateSql = "UPDATE hebergement SET capacity = capacity + ? WHERE acc_id = ?";
+           try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+               updateStmt.setInt(1, reservation.getNumberOfRooms());
+               updateStmt.setInt(2, reservation.getIdAcc());
+               updateStmt.executeUpdate();
+           }
+
+           // Commit transaction
+           connection.commit();
+           System.out.println("Réservation supprimée et capacité restaurée avec succès");
+       } catch (SQLException e) {
+           // Rollback transaction if any error occurs
+           connection.rollback();
+           System.err.println("Erreur lors de la suppression de la réservation: " + e.getMessage());
+           throw e;
+       } finally {
+           connection.setAutoCommit(true);
+       }
+   }
 
     public List<Reservation> getAllReservations() throws SQLException {
         List<Reservation> reservations = new ArrayList<>();

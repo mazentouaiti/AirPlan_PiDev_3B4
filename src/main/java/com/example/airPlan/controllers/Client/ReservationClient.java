@@ -268,7 +268,6 @@ public class ReservationClient {
                     // Update other fields if needed
                 }
             }
-
             // If the previous view is HotelInfoClient, update its display
             if (previousView != null && previousView.getUserData() instanceof HotelInfoClient) {
                 HotelInfoClient controller = (HotelInfoClient) previousView.getUserData();
@@ -278,7 +277,6 @@ public class ReservationClient {
             System.err.println("Error refreshing hotel data: " + e.getMessage());
         }
     }
-
 
     private boolean validateCapacity(int hebergementId, int roomsToReserve) throws SQLException {
         String sql = "SELECT capacity FROM hebergement WHERE acc_id = ?";
