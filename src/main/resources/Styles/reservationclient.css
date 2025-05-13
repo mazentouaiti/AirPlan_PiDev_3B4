@@ -1,0 +1,35 @@
+#anchorfilter{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(three-pass-box,#AAAAAA,10,0,0,10);
+}
+
+.Button {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 20;
+}
+
+.image-hebergement {
+    -fx-border-radius: 20px;  /* Coins légèrement arrondis */
+    -fx-background-radius: 20px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 3);
+    -fx-padding: 5px;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 150px;
+    -fx-fit-width: true;
+    -fx-fit-height: true;
+}
+
+/* Pour ajuster la taille de l'image en fonction du conteneur */
+
+/* Add to your reservationclient.css */
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}

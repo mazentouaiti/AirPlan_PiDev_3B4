@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Reservation Invoice</title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+
+        .invoice-container {
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .invoice-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .invoice-header::after {
+            content: "";
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: white;
+            clip-path: polygon(0 0, 100% 0, 100% 20%, 0 100%);
+        }
+
+        .company-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-left: 1rem;
+        }
+
+        .invoice-title {
+            text-align: right;
+        }
+
+        .invoice-title h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .invoice-body {
+            padding: 2rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .flight-details {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .flight-info {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .airport-code {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .airport-name {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .flight-route {
+            position: relative;
+            height: 2px;
+            background: #ddd;
+        }
+
+        .flight-route::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .flight-route::after {
+            content: "✈";
+            position: absolute;
+            right: 0;
+            top: -12px;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-section {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .grand-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid #eee;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .invoice-footer {
+            padding: 2rem;
+            text-align: center;
+            background: var(--light);
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--success);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .print-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <div class="invoice-header">
+        <div class="company-logo">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 16.21v-1.895L14 8V4a2 2 0 0 0-4 0v4l-8 6.315v1.895l8-2.526V18l-2 2v2h8v-2l-2-2v-4.316l8 2.526zm-10 3.79h4v-1.586l-2-2v-3.171l2-.632V16h-4v4z"/>
+            </svg>
+            <h1 class="company-name">Skyline Travel & Business</h1>
+        </div>
+        <div class="invoice-title">
+            <h2>FLIGHT INVOICE</h2>
+            <p id="invoice-number">#INV-{{invoiceNumber}}</p>
+            <p id="issue-date">Issued: {{issueDate}}</p>
+            <p id="due-date">Due: {{dueDate}}</p>
+        </div>
+    </div>
+
+    <div class="invoice-body">
+        <div class="details-grid">
+            <div class="detail-block">
+                <h3 class="section-title">Bill To</h3>
+                <div class="detail-item">
+                    <span class="detail-label">Client:</span>
+                    <span id="client-name">{{clientName}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Reservation Date:</span>
+                    <span id="reservation-date">{{reservationDate}}</span>
+                </div>
+            </div>
+
+            <div class="detail-block">
+                <h3 class="section-title">Flight Details</h3>
+                <div class="detail-item">
+                    <span class="detail-label">Booking Ref:</span>
+                    <span id="booking-ref">{{bookingRef}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Airline:</span>
+                    <span id="airline">{{airline}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Flight Status:</span>
+                    <span id="flight-status">{{flightStatus}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flight-details">
+            <h3 class="section-title">Flight Itinerary</h3>
+            <div class="flight-info">
+                <div class="airport">
+                    <div class="airport-code" id="origin-code">{{originCode}}</div>
+                    <div class="airport-name" id="origin-name">{{originName}}</div>
+                    <div id="departure-time">{{departureTime}}</div>
+                    <div id="departure-date">{{departureDate}}</div>
+                </div>
+
+                <div class="flight-route"></div>
+
+                <div class="airport">
+                    <div class="airport-code" id="destination-code">{{destinationCode}}</div>
+                    <div class="airport-name" id="destination-name">{{destinationName}}</div>
+                    <div id="arrival-time">{{arrivalTime}}</div>
+                    <div id="arrival-date">{{arrivalDate}}</div>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">Duration:</span>
+                <span id="duration">{{duration}}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Aircraft:</span>
+                <span id="aircraft">{{aircraft}}</span>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Class</th>
+                <th>Passengers</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{flightItems}}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="subtotal">{{subtotal}}</span>
+            </div>
+            <div class="total-row">
+                <span>Tax (7.5%):</span>
+                <span id="tax">{{taxAmount}}</span>
+            </div>
+            <div class="total-row grand-total">
+                <span>Total Due:</span>
+                <span id="total">{{total}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice-footer">
+        <p>Thank you for choosing Skyline Travel & Business for your corporate travel needs.</p>
+        <p>Payment is due within 15 days. Please make checks payable to Skyline Travel & Business.</p>
+        <p>For any questions regarding this invoice, contact accounting@skylinetravel.com</p>
+        <button class="print-btn" onclick="window.print()">Print Invoice</button>
+        <div class="status-badge">{{paymentStatus}}</div>
+    </div>
+</div>
+</body>
+</html>

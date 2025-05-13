@@ -1,5 +1,6 @@
 package com.example.airPlan.views;
 
 public enum AdminMenuOptions {
-    FLIGHT
+    FLIGHT,
+    HOTEL
 }

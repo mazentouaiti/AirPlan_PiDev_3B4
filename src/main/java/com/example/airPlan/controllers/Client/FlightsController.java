@@ -1,9 +1,13 @@
 package com.example.airPlan.controllers.Client;
 
+import com.example.airPlan.App;
 import com.example.airPlan.Services.FlightServices;
+import com.example.airPlan.Services.InvoiceService;
 import com.example.airPlan.models.FlightModel;
+import com.example.airPlan.controllers.Client.ReservedFlight;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -12,28 +16,33 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.print.PrinterJob;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.io.IOException;
+import java.util.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.scene.web.WebEngine;
+import java.awt.Desktop;
 
 public class FlightsController implements Initializable {
 
@@ -353,7 +362,12 @@ public class FlightsController implements Initializable {
 
         double total = basePrice * multiplier * passengers;
 
-        reservedFlightsListItems.add(new ReservedFlight(selectedFlight, passengers, total));
+        ReservedFlight reservedFlight = new ReservedFlight(selectedFlight, passengers, classType, total);
+        reservedFlightsListItems.add(reservedFlight);
+
+        // Show invoice in WebView window
+        showInvoiceInWebView(reservedFlight);
+
         showInformationAlert("Success", "Reservation confirmed!");
         hideReservationPanel();
         updateTotalPriceDisplay();
@@ -466,6 +480,224 @@ public class FlightsController implements Initializable {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), reservedFlights);
         slideOut.setToX(600);
         slideOut.play();
+    }
+    // Update the method signature to accept the parameter
+    private void generateAndShowInvoice(ReservedFlight reservedFlight) {
+        showInvoiceInWebView(reservedFlight);
+    }
+    private void displayInvoice(String htmlContent) throws Exception {
+        // Validate HTML content
+        if (htmlContent == null || htmlContent.trim().isEmpty()) {
+            throw new Exception("Generated invoice content is empty");
+        }
+
+        // Create temp file
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("invoice_", ".html");
+            tempFile.deleteOnExit();
+        } catch (IOException e) {
+            throw new Exception("Could not create temporary file: " + e.getMessage(), e);
+        }
+
+        // Write content
+        try (FileWriter writer = new FileWriter(tempFile)) {
+            writer.write(htmlContent);
+        } catch (IOException e) {
+            throw new Exception("Could not write invoice to file: " + e.getMessage(), e);
+        }
+
+        // Display in browser
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(tempFile.toURI());
+            } else {
+                HostServices hostServices = App.getHostServicesInstance();
+                if (hostServices != null) {
+                    hostServices.showDocument(tempFile.toURI().toString());
+                } else {
+                    throw new Exception("No available method to display the invoice");
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("Could not display invoice: " + e.getMessage(), e);
+        }
+    }
+
+    private String generateInvoiceContent(ReservedFlight reservedFlight) throws Exception {
+        InvoiceService invoiceService = new InvoiceService();
+        String clientName = getClientName();
+
+        try {
+            if (reservedFlight != null) {
+                return invoiceService.generateFlightInvoice(
+                        Objects.requireNonNull(reservedFlight, "Reservation cannot be null"),
+                        Objects.requireNonNull(clientName, "Client name cannot be null")
+                );
+            } else {
+                if (reservedFlightsListItems == null || reservedFlightsListItems.isEmpty()) {
+                    throw new IllegalStateException("No flights reserved");
+                }
+                return invoiceService.generateMultiFlightInvoice(
+                        new ArrayList<>(reservedFlightsListItems),
+                        Objects.requireNonNull(clientName, "Client name cannot be null")
+                );
+            }
+        } catch (Exception e) {
+            throw new Exception("Failed to generate invoice content: " + e.getMessage(), e);
+        }
+    }
+    private String getClientName() {
+        // Implement proper client name lookup
+        return "Client Name"; // Replace with actual implementation
+    }
+    @FXML
+    private void handleReserveAll() {
+        if (reservedFlightsListItems.isEmpty()) {
+            showErrorAlert("No Flights", "Please add flights to reserve first");
+            return;
+        }
+
+        // Show confirmation dialog with more details
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Reservation");
+        confirm.setHeaderText("Reservation Summary");
+        confirm.setContentText(String.format(
+                "You are about to reserve %d flights\n" +
+                        "Total Passengers: %d\n" +
+                        "Total Price: %s\n\n" +
+                        "Proceed to generate invoice?",
+                reservedFlightsListItems.size(),
+                reservedFlightsListItems.stream().mapToInt(ReservedFlight::getPassengers).sum(),
+                priceLabel.getText()
+        ));
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Call the parameterless version for all reservations
+            generateAndShowInvoiceForAll();
+        }
+    }
+    // New method for handling all reservations
+    private void generateAndShowInvoiceForAll() {
+        showInvoiceInWebView(null); // Null indicates multi-flight invoice
+    }
+
+
+
+
+    private void showHtmlInvoice(String htmlContent) throws Exception {
+        // Create temp file with proper permissions
+        File tempFile = File.createTempFile("invoice_template", ".html");
+        tempFile.setReadable(true, false);
+        tempFile.setWritable(true, false);
+
+        // Write content with proper encoding
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
+            writer.write(htmlContent);
+            writer.flush();
+        }
+
+        // Try desktop browser first
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            Desktop.getDesktop().browse(tempFile.toURI());
+        }
+        // Fallback to HostServices
+        else {
+            HostServices hostServices = App.getHostServicesInstance();
+            if (hostServices != null) {
+                hostServices.showDocument(tempFile.toURI().toString());
+            } else {
+                // Final fallback - show in WebView
+                Platform.runLater(() -> {
+                    WebView webView = new WebView();
+                    webView.getEngine().loadContent(htmlContent);
+
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(webView));
+                    stage.setTitle("Flight Invoice");
+                    stage.show();
+                });
+            }
+        }
+
+        // Schedule file deletion when JVM exits
+        tempFile.deleteOnExit();
+    }
+    private void showInvoiceInWebView(ReservedFlight reservedFlight) {
+        try {
+            // Validate input
+            if (reservedFlight == null && (reservedFlightsListItems == null || reservedFlightsListItems.isEmpty())) {
+                throw new IllegalArgumentException("No flight data available for invoice");
+            }
+
+            // Generate HTML content
+            String htmlContent = generateInvoiceContent(reservedFlight);
+
+            // Verify HTML content was generated
+            if (htmlContent == null || htmlContent.trim().isEmpty()) {
+                throw new IllegalStateException("Generated invoice content is empty");
+            }
+
+            // Create and show invoice window
+            Platform.runLater(() -> {
+                try {
+                    createInvoiceWindow(htmlContent, getWindowTitle(reservedFlight));
+                } catch (Exception e) {
+                    showErrorAlert("Display Error", "Failed to show invoice: " + e.getMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            Platform.runLater(() ->
+                    showErrorAlert("Invoice Error", "Failed to generate invoice: " + e.getMessage()));
+        }
+    }
+    private String getWindowTitle(ReservedFlight reservedFlight) {
+        if (reservedFlight != null) {
+            return "Invoice - Flight " + reservedFlight.getFlight().getFlightNumber();
+        } else if (reservedFlightsListItems != null && !reservedFlightsListItems.isEmpty()) {
+            return "Invoice - " + reservedFlightsListItems.size() + " Flights";
+        }
+        return "Flight Invoice";
+    }
+    private void createInvoiceWindow(String htmlContent, String title) {
+        // Create WebView and configure it
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+
+        // Set preferred size
+        webView.setPrefSize(900, 700);
+        webView.setContextMenuEnabled(true);
+
+        // Create the window
+        Stage invoiceWindow = new Stage();
+        invoiceWindow.setTitle(title);
+
+        // Add print button
+        Button printBtn = new Button("Print Invoice");
+        printBtn.setStyle("-fx-font-weight: bold; -fx-padding: 8 15;");
+        printBtn.setOnAction(e -> {
+            PrinterJob job = PrinterJob.createPrinterJob();
+            if (job != null && job.showPrintDialog(invoiceWindow)) {
+                webEngine.print(job);
+                job.endJob();
+            }
+        });
+
+        // Create layout
+        BorderPane root = new BorderPane();
+        root.setCenter(webView);
+
+        ToolBar toolbar = new ToolBar(printBtn);
+        toolbar.setStyle("-fx-padding: 10; -fx-alignment: center-right;");
+        root.setBottom(toolbar);
+
+        // Load content and show window
+        webEngine.loadContent(htmlContent);
+        invoiceWindow.setScene(new Scene(root));
+        invoiceWindow.show();
     }
 }
 

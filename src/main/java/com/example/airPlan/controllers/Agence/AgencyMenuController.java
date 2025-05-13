@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
+import java.util.ResourceBundle;
 
 public class AgencyMenuController implements Initializable {
     @FXML
@@ -32,19 +33,23 @@ public class AgencyMenuController implements Initializable {
 //        buttonMenuMap.put(dash_agency, AgencyMenuOptions.DASHBOARD);
         buttonMenuMap.put(flights_agency, AgencyMenuOptions.FLIGHTS);
 //        buttonMenuMap.put(report_btn, AgencyMenuOptions.REPORTS);
-//        buttonMenuMap.put(acc_agency, AgencyMenuOptions.ACCOUNT);
+        buttonMenuMap.put(acc_agency, AgencyMenuOptions.Hotels);
 //        buttonMenuMap.put(trans_agency, AgencyMenuOptions.TRANSACTIONS);
         buttonMenuMap.put(stats_agency, AgencyMenuOptions.STATS);
 //        buttonMenuMap.put(offers_agency, AgencyMenuOptions.OFFERS);
         addListeners();
 
         menuButtons = Arrays.asList(
-                flights_agency , stats_agency
+                flights_agency , stats_agency,acc_agency
         );
         setActiveButton(flights_agency);
     }
 
     private void addListeners() {
+//        dash_agency.setOnAction(event -> onDashboard());
+        flights_agency.setOnAction(event -> onFlights());
+        acc_agency.setOnAction(event -> onHotels());
+        // Add listeners for other buttons
         logout_btn.setOnAction(event -> onLogout());
 
         // Add listeners using the buttonMenuMap
@@ -62,6 +67,9 @@ public class AgencyMenuController implements Initializable {
 
     private void onFlights() {
         Model.getInstance().getViewFactory().getAgencySelectedMenuItem().set(AgencyMenuOptions.FLIGHTS);
+    }
+    private void onHotels(){
+        Model.getInstance().getViewFactory().getAgencySelectedMenuItem().set(AgencyMenuOptions.Hotels);
     }
     private void onStats(){
         Model.getInstance().getViewFactory().getAgencySelectedMenuItem().set(AgencyMenuOptions.STATS);

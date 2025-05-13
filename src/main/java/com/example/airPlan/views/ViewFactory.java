@@ -2,6 +2,7 @@ package com.example.airPlan.views;
 
 import com.example.airPlan.controllers.Admin.AdminController;
 import com.example.airPlan.controllers.Agence.AgencyController;
+import com.example.airPlan.controllers.Client.ChatbotController;
 import com.example.airPlan.controllers.Client.ClientController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,11 +23,15 @@ public class ViewFactory {
 
     //AdminViews
     private final ObjectProperty<AdminMenuOptions> adminSelectedMenuItem;
-    private AnchorPane FlightAdminView;
+    private AnchorPane flightAdminView;
+    private AnchorPane AccAdminView;
+
+
     //AgencyViews
     private final ObjectProperty<AgencyMenuOptions> agencySelectedMenuItem;
     private AnchorPane agencyFlightsView;
     private AnchorPane agencyStaticView;
+    private AnchorPane agencyHotelsView;
 
     //viewFactory
     public ViewFactory() {
@@ -71,16 +76,16 @@ public class ViewFactory {
         return flightView;
     }
 //*******************************************************************************************************
-//    public AnchorPane getHotelsView() {
-//        if (hotelsView == null) {
-//            try {
-//                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/Hotels.fxml")).load();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-//        return hotelsView;
-//    }
+    public AnchorPane getHotelsView() {
+        if (hotelsView == null) {
+            try {
+                hotelsView = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return hotelsView;
+    }
 //*********************************************************************************************************
 //    public AnchorPane getProfileView() {
 //        if (profileView == null) {
@@ -120,6 +125,26 @@ public class ViewFactory {
     public ObjectProperty<AdminMenuOptions> getAdminSelectedMenuItem() {
         return adminSelectedMenuItem;
     }
+    public AnchorPane getAdminFlightsView() {
+        if (flightAdminView == null) {
+            try{
+                flightAdminView =new FXMLLoader(getClass().getResource("/Fxml/Admin/FlightAdmin.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return flightAdminView;
+    }
+    public AnchorPane getAdminHotelsView() {
+        if (AccAdminView == null) {
+            try{
+                AccAdminView =new FXMLLoader(getClass().getResource("/Fxml/Admin/Admin_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return AccAdminView;
+    }
 
     //************************************************************************************************************
     public ObjectProperty<AgencyMenuOptions> getAgencySelectedMenuItem() { return agencySelectedMenuItem; }
@@ -143,6 +168,17 @@ public class ViewFactory {
         }
         return agencyStaticView;
     }
+    public AnchorPane getAgencyHotelsView() {
+        if (agencyHotelsView == null) {
+            try {
+                agencyHotelsView = new FXMLLoader(getClass().getResource("/Fxml/Agences/agency_acc.fxml")).load();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return agencyHotelsView;
+
+    }
 
     //Agency window
     public void showAgencyWindow(){
@@ -154,22 +190,22 @@ public class ViewFactory {
 
 
     // ************************************************************************************************************
-//    public AnchorPane getChatbotView() {
-//        if (chatbotView == null) {
-//            try {
-//                chatbotView = new FXMLLoader(getClass().getResource("/Fxml/chatbot.fxml")).load();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return chatbotView;
-//    }
-//    public void showChatbotWindow() {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml//chatbot.fxml"));
-//        ChatbotController chatbotController = new ChatbotController();
-//        loader.setController(chatbotController);
-//        createStage(loader);
-//    }
+    public AnchorPane getChatbotView() {
+        if (chatbotView == null) {
+            try {
+                chatbotView = new FXMLLoader(getClass().getResource("/Fxml/chatbot.fxml")).load();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return chatbotView;
+    }
+    public void showChatbotWindow() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml//chatbot.fxml"));
+        ChatbotController chatbotController = new ChatbotController();
+        loader.setController(chatbotController);
+        createStage(loader);
+    }
 
     // ************************************************************************************************************
     private void createStage(FXMLLoader loader) {
@@ -188,4 +224,7 @@ public class ViewFactory {
     public void closeStage(Stage stage){
         stage.close();
     }
+
+
+
 }

@@ -1,0 +1,112 @@
+.flights_view{
+    -fx-background-color: #EEE;
+    /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);*/
+    -fx-border-color: transparent;
+
+}
+.scroll-bar:vertical{
+    -fx-background-color: rgb(48,58,59);
+    -fx-pref-width: 0;
+}
+.scroll-pane .thumb {
+    -fx-background-color: transparent;
+    -fx-pref-width: 0;
+    -fx-background-radius: 8;
+}
+
+.combo-box {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA); /* Dégradé vertical */
+
+}
+
+
+.Button {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 20;
+}
+.progress-indicator {
+    -fx-progress-color: #588b8b;
+}
+
+.combo-box .list-view{
+    -fx-padding: 0;
+    -fx-background-color: whitesmoke;
+
+}
+
+.combo-box .list-cell {
+    -fx-padding:0;
+
+    -fx-font-size: 1.05em;
+    -fx-pref-width: 120;
+    -fx-pref-height: 26;
+
+}
+
+
+
+.list-view{
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+.list-cell{
+    -fx-background-color: transparent;
+    -fx-pref-width: 800;
+    -fx-padding: 10;
+}
+
+
+.title_pane{
+    -fx-background-color: #588b8b;
+    -fx-background-radius: 0 0 25 0;
+    -fx-pref-height: 55;
+    -fx-pref-width: 300;
+    -fx-padding:15;
+    -fx-alignment: center;
+    -fx-text-fill: #ffd5c2;
+    -fx-font-family: "Caliabri Light";
+
+
+}
+
+.search_form {
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-font-family: "Calibri Light";
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+    -fx-alignment: center_left;
+
+
+}
+#anchorfilter{
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(three-pass-box,#AAAAAA,10,0,0,10);
+}
+.title_pane FontAwesomeIconView{
+    -fx-fill: #ffd5c2;
+}
+
+
+
+.button {
+    -fx-background-color: #ffd5c2;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+
+}
+
+/* Effet au survol */
+.button:hover {
+    -fx-background-color: #ffbda2; /* Couleur un peu plus foncée au hover */
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}

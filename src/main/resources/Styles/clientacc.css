@@ -1,0 +1,56 @@
+
+
+/* === ScrollPane transparent === */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+/* === Viewport transparent === */
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* === ScrollBar transparent === */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+/* === Thumb (la partie qui se déplace) transparent et fin === */
+.scroll-bar .thumb {
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+}
+
+/* === AnchorPane transparent === */
+.anchor-pane {
+    -fx-background-color: transparent;
+}
+
+/* === FlowPane transparent === */
+.flow-pane {
+    -fx-background-color: transparent;
+}
+
+
+.combo-box {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA); /* Dégradé vertical */
+
+}
+
+.account_selector{
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+}
+.account_selector .label{
+    -fx-text-fill: white;
+    -fx-font-size: 1.2em;
+}
+.top_view Button {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+    -fx-pref-width: 100;
+    -fx-pref-height: 30;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 20;
+}

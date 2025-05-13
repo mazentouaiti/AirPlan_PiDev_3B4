@@ -1,0 +1,61 @@
+
+    .cell_container{
+        -fx-background-color: #FFF;
+        -fx-background-radius: 10;
+        /*-fx-border-radius: 10;*/
+        -fx-effect: dropshadow(three-pass-box,#dddddd,5,0,0,7);
+        -fx-alignment: left;
+    }
+    .cell_container:hover{
+        -fx-effect: dropshadow(three-pass-box, #cccccc, 10, 0, 0, 10);
+        -fx-cursor: hand;
+        -fx-background-color: #f9f9f9;
+    }
+
+    .cell_container FontAwesomeIconView{
+        -fx-fill: #588b8b;
+    }
+    .container{
+        -fx-alignment: center-left;
+        -fx-pref-height: 50;
+        -fx-spacing: 20;
+        -fx-text-fill: #588b8b;
+        -fx-font-size: 1em;
+        /*-fx-padding: 10 15 10 15;*/
+
+    }
+    .price_lbl {
+        -fx-text-fill: #222;
+        -fx-font-weight: bold;
+        -fx-font-size: 1.1em;
+    }
+    .lbl{
+        -fx-text-fill: #588b8b;
+        -fx-font-size: 1em;
+    }
+
+    .container Button{
+        -fx-background-radius: 25;
+        -fx-background-color: #588b8b;
+        -fx-border-radius: 25;
+        -fx-text-fill: #EEEE;
+    }
+    .container Button:hover {
+        -fx-background-color: #3a6e6e;
+        -fx-text-fill: white;
+        -fx-cursor: hand;
+        -fx-scale-x: 1.05;
+        -fx-scale-y: 1.05;
+    }
+    .status_badge {
+        -fx-background-radius: 15;
+        -fx-padding: 4 10;
+        -fx-font-size: 0.85em;
+        -fx-text-fill: white;
+    }
+
+
+#trash{
+    -fx-fill: black;
+
+}

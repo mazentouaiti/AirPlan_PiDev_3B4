@@ -1,0 +1,37 @@
+.flights_view{
+    -fx-background-color: #EEE;
+    /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);*/
+    -fx-border-color: transparent;
+
+}
+.scroll-bar:vertical{
+    -fx-background-color: rgb(48,58,59);
+    -fx-pref-width: 0;
+}
+.scroll-pane .thumb {
+    -fx-background-color: transparent;
+    -fx-pref-width: 0;
+    -fx-background-radius: 8;
+}
+
+.Button {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA);
+
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 20;
+}
+
+.combo-box {
+    -fx-background-color: linear-gradient(to right, #588b8b,#AAAAAA); /* Dégradé vertical */
+
+}
+
+
+
+#anchorfilter {
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+
+}
+

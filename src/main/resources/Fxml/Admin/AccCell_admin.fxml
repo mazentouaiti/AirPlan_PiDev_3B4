@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="65.0" prefWidth="830.0" styleClass="cell_container" stylesheets="@../../Styles/AccCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.AccCellAdmin">
+    <AnchorPane layoutX="2.0" layoutY="12.0" prefHeight="52.0" prefWidth="802.0" styleClass="container" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <FontAwesomeIconView glyphName="HOTEL" layoutX="4.0" layoutY="37.8" size="28" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="13.799999999999997" />
+        <Label fx:id="name_lbl" layoutX="63.0" layoutY="18.4" styleClass="price_lbl" text="Name" AnchorPane.topAnchor="18.4" />
+        <Label fx:id="type_lbl" layoutX="287.0" layoutY="17.6" styleClass="lbl" text="Type" AnchorPane.topAnchor="17.6" />
+        <Label fx:id="country_lbl" layoutX="377.0" layoutY="17.6" styleClass="lbl" text="Country" AnchorPane.topAnchor="17.6" />
+        <Label fx:id="city_lbl" layoutX="474.0" layoutY="16.6" styleClass="price_lbl" text="City" AnchorPane.topAnchor="16.6" />
+        <Line endX="-99.99998474121094" endY="18.95956039428711" layoutX="650.0" layoutY="17.50710676908493" startX="-100.0" AnchorPane.topAnchor="16.8" />
+        <Label fx:id="price_lbl" layoutX="595.0" layoutY="16.6" styleClass="price_lbl" text="PRICE" AnchorPane.topAnchor="16.6" />
+        <Label fx:id="status_lbl" layoutX="714.0" layoutY="17.6" styleClass="lbl" text="STATUS" AnchorPane.topAnchor="17.6" />
+        <Button fx:id="btnReject" layoutX="872.0" layoutY="12.8" mnemonicParsing="false" onAction="#rejectHebergement" prefHeight="28.0" prefWidth="42.0" AnchorPane.topAnchor="12.8">
+         <graphic>
+            <FontAwesomeIconView id="trash" glyphName="TIMES" size="18" />
+         </graphic></Button>
+      <Button fx:id="btnAccept" layoutX="812.0" layoutY="13.0" mnemonicParsing="false" onAction="#acceptHebergement" prefHeight="28.0" prefWidth="42.0">
+         <graphic>
+            <FontAwesomeIconView id="trash" glyphName="CHECK" size="18" />
+         </graphic></Button>
+    </AnchorPane>
+</AnchorPane>
