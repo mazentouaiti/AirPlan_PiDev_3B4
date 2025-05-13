@@ -113,3 +113,9 @@
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
 }
+.image-thumbnail {
+    -fx-effect: dropshadow(gaussian, gray, 6, 0.2, 2, 2);
+    -fx-cursor: hand;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
