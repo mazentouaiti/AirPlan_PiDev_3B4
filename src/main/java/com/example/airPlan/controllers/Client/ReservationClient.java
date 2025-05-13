@@ -247,6 +247,7 @@ public class ReservationClient {
         // Return to previous view
         if (parentContainer != null && previousView != null) {
             parentContainer.setCenter(previousView);
+            refreshHotelData();
         }
 
 
