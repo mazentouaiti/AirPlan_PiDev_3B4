@@ -5,15 +5,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -38,31 +38,70 @@ public class HotelInfoClient {
     @FXML private HBox albuminfoo;
     @FXML
     private Button returnButton;
+    private Runnable returnAction;
 
-    @FXML
-    private void initialize() {
-        returnButton.setOnAction(event -> retournerClient());
+    private BorderPane clientParent;
+    private Parent returnView;
+
+    private String getStarRating(double rating) {
+        int fullStars = (int) rating;
+        boolean halfStar = (rating - fullStars) >= 0.5;
+
+        StringBuilder stars = new StringBuilder();
+
+        for (int i = 0; i < fullStars; i++) {
+            stars.append("★"); // Full star
+        }
+
+        if (halfStar) {
+            stars.append("☆"); // Half star (you can use "½" if preferred)
+        }
+
+        while (stars.length() < 5) {
+            stars.append("☆"); // Fill up to 5 stars
+        }
+
+        return stars.toString();
     }
 
+    public void setReturnView(Parent returnView) {
+        this.returnView = returnView;
+    }
+    private Node previousView;
+    private BorderPane parentContainer;
 
+    public void setPreviousView(Node previousView, BorderPane parentContainer) {
+        this.previousView = previousView;
+        this.parentContainer = parentContainer;
+    }
+    @FXML
+    private void initialize() {
+        returnButton.setOnAction(event -> {
+            try {
+                retournerClient();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
 
-
-    public void retournerClient() {
+    public void retournerClient() throws IOException {
         try {
-            // Charger la vue accommodation
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
-            Parent root = loader.load();
+            Parent agencyAccView = loader.load();
 
-            // Obtenir la scène depuis le bouton
-            Stage stage = (Stage) returnButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-            // Optionnel : ajouter des styles, animations, etc.
+            // Get the parent BorderPane from the current scene
+            BorderPane parent = (BorderPane) returnButton.getScene().getRoot();
+            parent.setCenter(agencyAccView);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
+
+
+
 
 
     public void setHebergementDetails(Hebergement h) {
@@ -72,14 +111,12 @@ public class HotelInfoClient {
         countryinfo.setText(h.getCountry());
         addressinfo.setText(h.getAddress());
         descriptioninfo.setText(h.getDescription());
-        //albuminfo.setText(h.getAlbum()); // ou afficher un lien ou une liste d’images si besoin
         capacityinfo.setText(String.valueOf(h.getCapacity()));
-        ratinginfo.setText(String.valueOf(h.getRating()));
+        ratinginfo.setText(getStarRating(h.getRating())); // Changed to use star rating
         dispoinfo.setText(h.isDisponibility() ? "Available" : "Unavailable");
-        priceinfo.setText(String.format("%.2f TND", h.getPricePerNight())); // pour l'affichage stylé
+        priceinfo.setText(String.format("%.2f TND", h.getPricePerNight()));
         optionsinfo.setText(h.getOptions());
         String photoPath = h.getPhoto();
-
 
         try {
             File file = new File(photoPath);
@@ -87,22 +124,15 @@ public class HotelInfoClient {
                 Image image = new Image(file.toURI().toString());
                 photoinfo.setImage(image);
             } else {
-                System.out.println(" Fichier image introuvable : " + photoPath);
-                // Optionnel : image par défaut
+                System.out.println("Fichier image introuvable : " + photoPath);
                 photoinfo.setImage(new Image(getClass().getResourceAsStream("/images/default.jpg")));
             }
         } catch (Exception e) {
-            System.out.println(" Erreur lors du chargement de l'image : " + e.getMessage());
+            System.out.println("Erreur lors du chargement de l'image : " + e.getMessage());
         }
-        System.out.println("Chemin reçu de la base : " + h.getPhoto());
-        System.out.println("Fichier existe ? " + new File(h.getPhoto()).exists());
 
-
-        //albuum
-
-        // Affichage de l'album dans le FlowPane
-        albuminfoo.getChildren().clear(); // Nettoyer avant ajout
-
+        // Album display
+        albuminfoo.getChildren().clear();
         if (h.getAlbum() != null && !h.getAlbum().isEmpty()) {
             String[] imagePaths = h.getAlbum().split("\n");
             for (String path : imagePaths) {
@@ -115,36 +145,41 @@ public class HotelInfoClient {
                     imageView.setPreserveRatio(true);
                     imageView.getStyleClass().add("image-thumbnail");
 
-                    // Miniature cliquable
                     imageView.setOnMouseClicked(event -> {
+                        Stage mainStage = (Stage) imageView.getScene().getWindow();
+                        mainStage.getScene().getRoot().setEffect(new GaussianBlur(10));
+
+                        Pane overlay = new Pane();
+                        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+                        overlay.setPrefSize(mainStage.getScene().getWidth(), mainStage.getScene().getHeight());
+                        ((Pane) mainStage.getScene().getRoot()).getChildren().add(overlay);
+
                         Stage stage = new Stage();
                         stage.setTitle("Aperçu de l'image");
-
                         ImageView fullSize = new ImageView(image);
                         fullSize.setPreserveRatio(true);
                         fullSize.setFitWidth(600);
-
                         StackPane root = new StackPane(fullSize);
                         root.setPadding(new Insets(10));
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
                         stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.initOwner(mainStage);
+
+                        stage.setOnHidden(e -> {
+                            mainStage.getScene().getRoot().setEffect(null);
+                            ((Pane) mainStage.getScene().getRoot()).getChildren().remove(overlay);
+                        });
+
                         stage.show();
-
                     });
-
                     albuminfoo.getChildren().add(imageView);
                 } else {
                     System.out.println("Image non trouvée : " + path);
                 }
             }
         } else {
-            System.out.println("Aucune image dans l’album.");
+            System.out.println("Aucune image dans l'album.");
         }
-
-
     }
-
-
-
 }
