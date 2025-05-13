@@ -1,8 +1,10 @@
 package com.example.airPlan.controllers.Client;
 
+import com.example.airPlan.Utiles.DBConnection;
 import com.example.airPlan.models.Hebergement;
 import com.example.airPlan.models.Reservation;
 import com.example.airPlan.Services.ServiceReservation;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -19,6 +23,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javafx.embed.swing.SwingFXUtils;
 import java.io.File;
@@ -62,6 +70,12 @@ public class ReservationClient {
     private Hebergement currentHebergement;
     private ServiceReservation reservationService;
     private int currentUserId;
+    private Node previousView;
+    private BorderPane parentContainer;
+    public void setPreviousView(Node previousView, BorderPane parentContainer) {
+        this.previousView = previousView;
+        this.parentContainer = parentContainer;
+    }
 
     @FXML
     public void initialize() {
@@ -120,26 +134,54 @@ public class ReservationClient {
 
     @FXML
     private void handleCancelAction(ActionEvent event) {
-        try {
-            // Charger le fichier FXML de ClientAcc
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
-            Parent root = loader.load();
-
-            // Récupérer le stage de la scène actuelle
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Appliquer la nouvelle scène au stage actuel
-            Scene newScene = new Scene(root);
-            stage.setScene(newScene);
-            stage.show();  // Afficher le stage avec la nouvelle scène
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        } else {
+            // Fallback to window replacement
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client_acc.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) btnCancel.getScene().getWindow();
+                stage.setScene(new Scene(root));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
+/*
+    @FXML
+    private void handleSubmit(ActionEvent event) throws SQLException {
+        if (!validateForm()) {
+            return;
+        }
+
+        try {
+            Reservation reservation = ajouterReservation();
+
+            if (reservation != null) {
+                // Show WebView invoice
+                showHotelInvoice(reservation);
+
+                // Show success message
+                showAlert("Success", "Reservation completed successfully!", Alert.AlertType.INFORMATION);
+
+                // Refresh the hotel data before returning
+                refreshHotelData();
+
+                // Return to previous view
+                if (parentContainer != null && previousView != null) {
+                    parentContainer.setCenter(previousView);
+                }
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to complete reservation: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+
+    }*/
 
     @FXML
-    private void handleSubmit(ActionEvent event) {
+    private void handleSubmit(ActionEvent event) throws SQLException {
         if (departuredate.getValue() == null || arrivaldate.getValue() == null) {
             showAlert("Please fill in all required fields.", Alert.AlertType.WARNING);
             return;
@@ -154,6 +196,7 @@ public class ReservationClient {
         //pdf
         String countryCity = CountryCity.getText();
         String hebergementName = nameheber.getText();
+
         String options = optionheber.getText();
         String price = priceheber.getText();
         String type = typeheber.getText();
@@ -190,7 +233,7 @@ public class ReservationClient {
         );
 
         //emailll
-    /*
+
         String clientEmail = emailresField.getText();  // champ pour l'email du client
         String clientName = nameresField.getText();  // champ pour le nom du client
 
@@ -200,19 +243,63 @@ public class ReservationClient {
         // Affiche une alerte pour indiquer que la réservation a été effectuée avec succès
         showAlert("Reservation successful! A confirmation email has been sent.", Alert.AlertType.INFORMATION);
 
-    */
+        // Return to previous view
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        }
+
+
 
     }
 
+    private void refreshHotelData() {
+        try {
+            // Get the updated hotel data from the database
+            String sql = "SELECT * FROM hebergement WHERE acc_id = ?";
+            try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
+                stmt.setInt(1, currentHebergement.getId());
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    // Update the currentHebergement object with fresh data
+                    currentHebergement.setCapacity(rs.getInt("capacity"));
+                    // Update other fields if needed
+                }
+            }
+
+            // If the previous view is HotelInfoClient, update its display
+            if (previousView != null && previousView.getUserData() instanceof HotelInfoClient) {
+                HotelInfoClient controller = (HotelInfoClient) previousView.getUserData();
+                controller.setHebergementDetails(currentHebergement);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error refreshing hotel data: " + e.getMessage());
+        }
+    }
 
 
-    private void ajouterReservation() {
+    private boolean validateCapacity(int hebergementId, int roomsToReserve) throws SQLException {
+        String sql = "SELECT capacity FROM hebergement WHERE acc_id = ?";
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, hebergementId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int currentCapacity = rs.getInt("capacity");
+                return currentCapacity >= roomsToReserve;
+            }
+            return false;
+        }
+    }
+
+
+    private Reservation ajouterReservation() {
         try {
             Reservation reservation = new Reservation();
 
-            reservation.setIdUser(1); // à adapter
+            reservation.setIdUser(1);
             reservation.setIdAcc(currentHebergement.getId());
-            reservation.setTypeReservation(" Accommodation - "+currentHebergement.getType());
+            reservation.setTypeReservation(currentHebergement.getType());
+            reservation.setDestination(currentHebergement.getCountry() + ", " + currentHebergement.getCity());
             reservation.setNumberOfRooms((Integer) roomspinner.getValue());
             reservation.setNumberOfAdults((Integer) adultspinner.getValue());
             reservation.setNumberOfChildren((Integer) childrenspinner.getValue());
@@ -223,7 +310,7 @@ public class ReservationClient {
             // Calculate prices
             long nights = ChronoUnit.DAYS.between(arrivaldate.getValue(), departuredate.getValue());
             double adultPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfAdults();
-            double childPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfChildren() * 0.5; // 50% for children
+            double childPrice = nights * currentHebergement.getPricePerNight() * reservation.getNumberOfChildren() * 0.5;
             double totalPrice = adultPrice + childPrice;
 
             reservation.setPriceAdultsAcc(adultPrice);
@@ -234,21 +321,21 @@ public class ReservationClient {
             ServiceReservation service = new ServiceReservation();
             service.addReservation(reservation);
 
-            showAlert("Réservation enregistrée avec succès.", Alert.AlertType.INFORMATION);
+            return reservation; // Return the created reservation
         } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la réservation : " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to create reservation: " + e.getMessage(), Alert.AlertType.ERROR);
+            return null;
         }
     }
 
-
-
-
-
-    private boolean validateForm() {
+    private boolean validateForm() throws SQLException {
 
         if (currentHebergement == null) {
             showAlert("No accommodation selected.", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (!validateCapacity(currentHebergement.getId(), (Integer) roomspinner.getValue())) {
+            showAlert("Not enough capacity available for the selected number of rooms.", Alert.AlertType.WARNING);
             return false;
         }
 
@@ -267,17 +354,36 @@ public class ReservationClient {
             return false;
         }
 
-        int arrivalYear = arrivaldate.getValue().getYear();
-        int departureYear = departuredate.getValue().getYear();
+        // int arrivalYear = arrivaldate.getValue().getYear();
+        // Get current date
+        LocalDate currentDate = LocalDate.now();
+
+// Get arrival and departure dates from your date pickers
+        LocalDate arrivalDate = arrivaldate.getValue();
+        LocalDate departureDate = departuredate.getValue();
+
+// Validate years (2025 or 2026 only)
+        int arrivalYear = arrivalDate.getYear();
+        int departureYear = departureDate.getYear();
         if (!((arrivalYear == 2025 || arrivalYear == 2026) && (departureYear == 2025 || departureYear == 2026))) {
             showAlert("Arrival and Departure dates must be in 2025 or 2026.", Alert.AlertType.WARNING);
             return false;
         }
 
-        if (arrivaldate.getValue().isBefore(departuredate.getValue())) {
-            showAlert("Departure date must be before arrival date.", Alert.AlertType.WARNING);
+// Validate arrival date is not before current date
+        if (arrivalDate.isBefore(currentDate)) {
+            showAlert("Arrival date cannot be before today's date.", Alert.AlertType.WARNING);
             return false;
         }
+
+// Validate departure date is after arrival date
+        if (departureDate.isBefore(arrivalDate)) {
+            showAlert("Departure date must be after arrival date.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+
+
 
         // Validate spinners
         if (adultspinner.getValue() == null ) {
@@ -302,6 +408,15 @@ public class ReservationClient {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 
 
 

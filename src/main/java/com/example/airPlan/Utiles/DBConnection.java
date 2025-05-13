@@ -28,6 +28,6 @@ public class DBConnection {
         }
         return instance;
     }
-    public Connection getConnection() {return connection;}
+    public static Connection getConnection() {return connection;}
 
 }
