@@ -138,3 +138,16 @@
     -fx-border-color: #cccccc;
     -fx-border-radius: 3;
 }
+
+/* Improved pie chart label styling */
+.chart-pie-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-fill: #333;
+    -fx-effect: dropshadow(one-pass-box, rgba(255,255,255,0.8), 0, 0, 0, 1);
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #333;
+    -fx-fill: #333;
+}

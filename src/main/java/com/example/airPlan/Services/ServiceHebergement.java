@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -144,5 +146,18 @@ public class ServiceHebergement {
             stmt.setInt(2, id);
             stmt.executeUpdate();
         }
+    }
+
+    public Map<String, Long> getStatusStatistics() throws SQLException {
+        Map<String, Long> stats = new HashMap<>();
+        String sql = "SELECT LOWER(status) as status, COUNT(*) as count FROM hebergement GROUP BY LOWER(status)";
+
+        try (Statement stmt = cnx.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getString("status"), rs.getLong("count"));
+            }
+        }
+        return stats;
     }
 }

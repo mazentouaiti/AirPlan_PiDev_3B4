@@ -21,7 +21,7 @@
                 <ComboBox fx:id="typecombifilteragence" layoutX="156.0" layoutY="87.0" prefWidth="150.0" promptText="    Select A Type" styleClass="combo-box" />
                 <TextField fx:id="countryfilteragence" layoutX="417.0" layoutY="49.0" />
                 <TextField fx:id="namefilteragence" layoutX="157.0" layoutY="52.0" />
-                <Label layoutX="76.0" layoutY="14.0" prefHeight="27.0" prefWidth="109.0" text="Filter :" textFill="#588b8b">
+                <Label layoutX="46.0" layoutY="14.0" prefHeight="27.0" prefWidth="109.0" text="Filter :" textFill="#588b8b">
                     <graphic>
                         <FontAwesomeIconView fill="#588b8b" glyphName="LIST" />
                     </graphic>
@@ -42,11 +42,17 @@
             <font>
                <Font size="14.0" />
             </font></Label>
-              <Button layoutX="592.0" layoutY="60.0" mnemonicParsing="false" onAction="#onReset" prefHeight="29.0" prefWidth="36.0" styleClass="Button" stylesheets="@../../Styles/accadmin.css">
+              <Button layoutX="592.0" layoutY="47.0" mnemonicParsing="false" onAction="#onReset" prefHeight="29.0" prefWidth="36.0" styleClass="Button" stylesheets="@../../Styles/accadmin.css">
                   <graphic>
-                      <FontAwesomeIconView glyphName="UNDO" />
+                      <FontAwesomeIconView glyphName="UNDO" size="15" />
                   </graphic>
               </Button>
+      
+          <Button fx:id="btnStat" layoutX="592.0" layoutY="85.0" mnemonicParsing="false" onAction="#showStatistics" prefHeight="29.0" prefWidth="36.0" styleClass="Button" stylesheets="@../../Styles/accadmin.css">
+              <graphic>
+                  <FontAwesomeIconView glyphName="BAR_CHART" size="15" />
+              </graphic>
+          </Button>
             </children>
         </AnchorPane>
    <ListView fx:id="listHebergement" layoutY="370.0" prefHeight="384.0" prefWidth="1002.0" />
