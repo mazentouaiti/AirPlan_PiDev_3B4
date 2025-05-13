@@ -17,6 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -32,6 +34,9 @@ import java.util.ResourceBundle;
 public class AccAdmin implements Initializable {
     @FXML
     private TextField namefilteragence;
+    @FXML
+    private AnchorPane mainwidow;
+
     @FXML
     private ComboBox<String> dispocomboagence;
     @FXML
@@ -174,7 +179,7 @@ public class AccAdmin implements Initializable {
             pieChart.setTitle("Accommodation Status Statistics");
             pieChart.setLabelsVisible(true);
             pieChart.setLegendVisible(true);
-            pieChart.setPrefSize(400, 400);
+            pieChart.setPrefSize(450, 450);
 
             // Style the chart slices with colors
             pieChart.setStyle("-fx-font-size: 14px;");
@@ -193,6 +198,10 @@ public class AccAdmin implements Initializable {
             popup.initModality(Modality.APPLICATION_MODAL);
             popup.setTitle("Accommodation Statistics");
 
+            // Apply blur effect to background
+            BoxBlur blur = new BoxBlur(5, 5, 3);
+            mainwidow.setEffect(blur);
+            popup.setOnHidden(e -> mainwidow.setEffect(null));
             // Add total count label
             Label totalLabel = new Label(String.format("Total Accommodations: %d", total));
             totalLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #588b8b;");

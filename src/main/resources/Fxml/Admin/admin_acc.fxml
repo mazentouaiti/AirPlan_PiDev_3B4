@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/accommodation.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.AccAdmin">
+<AnchorPane fx:id="mainwidow" prefHeight="750.0" prefWidth="1000.0" stylesheets="@../../Styles/accommodation.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Admin.AccAdmin">
         <AnchorPane id="anchorfilter" layoutX="239.0" layoutY="163.0" prefHeight="143.0" prefWidth="678.0">
             <children>
                 <Label layoutX="94.0" layoutY="90.0" text="Type :">
