@@ -11,6 +11,8 @@ public class ReservedFlight {
     private String classType;
     private double totalPrice;
     private Date reservationDate;
+    private boolean paid = false;
+
 
     public ReservedFlight(FlightModel flight, int passengers, String classType, double totalPrice) {
         this.flight = flight;
@@ -31,5 +33,16 @@ public class ReservedFlight {
     // Helper method for invoice generation
     public String getFormattedReservationDate() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(reservationDate);
+    }
+    public void markAsPaid() {
+        this.paid = true;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public String getPaymentStatus() {
+        return paid ? "PAID" : "UNPAID";
     }
 }

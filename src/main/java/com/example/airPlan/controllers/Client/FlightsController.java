@@ -331,7 +331,7 @@ public class FlightsController implements Initializable {
         mainContent.setDisable(true);
         mainContent.setEffect(new BoxBlur(3, 3, 2));
     }
-    private void calculateTotalPrice() {
+    private double calculateTotalPrice() {
         if (selectedFlight != null) {
             double basePrice = selectedFlight.getPrice();
             int passengers = resv_passenger_number.getValue();
@@ -344,34 +344,37 @@ public class FlightsController implements Initializable {
             };
 
             double total = basePrice * multiplier * passengers;
-            resv_autoprice.setText(String.format("€%.2f", total));
+            resv_autoprice.setText(String.format("€%.2f", total)); // Update UI
+            return total; // Return the calculated value
         }
+        return 0.0; // Default if no flight selected
     }
     private void confirmReservation() {
         if (selectedFlight == null) return;
 
+        // Get the calculated total price
+        double total = calculateTotalPrice();
         int passengers = resv_passenger_number.getValue();
         String classType = resv_classcombo.getValue();
-        double basePrice = selectedFlight.getPrice();
 
-        double multiplier = switch (classType) {
-            case "Business" -> 1.5;
-            case "First Class" -> 2.0;
-            default -> 1.0;
-        };
-
-        double total = basePrice * multiplier * passengers;
-
+        // Create reservation without payment
         ReservedFlight reservedFlight = new ReservedFlight(selectedFlight, passengers, classType, total);
         reservedFlightsListItems.add(reservedFlight);
 
-        // Show invoice in WebView window
-        showInvoiceInWebView(reservedFlight);
+        Alert invoiceConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        invoiceConfirmation.setTitle("Reservation Added");
+        invoiceConfirmation.setContentText("Reservation added to your cart. Do you want to view the invoice now?");
+        invoiceConfirmation.setHeaderText("Note: Payment is pending until you complete the reservation");
 
-        showInformationAlert("Success", "Reservation confirmed!");
+        Optional<ButtonType> result = invoiceConfirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            showInvoiceInWebView(reservedFlight);
+        }
+
         hideReservationPanel();
         updateTotalPriceDisplay();
     }
+
     private void loadInExternalBrowser(String url) {
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
@@ -551,34 +554,38 @@ public class FlightsController implements Initializable {
         // Implement proper client name lookup
         return "Client Name"; // Replace with actual implementation
     }
+
     @FXML
     private void handleReserveAll() {
         if (reservedFlightsListItems.isEmpty()) {
-            showErrorAlert("No Flights", "Please add flights to reserve first");
+            showErrorAlert("No Flights", "Please add flights to reserve first.");
             return;
         }
 
-        // Show confirmation dialog with more details
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirm Reservation");
-        confirm.setHeaderText("Reservation Summary");
-        confirm.setContentText(String.format(
-                "You are about to reserve %d flights\n" +
-                        "Total Passengers: %d\n" +
-                        "Total Price: %s\n\n" +
-                        "Proceed to generate invoice?",
-                reservedFlightsListItems.size(),
-                reservedFlightsListItems.stream().mapToInt(ReservedFlight::getPassengers).sum(),
-                priceLabel.getText()
-        ));
+        double totalPrice = reservedFlightsListItems.stream()
+                .mapToDouble(ReservedFlight::getTotalPrice)
+                .sum();
 
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Call the parameterless version for all reservations
-            generateAndShowInvoiceForAll();
+        // Ask for payment first
+        boolean paymentSuccess = showPaymentDialog(totalPrice);
+        if (!paymentSuccess) {
+            showErrorAlert("Payment Failed", "Reservation canceled due to payment issue.");
+            return;
         }
-    }
-    // New method for handling all reservations
+
+        // Mark all reservations as paid
+        reservedFlightsListItems.forEach(ReservedFlight::markAsPaid);
+
+        Alert invoiceConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        invoiceConfirmation.setTitle("Reservation Complete");
+        invoiceConfirmation.setHeaderText("Payment successful! All flights reserved.");
+        invoiceConfirmation.setContentText("Do you want to view the invoice now?");
+
+        Optional<ButtonType> result = invoiceConfirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            showInvoiceInWebView(null); // Show multi-flight invoice
+        }
+    }    // New method for handling all reservations
     private void generateAndShowInvoiceForAll() {
         showInvoiceInWebView(null); // Null indicates multi-flight invoice
     }
@@ -699,5 +706,34 @@ public class FlightsController implements Initializable {
         invoiceWindow.setScene(new Scene(root));
         invoiceWindow.show();
     }
+
+    private boolean showPaymentDialog(double amount) {
+        // Create a custom payment dialog
+        Dialog<ButtonType> paymentDialog = new Dialog<>();
+        paymentDialog.setTitle("Payment Required");
+        paymentDialog.setHeaderText("Complete Payment to Confirm Reservation");
+        paymentDialog.setContentText(String.format("Total Amount: €%.2f", amount));
+
+        // Payment options
+        ButtonType creditCardBtn = new ButtonType("Credit Card", ButtonBar.ButtonData.OK_DONE);
+        ButtonType paypalBtn = new ButtonType("PayPal", ButtonBar.ButtonData.OTHER);
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        paymentDialog.getDialogPane().getButtonTypes().addAll(creditCardBtn, paypalBtn, cancelBtn);
+
+        // Simulate payment processing (replace with real API calls if needed)
+        Optional<ButtonType> result = paymentDialog.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == creditCardBtn || result.get() == paypalBtn) {
+                // Simulate payment success (replace with actual payment logic)
+                showInformationAlert("Payment Success", "Payment processed successfully!");
+                return true;
+            }
+        }
+        return false; // Payment failed or was canceled
+    }
+
+
+
 }
 

@@ -59,7 +59,7 @@ public class InvoiceService {
             variables.put("taxRate", String.format("%.1f%%", TAX_RATE * 100));
             variables.put("taxAmount", String.format("€%.2f", taxAmount));
             variables.put("total", String.format("€%.2f", total));
-            variables.put("paymentStatus", "PAID");
+            variables.put("paymentStatus", reservedFlight.getPaymentStatus());
 
             // Generate flight items table rows
             String flightItem = "<tr>" +
@@ -117,6 +117,8 @@ public class InvoiceService {
             variables.put("subtotal", String.format("€%.2f", subtotal));
             variables.put("taxAmount", String.format("€%.2f", taxAmount));
             variables.put("total", String.format("€%.2f", total));
+            variables.put("paymentStatus", "PAID");
+
 
             // Generate flight items table rows
             StringBuilder flightItems = new StringBuilder();
