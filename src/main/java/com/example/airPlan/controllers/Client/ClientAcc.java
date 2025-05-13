@@ -66,7 +66,7 @@ public class ClientAcc {
 
 
 
-    private static final String OPENWEATHER_API_KEY = "054d682ef2cd7a8772bb51e1adfcdc70";
+    private static final String OPENWEATHER_API_KEY = "";
     private static final String OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric";
 
     @FXML

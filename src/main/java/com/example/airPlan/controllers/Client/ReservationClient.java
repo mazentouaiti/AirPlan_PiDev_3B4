@@ -167,6 +167,9 @@ public class ReservationClient {
                 // Show success message
                 showAlert("Success", "Reservation completed successfully!", Alert.AlertType.INFORMATION);
 
+                // Refresh the hotel data before returning
+                refreshHotelData();
+
                 // Return to previous view
                 if (parentContainer != null && previousView != null) {
                     parentContainer.setCenter(previousView);
@@ -177,6 +180,30 @@ public class ReservationClient {
         }
     }
 
+    private void refreshHotelData() {
+        try {
+            // Get the updated hotel data from the database
+            String sql = "SELECT * FROM hebergement WHERE acc_id = ?";
+            try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
+                stmt.setInt(1, currentHebergement.getId());
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    // Update the currentHebergement object with fresh data
+                    currentHebergement.setCapacity(rs.getInt("capacity"));
+                    // Update other fields if needed
+                }
+            }
+
+            // If the previous view is HotelInfoClient, update its display
+            if (previousView != null && previousView.getUserData() instanceof HotelInfoClient) {
+                HotelInfoClient controller = (HotelInfoClient) previousView.getUserData();
+                controller.setHebergementDetails(currentHebergement);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error refreshing hotel data: " + e.getMessage());
+        }
+    }
 
 
     private boolean validateCapacity(int hebergementId, int roomsToReserve) throws SQLException {
@@ -197,7 +224,7 @@ public class ReservationClient {
         try {
             Reservation reservation = new Reservation();
 
-            reservation.setIdUser(currentUserId);
+            reservation.setIdUser(1);
             reservation.setIdAcc(currentHebergement.getId());
             reservation.setTypeReservation(currentHebergement.getType());
             reservation.setDestination(currentHebergement.getCountry() + ", " + currentHebergement.getCity());
@@ -228,10 +255,6 @@ public class ReservationClient {
             return null;
         }
     }
-
-
-
-
 
     private boolean validateForm() throws SQLException {
 
