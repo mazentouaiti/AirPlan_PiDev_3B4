@@ -150,7 +150,7 @@ public class ReservationClient {
         }
     }
 
-
+/*
     @FXML
     private void handleSubmit(ActionEvent event) throws SQLException {
         if (!validateForm()) {
@@ -178,6 +178,79 @@ public class ReservationClient {
         } catch (Exception e) {
             showAlert("Error", "Failed to complete reservation: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+
+    }*/
+
+    @FXML
+    private void handleSubmit(ActionEvent event) throws SQLException {
+        if (departuredate.getValue() == null || arrivaldate.getValue() == null) {
+            showAlert("Please fill in all required fields.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        if (!validateForm()) {
+            return;
+        }
+
+        ajouterReservation();
+
+        //pdf
+        String countryCity = CountryCity.getText();
+        String hebergementName = nameheber.getText();
+
+        String options = optionheber.getText();
+        String price = priceheber.getText();
+        String type = typeheber.getText();
+        String rating = ratingheber.getText();
+        String dateArrival = arrivaldate.getValue().toString();
+        String dateDeparture = departuredate.getValue().toString();
+        String request = requestarea.getText();
+        int nbAdults = (int) adultspinner.getValue();
+        int nbChildren = (int) childrenspinner.getValue();
+        int nbRooms = (int) roomspinner.getValue();
+
+// Récupérer l’image (enregistrée temporairement pour le PDF si tu veux l’y inclure)
+        Image fxImage = imagehebergement.getImage();
+
+        String imagePath = "C:\\Users\\jmaae\\IdeaProjects\\Hotels\\src\\main\\resources\\com\\example\\hotels\\images\\passeport.png";
+
+
+        StyledPdfGenerator generator = new StyledPdfGenerator();
+        generator.generatePdf(
+                "ReservationConfirmation.pdf",
+                countryCity,
+                hebergementName,
+                type,
+                options,
+                price,
+                rating,
+                dateArrival,
+                dateDeparture,
+                nbAdults,
+                nbChildren,
+                nbRooms,
+                request,
+                imagePath
+        );
+
+        //emailll
+
+        String clientEmail = emailresField.getText();  // champ pour l'email du client
+        String clientName = nameresField.getText();  // champ pour le nom du client
+
+        // Appelle la méthode d'envoi d'email pour envoyer une confirmation
+        BrevoEmailSender.sendEmail(clientEmail, clientName);
+
+        // Affiche une alerte pour indiquer que la réservation a été effectuée avec succès
+        showAlert("Reservation successful! A confirmation email has been sent.", Alert.AlertType.INFORMATION);
+
+        // Return to previous view
+        if (parentContainer != null && previousView != null) {
+            parentContainer.setCenter(previousView);
+        }
+
+
+
     }
 
     private void refreshHotelData() {
