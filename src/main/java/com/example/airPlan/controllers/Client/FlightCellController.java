@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
@@ -23,11 +22,13 @@ public class FlightCellController implements Initializable {
     private FlightsController mainController;
 
     public void setMainController(FlightsController mainController) {
+
         this.mainController = mainController;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         view_btn.setOnAction(event -> onViewClicked());
     }
     @FXML
@@ -38,14 +39,12 @@ public class FlightCellController implements Initializable {
             System.out.println("Error: " + (flightModel == null ? "No flight selected" : "Controller missing"));
         }
     }
-
     public void setFlight(FlightModel flightModel) {
         this.flightModel = flightModel;
         updateFlightData();
         view_btn.setDisable(false);
         view_btn.setTooltip(null);
     }
-
     private void updateFlightData() {
         if (flightModel != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -83,15 +82,6 @@ public class FlightCellController implements Initializable {
                     status_lbl.setStyle("");
             }
         }
-    }
-
-    private void showErrorAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
     public void setCancelButtonBehavior(Runnable onCancelAction) {
         view_btn.setText("Cancel");

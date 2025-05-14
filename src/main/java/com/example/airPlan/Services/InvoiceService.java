@@ -49,12 +49,12 @@ public class InvoiceService {
             variables.put("originName", flight.getOrigin() + " International Airport");
             variables.put("destinationCode", flight.getDestination());
             variables.put("destinationName", flight.getDestination() + " International Airport");
-            variables.put("departureTime", "08:00 AM"); // You can add time to FlightModel
+            variables.put("departureTime", dateTimeFormat.format(flight.getDepartureDate()));
             variables.put("departureDate", dateFormat.format(flight.getDepartureDate()));
-            variables.put("arrivalTime", "11:30 AM"); // You can add time to FlightModel
+            variables.put("arrivalTime", dateTimeFormat.format(flight.getReturnDate()));
             variables.put("arrivalDate", dateFormat.format(flight.getReturnDate()));
             variables.put("duration", calculateDuration(flight.getDepartureDate(), flight.getReturnDate()));
-            variables.put("aircraft", "Boeing 787-9 Dreamliner"); // Add to FlightModel if needed
+            variables.put("aircraft", "N/A"); // Add to FlightModel if needed
             variables.put("subtotal", String.format("€%.2f", subtotal));
             variables.put("taxRate", String.format("%.1f%%", TAX_RATE * 100));
             variables.put("taxAmount", String.format("€%.2f", taxAmount));
@@ -86,9 +86,19 @@ public class InvoiceService {
     }
 
     private String calculateDuration(Date departure, Date arrival) {
-        long diff = arrival.getTime() - departure.getTime();
-        long hours = diff / (60 * 60 * 1000);
-        long minutes = (diff / (60 * 1000)) % 60;
+        if (departure == null || arrival == null) {
+            return "N/A";
+        }
+
+        long diffMillis = arrival.getTime() - departure.getTime();
+        if (diffMillis <= 0) {
+            return "N/A";
+        }
+
+        long diffSeconds = diffMillis / 1000;
+        long hours = diffSeconds / 3600;
+        long minutes = (diffSeconds % 3600) / 60;
+
         return String.format("%dh %02dm", hours, minutes);
     }
     // Add this method to InvoiceService.java
