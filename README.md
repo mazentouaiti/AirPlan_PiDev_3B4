@@ -1,1 +1,1 @@
-read me
+AirPlan is a smart travel planning application that allows users to find, book, and manage accommodations, transportation, flights, and travel services all in one place. Whether you're booking a hotel, reserving a private car, or planning a complete trip across multiple countries, AirPlan simplifies the experience. The app features real-time reservation management, a friendly chatbot assistant, and powerful tools for travel agencies to organize their services. With AirPlan, planning your journey becomes seamless, personalized, and efficient.
