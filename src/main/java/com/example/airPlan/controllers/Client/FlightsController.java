@@ -542,7 +542,9 @@ public class FlightsController implements Initializable {
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 showInvoiceInWebView(null); // Show multi-flight invoice
             }
+
         }
+        reservedFlightsListItems.clear();
     }
 
     private void showInvoiceInWebView(ReservedFlight reservedFlight) {
@@ -642,7 +644,11 @@ public class FlightsController implements Initializable {
         return false; // Payment failed or was canceled
     }
 
-
+    public void updateMapWithFlight(FlightModel flight) {
+        if (flight != null) {
+            updateMap(flight.getDestination());
+        }
+    }
 
 }
 

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane prefHeight="92.0" prefWidth="500.0" styleClass="cell_container" stylesheets="@../../Styles/FlightCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.FlightCellController">
+<AnchorPane fx:id="rootContainer" prefHeight="92.0" prefWidth="500.0" styleClass="cell_container" stylesheets="@../../Styles/FlightCell.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.airPlan.controllers.Client.FlightCellController">
     <AnchorPane layoutX="2.0" layoutY="12.0" prefHeight="82.0" prefWidth="497.0" styleClass="container" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
         <FontAwesomeIconView glyphName="PLANE" layoutX="1.0" layoutY="28.0" size="30" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="20.0" />
         <Label fx:id="airline_lbl" layoutX="47.0" layoutY="16.0" styleClass="lbl" text="AIRLINE" AnchorPane.topAnchor="25.0" />

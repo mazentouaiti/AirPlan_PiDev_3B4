@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
@@ -20,6 +22,8 @@ public class FlightCellController implements Initializable {
 
     private FlightModel flightModel;
     private FlightsController mainController;
+    @FXML
+    private AnchorPane rootContainer;
 
     public void setMainController(FlightsController mainController) {
 
@@ -30,6 +34,17 @@ public class FlightCellController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         view_btn.setOnAction(event -> onViewClicked());
+
+        rootContainer.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) { // Single click
+                onCellClicked();
+            }
+        });
+    }
+    private void onCellClicked() {
+        if (flightModel != null && mainController != null) {
+            mainController.updateMapWithFlight(flightModel);
+        }
     }
     @FXML
     private void onViewClicked() {
